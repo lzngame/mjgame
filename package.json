@@ -1,0 +1,21 @@
+{
+  "name": "dungeons",
+  "version": "1.0.0",
+  "description": "beta 0.1",
+  "main": "main.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git"
+  },
+  "keywords": [
+    "keyword"
+  ],
+  "author": "lzn",
+  "license": "ISC",
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  }
+}
