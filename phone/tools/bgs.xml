@@ -1,0 +1,8 @@
+<TextureAtlas imagePath="sprites.png">
+	<SubTexture name="battlebg.png" x="0" y="0" width="768" height="432"/>
+	<SubTexture name="login_6.png" x="770" y="0" width="365" height="427"/>
+	<SubTexture name="login_bg35.png" x="770" y="429" width="364" height="374"/>
+	<SubTexture name="login_bg36.png" x="0" y="868" width="555" height="293"/>
+	<SubTexture name="login_girl.png" x="557" y="868" width="457" height="337"/>
+	<SubTexture name="loginbg.png" x="0" y="434" width="768" height="432"/>
+</TextureAtlas>

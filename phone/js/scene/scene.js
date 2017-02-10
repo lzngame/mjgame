@@ -135,14 +135,14 @@
 				self.startTxtBtn.visible = true;
 				self.isflash = true;
 				self.on(Hilo.event.POINTER_START, function(e) {
-					game.switchScene(game.configdata.SCENE_NAMES.main);
+					game.switchScene(game.configdata.SCENE_NAMES.weixinlogin);
 				});
 				game.loadqueue.off('complete');
 				game.loadqueue.off('load');
 				
 				game.monsterdata.initAtlas();
 				
-				game.switchScene(game.configdata.SCENE_NAMES.main);
+				game.switchScene(game.configdata.SCENE_NAMES.weixinlogin);
 			});
 			game.loadqueue.start();
 		},
@@ -171,6 +171,163 @@
 				x:18*this.coinInitXpos,
 			}).addTo(this.loadingline);
 			this.coinInitXpos++;
+		},
+	});
+	
+	var WinXinloginScene = ns.WinXinloginScene = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name: game.configdata.SCENE_NAMES.main,
+		items:null,
+		
+		constructor: function(properties) {
+			WinXinloginScene.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		init: function(properties) {
+			console.log('%s init', this.name);
+			this.width = game.configdata.mainStageSize.width;
+			this.height = game.configdata.mainStageSize.height;
+			this.y = -this.height;
+			this.x = game.screenWidth/2 - this.width/2;
+			this.items = {};
+		},
+		initTouchEvent:function(){
+			var scene = this;
+			game.stage.off();
+			game.stage.on(Hilo.event.POINTER_MOVE, function(e) {
+				
+			});
+		},
+		
+		layoutUiData:function(uidata,imgsourcename){
+			if(!imgsourcename){
+				imgsourcename = 'ui';
+			}
+			var tmpposdic = {};
+			for(var i=0;i<uidata.length;i++){
+				var itemdata = uidata[i];
+				var posxy = game.layoutUi.getItemPos(itemdata,imgsourcename,tmpposdic);
+				var rect = game.configdata.getPngRect(itemdata.itemurlvalue,imgsourcename);
+				var x = posxy[0];
+				var y = posxy[1];
+				var w = rect[2] * game.scalefact;
+				var h = rect[3] * game.scalefact;
+				tmpposdic[itemdata.itemid] = [x,y,w,h];
+				if(itemdata.itemtype === 'bmp'){ 
+					this.items[itemdata.itemid] = game.configdata.creatRectImg(imgsourcename,itemdata.itemurlvalue,x,y,game.scalefact).addTo(this);
+				}
+				if(itemdata.itemtype === 'btn'){ 
+					this.items[itemdata.itemid] = game.configdata.createButton(itemdata.itemurlvalue,itemdata.btnup,x,y).addTo(this);
+				}
+				if(itemdata.itemtype === 'selectbox'){ 
+					this.items[itemdata.itemid] = game.configdata.createSelectbox(itemdata.itemurlvalue,itemdata.selectvalue,x,y).addTo(this);
+				}
+			}
+		},
+		
+		active:function(data) {
+			console.log('%s active:', this.name);
+			this.addTo(game.stage);
+			this.initTouchEvent();
+			this.alpha = 1;
+			var img = game.getImg('ui');
+			var bg = new Hilo.Bitmap({
+				width:this.width,
+				height:this.height,
+				image:game.getImg('loginbg'),
+			}).addTo(this);
+			//var girl = game.configdata.creatRectImg('bg','login_girl',0,0,game.scalefact).addTo(this);
+			
+			Hilo.Tween.to(this, {
+				y: game.screenHeight/2 - this.height/2
+			}, {
+				duration: 800,
+				ease: Hilo.Ease.Bounce.EaseOut,
+				onComplete: function() {
+					game.previousScene.destory();
+				}
+			});
+			var testuidata =[
+				{
+					itemid:'id_weixinlogbg_girl_bmp',
+					itemtype:'bmp',
+					itemurlvalue:'login_girl',
+					layouttype_x:'txt',
+					alignx:'center',
+					layouttype_y:'pct',
+					aligny:'top_5'
+				},];
+			var testuidata2 = [
+				{
+					itemid:'id_weixinlogin_btn',
+					itemtype:'btn',
+					itemurlvalue:'login_10',
+					btnup:'login_11',
+					layouttype_x:'txt',
+					alignx:'center',
+					layouttype_y:'txt',
+					aligny:'center'
+				},
+				{
+					itemid:'id_agreeweixinlogin_selectbox',
+					itemtype:'selectbox',
+					itemurlvalue:'login_bg48',
+					selectvalue:'login_4',
+					layouttype_x:'pct',
+					alignx:'left_36',
+					layouttype_y:'pct',
+					aligny:'bottom_10'
+				},
+				{
+					itemid:'id_weixinlogin_txt',
+					itemtype:'bmp',
+					itemurlvalue:'login_5',
+					layouttype_x:'follow',
+					alignx:'id_agreeweixinlogin_selectbox&45',
+					layouttype_y:'follow',
+					aligny:'id_agreeweixinlogin_selectbox&15'
+				}
+			];
+			this.layoutUiData(testuidata,'bg');
+			this.layoutUiData(testuidata2,'ui');
+			//this.layoutUiData(game.configdata.testuidata,'ui');
+			this.drawStepLine();
+		},
+		drawStepLine:function(){
+			var w = game.screenWidth/4;
+			var h = game.screenHeight/4;
+			for(var i=0;i<16;i++){
+				var x = i%4 * game.screenWidth/4;
+				var y = Math.floor(i/4) * game.screenHeight/4;
+				this.drawLine(x,y,w,h);
+			}
+		},
+		drawLine:function(initx,inity,w,h){
+			for(var i=0;i<4;i++){
+				game.drawdata.drawItemRect(1,'white','rgba(0,0,0,0)',initx+i%2 * w/2,inity+Math.floor(i/2)*h/2,w/2,h/2,this);
+			}
+		},
+		deactive: function() {
+			var scene = this;
+			game.sounds.stop(20);
+			Hilo.Tween.to(this, {
+					y: -this.height,
+				}, {
+					duration: 500,
+					ease: Hilo.Ease.Back.EaseIn,
+					onComplete: function() {
+						console.log('main scene destory');
+						scene.destory();
+					}
+				});
+		},
+		destory: function() {
+			console.log('%s destory', this.name);
+			this.removeAllChildren();
+			this.removeFromParent();
+		},
+		onUpdate:function(){
+			
 		},
 	});
 
@@ -203,17 +360,23 @@
 			});
 		},
 		
-		layoutUiData:function(uidata){
+		layoutUiData:function(uidata,imgsourcename){
+			if(!imgsourcename){
+				imgsourcename = 'ui';
+			}
+			var tmpposdic = {};
 			for(var i=0;i<uidata.length;i++){
 				var itemdata = uidata[i];
 				if(itemdata.itemtype === 'bmp'){
-					var posxy = game.layoutUi.getItemPos(itemdata);
-					var rect = game.configdata.getPngRect(itemdata.itemurlvalue,'uimap');
+					console.log(itemdata.itemid);
+					var posxy = game.layoutUi.getItemPos(itemdata,tmpposdic);
+					var rect = game.configdata.getPngRect(itemdata.itemurlvalue,imgsourcename);
 					var x = posxy[0];
 					var y = posxy[1];
 					var w = rect[2] * game.scalefact;
 					var h = rect[3] * game.scalefact;
-					this.items[itemdata.id] = game.configdata.creatRectImg('ui',itemdata.itemurlvalue,x,y,game.scalefact).addTo(this);
+					tmpposdic[itemdata.itemid] = [x,y,w,h];
+					this.items[itemdata.itemid] = game.configdata.creatRectImg(imgsourcename,itemdata.itemurlvalue,x,y,game.scalefact).addTo(this);
 				}
 			}
 		},
@@ -228,6 +391,8 @@
 				height:this.height,
 				image:game.getImg('battlebg'),
 			}).addTo(this);
+
+			
 			
 			Hilo.Tween.to(this, {
 				y: game.screenHeight/2 - this.height/2

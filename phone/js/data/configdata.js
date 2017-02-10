@@ -25,10 +25,10 @@ game.configdata = new function(){
 	self.SCENE_NAMES ={
 		load:'LOAD_SCENE_NAME',
 		login:'LOGIN_SCENE_NAME',
+		weixinlogin:'WEIXIN_LOGIN_SCENENAME',
 		main:'MAIN_SCENE_NAME',
 		over:'GAME_SCENE_NAME',
 		shop:'SHOP_SCENE_NAME',
-		
 	};
 	
 	self.LAYOUTTYPE = {
@@ -39,9 +39,6 @@ game.configdata = new function(){
 	self.MSAGE_TYPE ={
 		
 	},
-	
-	
-	
 
 	self.mainStageSize ={width:320,height:480};
 	
@@ -57,11 +54,15 @@ game.configdata = new function(){
 	}
 	
 	self.createSelectbox = function(imgbg,imgcheck,x,y){
-		return new game.MjSelectbox({
+		var result = new game.MjSelectbox({
 			imgbg:imgbg,
 			imgcheck:imgcheck,
-			x:x,y:
-			y});
+			x:x,
+			y:y
+		});
+		result.scaleX = game.scalefact;
+		result.scaleY = game.scalefact;
+		return result;
 	}
 	
 	self.createButton = function(uprectname,downrectname,x,y){
@@ -82,7 +83,9 @@ game.configdata = new function(){
   				downState: {rect:downrect},
    				disabledState: {rect:downrect},
    				x:xp,
-   				y:yp
+   				y:yp,
+   				scaleX:game.scalefact,
+   				scaleY:game.scalefact,
 			});
 	}
 	
@@ -97,6 +100,10 @@ game.configdata = new function(){
 			case 'mj':
 				rect_data = game.loaddata.IMAGEDATA_2[pngname];
 				imgsource = game.getImg('mjbattle');
+				break;
+			case 'bg':
+				rect_data = game.loaddata.IMAGEDATA_3[pngname];
+				imgsource = game.getImg('bgs');
 				break;
 			default:
 				rect_data = game.loaddata.IMAGEDATA_1[pngname];
@@ -133,13 +140,13 @@ game.configdata = new function(){
 	self.getPngRect = function(pngname,sourcePng){
 		var rect = null;
 		switch(sourcePng){
-			case 'ui':  //objects
+			case 'ui':  //
 				rect = game.loaddata.IMAGEDATA_1[pngname];
 				break;
-			case 'mj': //effects
+			case 'mj': //
 				rect = game.loaddata.IMAGEDATA_2[pngname];
 				break;
-			case 'action': //actions
+			case 'bg': //
 				rect = game.loaddata.IMAGEDATA_3[pngname];
 				break;
 			default:
@@ -171,7 +178,7 @@ game.configdata = new function(){
 	}
 	
 	self.testuidata =[
-				{
+			{
 					itemid:'id_bg_girl1',
 					itemtype:'bmp',
 					itemurltype:'rect',
@@ -341,6 +348,37 @@ game.configdata = new function(){
 					layouttype_y:'pct',
 					aligny:'bottom_25',
 				},
+				{
+					itemid:'id_bg_girl19',
+					itemtype:'bmp',
+					itemurltype:'rect',
+					itemurlvalue:'battle_100',
+					layouttype_x:'follow',
+					alignx:'id_bg_girl18&100',
+					layouttype_y:'follow',
+					aligny:'id_bg_girl18&-100',
+				},
+				{
+					itemid:'id_bg_girl20',
+					itemtype:'bmp',
+					itemurltype:'rect',
+					itemurlvalue:'battle_100',
+					layouttype_x:'follow',
+					alignx:'id_bg_girl18&100',
+					layouttype_y:'follow',
+					aligny:'id_bg_girl19&50',
+				},
+				{
+					itemid:'id_weixinlogin_btn',
+					itemtype:'btn',
+					itemurltype:'rect',
+					itemurlvalue:'login_10',
+					btnup:'login_11',
+					layouttype_x:'txt',
+					alignx:'center',
+					layouttype_y:'txt',
+					aligny:'center'
+				}
 			];
 };
 
@@ -370,7 +408,6 @@ game.sounds = new function(){
 	'ting.mp3',//19
 	'passbg.mp3',//20
 	'dang.mp3',//21
-	
 	'dog.mp3',//22,  
 	'knock.mp3',//23
 	'fallbone.mp3',//24
@@ -405,20 +442,20 @@ game.sounds = new function(){
 
 game.layoutUi = new function(){
 	var self = this;
-	this.getItemPos = function(itemdata){
+	this.getItemPos = function(itemdata,imgsourcename,tmpposdic){
 			if(itemdata.layouttype_x === 'txt'){
 						var aligntype = itemdata.alignx;
 						if(aligntype === 'center'){
 							aligntype = 'center_x';
 						}
-						var x= this.getItemTxtPos(aligntype,itemdata.itemurlvalue);
+						var x= this.getItemTxtPos(aligntype,itemdata.itemurlvalue,imgsourcename);
 				}
 			if(itemdata.layouttype_y === 'txt'){
 						aligntype = itemdata.aligny;
 						if(aligntype === 'center'){
 							aligntype = 'center_y';
 						}
-						var y= this.getItemTxtPos(aligntype,itemdata.itemurlvalue);
+						var y= this.getItemTxtPos(aligntype,itemdata.itemurlvalue,imgsourcename);
 				}
 			if(itemdata.layouttype_x === 'pct'){
 						var aligntype = itemdata.alignx;
@@ -429,7 +466,7 @@ game.layoutUi = new function(){
 						}else{
 							aligntype = tm[0];
 						}
-						var x= this.getItemPctPos(aligntype,value,itemdata.itemurlvalue);
+						var x= this.getItemPctPos(aligntype,value,itemdata.itemurlvalue,imgsourcename);
 					}
 			if(itemdata.layouttype_y === 'pct'){
 						aligntype = itemdata.aligny;
@@ -440,13 +477,27 @@ game.layoutUi = new function(){
 						}else{
 							aligntype = tm[0];
 						}
-						var y= this.getItemPctPos(aligntype,value,itemdata.itemurlvalue);
+						var y= this.getItemPctPos(aligntype,value,itemdata.itemurlvalue,imgsourcename);
 					}
+			if(itemdata.layouttype_x === 'follow'){
+						var aligntype = itemdata.alignx;
+						var tm = aligntype.split('&');
+						var targetItemid = tm[0];
+						var value = parseInt(tm[1]);
+						var x= this.getItemFollowPos(targetItemid,value,'horizontal',tmpposdic);
+				}
+			if(itemdata.layouttype_y === 'follow'){
+						var aligntype = itemdata.aligny;
+						var tm = aligntype.split('&');
+						var targetItemid = tm[0];
+						var value = parseInt(tm[1]);
+						var y = this.getItemFollowPos(targetItemid,value,'vertical',tmpposdic);
+				}		
 			return [x,y];
 		};
 		
-	this.getItemPctPos = function(relativepos,pctvalue,namevalue){
-			var rect = game.configdata.getPngRect(namevalue);
+	this.getItemPctPos = function(relativepos,pctvalue,namevalue,imgsourcename){
+			var rect = game.configdata.getPngRect(namevalue,imgsourcename);
 			var result = 0;
 			var w = rect[2] * game.scalefact;
 			var h = rect[3] * game.scalefact;
@@ -484,8 +535,8 @@ game.layoutUi = new function(){
 			return result;
 		};
 		
-	this.getItemTxtPos = function(txtvalue,namevalue){
-			var rect = game.configdata.getPngRect(namevalue);
+	this.getItemTxtPos = function(txtvalue,namevalue,imgsourcename){
+			var rect = game.configdata.getPngRect(namevalue,imgsourcename);
 			var result = 0;
 			var w = rect[2] * game.scalefact;
 			var h = rect[3] * game.scalefact;
@@ -512,9 +563,24 @@ game.layoutUi = new function(){
 			return result;
 	};
 		
+	this.getItemFollowPos = function(itemid,followvalue,directtype,tmpposDic){
+		var referenceX = tmpposDic[itemid][0];
+		var referenceY = tmpposDic[itemid][1];
+		switch(directtype){
+			case 'vertical':
+					result = referenceY + followvalue ;
+					break;
+			case 'horizontal':
+					result = referenceX + followvalue;
+					break;
+			}
+		return result;
+	};
+	
 	this.layoutUiData = function(uidata,parentScene){
 			for(var i=0;i<uidata.length;i++){
 				var itemdata = uidata[i];
+				var tmpposDic = {};
 				if(itemdata.itemtype === 'bmp'){
 					var posxy = this.getItemPos(itemdata);
 					var x = posxy[0];
@@ -522,7 +588,8 @@ game.layoutUi = new function(){
 					var rect = game.configdata.getPngRect(itemdata.itemurlvalue,'uimap');
 					var w = rect[2] * game.scalefact;
 					var h = rect[3] * game.scalefact;
-					this.items[itemdata.id] = game.configdata.creatRectImg('ui',itemdata.itemurlvalue,x,y,game.scalefact).addTo(parentScene);
+					this.items[itemdata.itemid] = game.configdata.creatRectImg('ui',itemdata.itemurlvalue,x,y,game.scalefact).addTo(parentScene);
+					tmpposDic[itemdata.itemid] =[x,y,w,h];
 				}
 			}
 	};
