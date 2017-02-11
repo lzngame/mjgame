@@ -224,6 +224,67 @@
 				}
 			}
 		},
+		layoutPanelData:function(uidata,imgsourcename,theparent){
+			if(!imgsourcename){
+				imgsourcename = 'ui';
+			}
+			var tmpposdic = {};
+			for(var i=0;i<uidata.length;i++){
+				var itemdata = uidata[i];
+				var posxy = game.layoutUi.getItemPos(itemdata,imgsourcename,tmpposdic);
+				var rect = game.configdata.getPngRect(itemdata.itemurlvalue,imgsourcename);
+				var x = posxy[0];
+				var y = posxy[1];
+				var w = rect[2] * game.scalefact;
+				var h = rect[3] * game.scalefact;
+				tmpposdic[itemdata.itemid] = [x,y,w,h];
+				if(itemdata.itemtype === 'bmp'){ 
+					theparent.items[itemdata.itemid] = game.configdata.creatRectImg(imgsourcename,itemdata.itemurlvalue,x,y,game.scalefact).addTo(theparent);
+				}
+				if(itemdata.itemtype === 'btn'){ 
+					theparent.items[itemdata.itemid] = game.configdata.createButton(itemdata.itemurlvalue,itemdata.btnup,x,y).addTo(theparent);
+				}
+				if(itemdata.itemtype === 'selectbox'){ 
+					theparent.items[itemdata.itemid] = game.configdata.createSelectbox(itemdata.itemurlvalue,itemdata.selectvalue,x,y).addTo(theparent);
+				}
+			}
+		},
+		createPromptpanel:function(){
+			var testuidata =[
+				{
+					itemid:'id_promptpanel_bg',
+					itemtype:'bmp',
+					itemurlvalue:'login_bg36',
+					layouttype_x:'txt',
+					alignx:'center',
+					layouttype_y:'txt',
+					aligny:'center'
+				},
+			];
+			var uidata_1 =[
+				{
+					itemid:'id_weixinlogin_btn',
+					itemtype:'btn',
+					itemurlvalue:'battle_6',
+					btnup:'21',
+					layouttype_x:'txt',
+					alignx:'center',
+					layouttype_y:'txt',
+					aligny:'center'
+				},
+			];
+			var panel = new Hilo.Container();
+			panel.items = {};
+			this.layoutPanelData(testuidata,'bg',panel);
+			this.layoutPanelData(uidata_1,'ui',panel);
+			var p = panel;
+			panel.items['id_weixinlogin_btn'].on(Hilo.event.POINTER_END, function(e) {
+				console.log('close');
+				console.log(self.items);
+				p.removeFromParent();
+			});
+			return panel;
+		},
 		
 		active:function(data) {
 			console.log('%s active:', this.name);
@@ -291,6 +352,15 @@
 			this.layoutUiData(testuidata,'bg');
 			this.layoutUiData(testuidata2,'ui');
 			//this.layoutUiData(game.configdata.testuidata,'ui');
+			var self = this;
+			this.items['id_weixinlogin_btn'].on(Hilo.event.POINTER_END, function(e) {
+				console.log('button handler');
+				console.log(self.items);
+				//self.items['id_weixinlogin_btn'].x++;
+				var prompt = self.createPromptpanel();
+				prompt.addTo(self);
+				console.log(prompt);
+			});
 			this.drawStepLine();
 		},
 		drawStepLine:function(){
