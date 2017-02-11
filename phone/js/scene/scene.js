@@ -224,7 +224,6 @@
 				}
 			}
 		},
-<<<<<<< HEAD
 		layoutPanelData:function(uidata,imgsourcename,theparent){
 			if(!imgsourcename){
 				imgsourcename = 'ui';
@@ -286,8 +285,6 @@
 			});
 			return panel;
 		},
-=======
->>>>>>> 9434bfd908ad329ac6363d7a6c51f5e4dbd24b13
 		
 		active:function(data) {
 			console.log('%s active:', this.name);
@@ -354,7 +351,7 @@
 			];
 			this.layoutUiData(testuidata,'bg');
 			this.layoutUiData(testuidata2,'ui');
-<<<<<<< HEAD
+
 			//this.layoutUiData(game.configdata.testuidata,'ui');
 			var self = this;
 			this.items['id_weixinlogin_btn'].on(Hilo.event.POINTER_END, function(e) {
@@ -365,9 +362,8 @@
 				prompt.addTo(self);
 				console.log(prompt);
 			});
-=======
+
 			//this.layoutUiData(game.configdata.testuidata,'ui');
->>>>>>> 9434bfd908ad329ac6363d7a6c51f5e4dbd24b13
 			this.drawStepLine();
 		},
 		drawStepLine:function(){
