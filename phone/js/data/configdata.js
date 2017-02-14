@@ -442,6 +442,34 @@ game.sounds = new function(){
 
 game.layoutUi = new function(){
 	var self = this;
+	this.layoutPanelData = function(uidata,panelwidth,panelheight,scalefact,imgsourcename,theparent){
+			if(!imgsourcename){
+				imgsourcename = 'ui';
+			}
+			var tmpposdic = {};
+			panelwidth = panelwidth * scalefact;
+			panelheight = panelheight * scalefact;
+			for(var i=0;i<uidata.length;i++){
+				var itemdata = uidata[i];
+				var posxy = game.layoutUi.getItemPos(itemdata,panelwidth,panelheight,imgsourcename,tmpposdic);
+				var rect = game.configdata.getPngRect(itemdata.itemurlvalue,imgsourcename);
+				var x = posxy[0];
+				var y = posxy[1];
+				var w = rect[2] * game.scalefact;
+				var h = rect[3] * game.scalefact;
+				tmpposdic[itemdata.itemid] = [x,y,w,h];
+				if(itemdata.itemtype === 'bmp'){ 
+					theparent.items[itemdata.itemid] = game.configdata.creatRectImg(imgsourcename,itemdata.itemurlvalue,x,y,game.scalefact).addTo(theparent);
+				}
+				if(itemdata.itemtype === 'btn'){ 
+					theparent.items[itemdata.itemid] = game.configdata.createButton(itemdata.itemurlvalue,itemdata.btnup,x,y).addTo(theparent);
+				}
+				if(itemdata.itemtype === 'selectbox'){ 
+					theparent.items[itemdata.itemid] = game.configdata.createSelectbox(itemdata.itemurlvalue,itemdata.selectvalue,x,y).addTo(theparent);
+				}
+			}
+	};
+	
 	this.getItemPos = function(itemdata,panelwidth,panelheight,imgsourcename,tmpposdic){
 			if(itemdata.layouttype_x === 'txt'){
 						var aligntype = itemdata.alignx;
@@ -575,6 +603,26 @@ game.layoutUi = new function(){
 					break;
 			}
 		return result;
+	};
+	
+	
+	this.drawStepLine = function(panelwidth,panelheight,panel,scalefact){
+			if(!scalefact){
+				scalefact = 1.0;
+			}
+			var w = panelwidth/4 * scalefact;
+			var h = panelheight/4 * scalefact;
+			for(var i=0;i<16;i++){
+				var x = i%4 * w;
+				var y = Math.floor(i/4) * h;
+				this.drawLine(x,y,w,h,panel);
+			}
+	};
+		
+	this.drawLine = function(initx,inity,w,h,panel){
+			for(var i=0;i<4;i++){
+				game.drawdata.drawItemRect(1,'white','rgba(0,0,0,0)',initx+i%2 * w/2,inity+Math.floor(i/2)*h/2,w/2,h/2,panel);
+			}
 	};
 }
 
