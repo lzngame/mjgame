@@ -199,14 +199,14 @@
 			});
 		},
 		
-		layoutUiData:function(uidata,imgsourcename){
+		layoutUiData:function(uidata,panelwidth,panelheight,imgsourcename){
 			if(!imgsourcename){
 				imgsourcename = 'ui';
 			}
 			var tmpposdic = {};
 			for(var i=0;i<uidata.length;i++){
 				var itemdata = uidata[i];
-				var posxy = game.layoutUi.getItemPos(itemdata,imgsourcename,tmpposdic);
+				var posxy = game.layoutUi.getItemPos(itemdata,panelwidth,panelheight,imgsourcename,tmpposdic);
 				var rect = game.configdata.getPngRect(itemdata.itemurlvalue,imgsourcename);
 				var x = posxy[0];
 				var y = posxy[1];
@@ -224,14 +224,16 @@
 				}
 			}
 		},
-		layoutPanelData:function(uidata,imgsourcename,theparent){
+		layoutPanelData:function(uidata,panelwidth,panelheight,imgsourcename,theparent){
 			if(!imgsourcename){
 				imgsourcename = 'ui';
 			}
 			var tmpposdic = {};
+			panelwidth = panelwidth * game.scalefact;
+			panelheight = panelheight * game.scalefact;
 			for(var i=0;i<uidata.length;i++){
 				var itemdata = uidata[i];
-				var posxy = game.layoutUi.getItemPos(itemdata,imgsourcename,tmpposdic);
+				var posxy = game.layoutUi.getItemPos(itemdata,panelwidth,panelheight,tmpposdic);
 				var rect = game.configdata.getPngRect(itemdata.itemurlvalue,imgsourcename);
 				var x = posxy[0];
 				var y = posxy[1];
@@ -256,27 +258,45 @@
 					itemtype:'bmp',
 					itemurlvalue:'login_bg36',
 					layouttype_x:'txt',
-					alignx:'center',
+					alignx:'left',
 					layouttype_y:'txt',
-					aligny:'center'
+					aligny:'top'
 				},
 			];
 			var uidata_1 =[
 				{
 					itemid:'id_weixinlogin_btn',
 					itemtype:'btn',
-					itemurlvalue:'battle_6',
-					btnup:'21',
+					itemurlvalue:'login_13',
+					btnup:'login_14',
 					layouttype_x:'txt',
-					alignx:'center',
+					alignx:'right',
 					layouttype_y:'txt',
-					aligny:'center'
+					aligny:'top'
+				},
+				{
+					itemid:'id_1',
+					itemtype:'bmp',
+					itemurlvalue:'11',
+					layouttype_x:'pct',
+					alignx:'left_25',
+					layouttype_y:'pct',
+					aligny:'top_25'
 				},
 			];
 			var panel = new Hilo.Container();
+			panel.modalmask = new Hilo.Bitmap({
+				width:this.width,
+				height:this.height,
+				image:game.getImg('loginbg'),
+				alpha:0.3,
+				//visible:false,
+			}).addTo(panel);
+			
 			panel.items = {};
-			this.layoutPanelData(testuidata,'bg',panel);
-			this.layoutPanelData(uidata_1,'ui',panel);
+			this.layoutPanelData(testuidata,555,293,'bg',panel);
+			this.drawStepLine(555,293,panel);
+			this.layoutPanelData(uidata_1,555,293,'ui',panel);
 			var p = panel;
 			panel.items['id_weixinlogin_btn'].on(Hilo.event.POINTER_END, function(e) {
 				console.log('close');
@@ -292,6 +312,9 @@
 			this.initTouchEvent();
 			this.alpha = 1;
 			var img = game.getImg('ui');
+			
+			
+			
 			var bg = new Hilo.Bitmap({
 				width:this.width,
 				height:this.height,
@@ -349,37 +372,41 @@
 					aligny:'id_agreeweixinlogin_selectbox&15'
 				}
 			];
-			this.layoutUiData(testuidata,'bg');
-			this.layoutUiData(testuidata2,'ui');
+			this.layoutUiData(testuidata,game.screenWidth,game.screenHeight,'bg');
+			this.layoutUiData(testuidata2,game.screenWidth,game.screenHeight,'ui');
 
-			//this.layoutUiData(game.configdata.testuidata,'ui');
+			//this.layoutUiData(game.configdata.testuidata,game.screenWidth,game.screenHeight,'ui');
 			var self = this;
 			this.items['id_weixinlogin_btn'].on(Hilo.event.POINTER_END, function(e) {
 				console.log('button handler');
 				console.log(self.items);
 				//self.items['id_weixinlogin_btn'].x++;
 				var prompt = self.createPromptpanel();
+				//prompt.alpha = 0.3;
+				//prompt.y = 150;
 				prompt.addTo(self);
 				console.log(prompt);
 			});
 
 			//this.layoutUiData(game.configdata.testuidata,'ui');
-			this.drawStepLine();
+			this.drawStepLine(game.screenWidth,game.screenHeight,this);
 		},
-		drawStepLine:function(){
-			var w = game.screenWidth/4;
-			var h = game.screenHeight/4;
+		drawStepLine:function(panelwidth,panelheight,panel){
+			var w = panelwidth/4;
+			var h = panelheight/4;
 			for(var i=0;i<16;i++){
-				var x = i%4 * game.screenWidth/4;
-				var y = Math.floor(i/4) * game.screenHeight/4;
-				this.drawLine(x,y,w,h);
+				var x = i%4 * w;
+				var y = Math.floor(i/4) * h;
+				this.drawLine(x,y,w,h,panel);
 			}
 		},
-		drawLine:function(initx,inity,w,h){
+		
+		drawLine:function(initx,inity,w,h,panel){
 			for(var i=0;i<4;i++){
-				game.drawdata.drawItemRect(1,'white','rgba(0,0,0,0)',initx+i%2 * w/2,inity+Math.floor(i/2)*h/2,w/2,h/2,this);
+				game.drawdata.drawItemRect(1,'white','rgba(0,0,0,0)',initx+i%2 * w/2,inity+Math.floor(i/2)*h/2,w/2,h/2,panel);
 			}
 		},
+		
 		deactive: function() {
 			var scene = this;
 			game.sounds.stop(20);
@@ -433,26 +460,7 @@
 			});
 		},
 		
-		layoutUiData:function(uidata,imgsourcename){
-			if(!imgsourcename){
-				imgsourcename = 'ui';
-			}
-			var tmpposdic = {};
-			for(var i=0;i<uidata.length;i++){
-				var itemdata = uidata[i];
-				if(itemdata.itemtype === 'bmp'){
-					console.log(itemdata.itemid);
-					var posxy = game.layoutUi.getItemPos(itemdata,tmpposdic);
-					var rect = game.configdata.getPngRect(itemdata.itemurlvalue,imgsourcename);
-					var x = posxy[0];
-					var y = posxy[1];
-					var w = rect[2] * game.scalefact;
-					var h = rect[3] * game.scalefact;
-					tmpposdic[itemdata.itemid] = [x,y,w,h];
-					this.items[itemdata.itemid] = game.configdata.creatRectImg(imgsourcename,itemdata.itemurlvalue,x,y,game.scalefact).addTo(this);
-				}
-			}
-		},
+		
 		active:function(data) {
 			console.log('%s active:', this.name);
 			this.addTo(game.stage);
@@ -476,7 +484,7 @@
 					game.previousScene.destory();
 				}
 			});
-			this.layoutUiData(game.configdata.testuidata);
+			//this.layoutUiData(game.configdata.testuidata);
 			//game.layoutUi.layoutUiData(game.configdata.testuidata);
 			/*var self = this;
 			var btn = game.configdata.createButton('login_10','login_11',30,120).addTo(this);
@@ -490,7 +498,7 @@
 			game.configdata.createSelectbox('login_3','login_4',300,10).addTo(this);*/
 			
 			//this.initTouchEvent();
-			this.drawStepLine();
+			//this.drawStepLine();
 			//this.drawLine(0,0,game.screenWidth,game.screenHeight);
 		},
 		drawStepLine:function(){

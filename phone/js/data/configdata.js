@@ -178,7 +178,7 @@ game.configdata = new function(){
 	}
 	
 	self.testuidata =[
-			{
+				{
 					itemid:'id_bg_girl1',
 					itemtype:'bmp',
 					itemurltype:'rect',
@@ -342,7 +342,7 @@ game.configdata = new function(){
 					itemid:'id_bg_girl18',
 					itemtype:'bmp',
 					itemurltype:'rect',
-					itemurlvalue:'battle_100',
+					itemurlvalue:'battle_7',
 					layouttype_x:'pct',
 					alignx:'right_25',
 					layouttype_y:'pct',
@@ -352,7 +352,7 @@ game.configdata = new function(){
 					itemid:'id_bg_girl19',
 					itemtype:'bmp',
 					itemurltype:'rect',
-					itemurlvalue:'battle_100',
+					itemurlvalue:'chibeijing1',
 					layouttype_x:'follow',
 					alignx:'id_bg_girl18&100',
 					layouttype_y:'follow',
@@ -368,7 +368,7 @@ game.configdata = new function(){
 					layouttype_y:'follow',
 					aligny:'id_bg_girl19&50',
 				},
-				{
+				/*{
 					itemid:'id_weixinlogin_btn',
 					itemtype:'btn',
 					itemurltype:'rect',
@@ -378,7 +378,7 @@ game.configdata = new function(){
 					alignx:'center',
 					layouttype_y:'txt',
 					aligny:'center'
-				}
+				}*/
 			];
 };
 
@@ -442,20 +442,20 @@ game.sounds = new function(){
 
 game.layoutUi = new function(){
 	var self = this;
-	this.getItemPos = function(itemdata,imgsourcename,tmpposdic){
+	this.getItemPos = function(itemdata,panelwidth,panelheight,imgsourcename,tmpposdic){
 			if(itemdata.layouttype_x === 'txt'){
 						var aligntype = itemdata.alignx;
 						if(aligntype === 'center'){
 							aligntype = 'center_x';
 						}
-						var x= this.getItemTxtPos(aligntype,itemdata.itemurlvalue,imgsourcename);
+						var x= this.getItemTxtPos(aligntype,itemdata.itemurlvalue,panelwidth,panelheight,imgsourcename);
 				}
 			if(itemdata.layouttype_y === 'txt'){
 						aligntype = itemdata.aligny;
 						if(aligntype === 'center'){
 							aligntype = 'center_y';
 						}
-						var y= this.getItemTxtPos(aligntype,itemdata.itemurlvalue,imgsourcename);
+						var y= this.getItemTxtPos(aligntype,itemdata.itemurlvalue,panelwidth,panelheight,imgsourcename);
 				}
 			if(itemdata.layouttype_x === 'pct'){
 						var aligntype = itemdata.alignx;
@@ -466,7 +466,7 @@ game.layoutUi = new function(){
 						}else{
 							aligntype = tm[0];
 						}
-						var x= this.getItemPctPos(aligntype,value,itemdata.itemurlvalue,imgsourcename);
+						var x= this.getItemPctPos(aligntype,value,itemdata.itemurlvalue,panelwidth,panelheight,imgsourcename);
 					}
 			if(itemdata.layouttype_y === 'pct'){
 						aligntype = itemdata.aligny;
@@ -477,7 +477,7 @@ game.layoutUi = new function(){
 						}else{
 							aligntype = tm[0];
 						}
-						var y= this.getItemPctPos(aligntype,value,itemdata.itemurlvalue,imgsourcename);
+						var y= this.getItemPctPos(aligntype,value,itemdata.itemurlvalue,panelwidth,panelheight,imgsourcename);
 					}
 			if(itemdata.layouttype_x === 'follow'){
 						var aligntype = itemdata.alignx;
@@ -496,7 +496,7 @@ game.layoutUi = new function(){
 			return [x,y];
 		};
 		
-	this.getItemPctPos = function(relativepos,pctvalue,namevalue,imgsourcename){
+	this.getItemPctPos = function(relativepos,pctvalue,namevalue,panelwidth,panelheight,imgsourcename){
 			var rect = game.configdata.getPngRect(namevalue,imgsourcename);
 			var result = 0;
 			var w = rect[2] * game.scalefact;
@@ -505,50 +505,50 @@ game.layoutUi = new function(){
 			switch(relativepos){
 				case 'center_x':
 					if(pctvalue > 0){
-						dis = (game.screenWidth/100.0) * pctvalue;
+						dis = (panelwidth/100.0) * pctvalue;
 					}else{
-						dis = (game.screenWidth/100.0) * pctvalue - w;
+						dis = (panelwidth/100.0) * pctvalue - w;
 					}
-					result =  game.screenWidth/2 + dis ;
+					result =  panelwidth/2 + dis ;
 					break;
 				case 'center_y':
 					if(pctvalue > 0){
-						dis = (game.screenHeight/100.0) * pctvalue;
+						dis = (panelheight/100.0) * pctvalue;
 					}else{
-						dis = (game.screenHeight/100.0) * pctvalue - h;
+						dis = (panelheight/100.0) * pctvalue - h;
 					}
-					result =  game.screenHeight/2 + dis ;
+					result =  panelheight/2 + dis ;
 					break;
 				case 'top':
-					result = (game.screenHeight/100.0) * pctvalue;
+					result = (panelheight/100.0) * pctvalue;
 					break;
 				case 'bottom':
-					result = game.screenHeight - (game.screenHeight/100.0) * pctvalue -h;
+					result = panelheight - (panelheight/100.0) * pctvalue -h;
 					break;
 				case 'left':
-					result = (game.screenWidth/100.0) * pctvalue;
+					result = (panelwidth/100.0) * pctvalue;
 					break;
 				case 'right':
-					result = game.screenWidth - (game.screenWidth/100.0) * pctvalue - w;
+					result = panelwidth - (panelwidth/100.0) * pctvalue - w;
 					break;
 			}
 			return result;
 		};
 		
-	this.getItemTxtPos = function(txtvalue,namevalue,imgsourcename){
+	this.getItemTxtPos = function(txtvalue,namevalue,panelwidth,panelheight,imgsourcename){
 			var rect = game.configdata.getPngRect(namevalue,imgsourcename);
 			var result = 0;
 			var w = rect[2] * game.scalefact;
 			var h = rect[3] * game.scalefact;
 			switch(txtvalue){
 				case 'center_x':
-					result =  Math.floor((game.screenWidth - w)/2.0);
+					result =  Math.floor((panelwidth - w)/2.0);
 					break;
 				case 'center_y':
-					result = Math.floor((game.screenHeight - h)/2.0);
+					result = Math.floor((panelheight - h)/2.0);
 					break;
 				case 'bottom':
-					result = game.screenHeight - h;
+					result = panelheight - h;
 					break;
 				case 'top':
 					result = 0;
@@ -557,7 +557,7 @@ game.layoutUi = new function(){
 					result = 0;
 					break;
 				case 'right':
-					result = game.screenWidth - w;
+					result = panelwidth - w;
 					break;
 			}
 			return result;
@@ -575,23 +575,6 @@ game.layoutUi = new function(){
 					break;
 			}
 		return result;
-	};
-	
-	this.layoutUiData = function(uidata,parentScene){
-			for(var i=0;i<uidata.length;i++){
-				var itemdata = uidata[i];
-				var tmpposDic = {};
-				if(itemdata.itemtype === 'bmp'){
-					var posxy = this.getItemPos(itemdata);
-					var x = posxy[0];
-					var y = posxy[1];
-					var rect = game.configdata.getPngRect(itemdata.itemurlvalue,'uimap');
-					var w = rect[2] * game.scalefact;
-					var h = rect[3] * game.scalefact;
-					this.items[itemdata.itemid] = game.configdata.creatRectImg('ui',itemdata.itemurlvalue,x,y,game.scalefact).addTo(parentScene);
-					tmpposDic[itemdata.itemid] =[x,y,w,h];
-				}
-			}
 	};
 }
 
