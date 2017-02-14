@@ -127,7 +127,8 @@
 		initScene: function() {
 			this.scenes = {};
 			this.scenes[game.configdata.SCENE_NAMES.load]         = new game.LoadScene();
-			this.scenes[game.configdata.SCENE_NAMES.weixinlogin]  = new game.WinXinloginScene();
+			this.scenes[game.configdata.SCENE_NAMES.weixinlogin]  = new game.WeixinLoginScene();
+			this.scenes[game.configdata.SCENE_NAMES.main]  = new game.MainScene();
 		},
 		getImg: function(id) {
 			var img = this.loadqueue.getContent(id);
