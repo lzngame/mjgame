@@ -65,6 +65,22 @@ game.configdata = new function(){
 		return result;
 	}
 	
+	self.createRadiotbox = function(itemurlvalue,imgcheck,x,y,lbtext,groupid,ischeck,theparent){
+		var result = new game.MjRadioBox({
+			itemurlvalue:itemurlvalue,
+			imgcheck:imgcheck,
+			textlabel:lbtext,
+			groupid:groupid,
+			isSelected:ischeck,
+			x:x,
+			y:y,
+			theparent:theparent,
+		});
+		result.scaleX = game.scalefact;
+		result.scaleY = game.scalefact;
+		return result;
+	}
+	
 	self.createButton = function(uprectname,downrectname,x,y){
 		var uprect = game.configdata.getPngRect(uprectname);
 		var downrect = game.configdata.getPngRect(downrectname);
@@ -135,6 +151,15 @@ game.configdata = new function(){
 				width:w_size,
 				height:h_size
 			});
+	}
+	
+	self.createMerrygoround = function(headimg,itemurlvalue,x,y){
+		return new game.Merrygoround({
+			x:x,
+			y:y,
+			headimg:headimg,
+			itemurlvalue:itemurlvalue,
+		});
 	}
 	
 	self.getPngRect = function(pngname,sourcePng){
@@ -466,6 +491,12 @@ game.layoutUi = new function(){
 				}
 				if(itemdata.itemtype === 'selectbox'){ 
 					theparent.items[itemdata.itemid] = game.configdata.createSelectbox(itemdata.itemurlvalue,itemdata.selectvalue,x,y).addTo(theparent);
+				}
+				if(itemdata.itemtype === 'radiobox'){ 
+					theparent.items[itemdata.itemid] = game.configdata.createRadiotbox(itemdata.itemurlvalue,itemdata.selectvalue,x,y,itemdata.lbtext,itemdata.groupid,itemdata.ischeck,theparent).addTo(theparent);
+				}
+				if(itemdata.itemtype == 'merrygoround'){
+					theparent.items[itemdata.itemid] = game.configdata.createMerrygoround(itemdata.headimg,itemdata.itemurlvalue,x,y).addTo(theparent);
 				}
 			}
 	};
