@@ -1,13 +1,13 @@
 game = window.game || {};
 
-game.sceneuidata = new function(){
+game.commontuidata = new function(){
 	var self = this;
 	
 	self.init = function(){
 		console.log('scene ui data init');
 	};
 	
-	self.weixinlogin_uidata = [
+	self.radiobox_uidata = [
 	        [
 				{
 					itemid:'id_weixinlogbg_girl_bmp',
@@ -116,7 +116,7 @@ game.sceneuidata = new function(){
 					aligny:'top_2'
 				},
 				{
-					itemid:'id_mainscene_createroom_btn',
+					itemid:'id_mainscene_enterroom_btn',
 					itemtype:'btn',
 					itemurlvalue:'5',
 					btnup:'6',
@@ -126,7 +126,7 @@ game.sceneuidata = new function(){
 					aligny:'top_25'
 				},
 				{
-					itemid:'id_mainscene_enterroom_btn',
+					itemid:'id_mainscene_createroom_btn',
 					itemtype:'btn',
 					itemurlvalue:'6',
 					btnup:'5',
