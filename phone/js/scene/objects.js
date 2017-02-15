@@ -44,9 +44,8 @@
 		value:null,
 		defaultLabelClr:'black',
 		selectLabelClr:'green',
-		theparent:null,
+		items:null,
 		iscurrent:false,
-		
 		
 		constructor: function(properties) {
 			MjRadioBox.superclass.constructor.call(this, properties);
@@ -85,13 +84,10 @@
 		groupExe:function(){
 			this.iscurrent = true;
 			var currentgroup = this.groupid;
-			for(var itemid in this.theparent.items){
-				
-				if(this.theparent.items[itemid].groupid  && !this.theparent.items[itemid].iscurrent){
-					//this.theparent.items[id].noCheck();
-					
-					//console.log(this.theparent.items[itemid].noCheck);
-					this.theparent.items[itemid].noCheck();
+			for(var itemid in this.items){
+				var radio = this.items[itemid];
+				if(radio.groupid && radio.groupid == currentgroup && !radio.iscurrent){
+					this.items[itemid].noCheck();
 				}
 			}
 			this.iscurrent = false;
@@ -100,7 +96,84 @@
 			this.isSelected = false;
 			this.imgcheck.visible = self.isSelected;
 			this.setLabelColor();
-			console.log(this);
+		},
+		setLabelColor:function(){
+			if(this.isSelected){
+				this.txtlabel.color = this.defaultLabelClr;
+			}else{
+				this.txtlabel.color = this.selectLabelClr;
+			}
+		},
+		onUpdate:function(){
+			
+		},
+	});
+	
+	//RoomSurebtn ---- 带数字的按钮
+	var MjRadioBox = ns.MjRadioBox = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name:'MjRadioBox',
+		groupid:null,
+		itemurlvalue:null,
+		imgcheck:null,
+		isSelected:false,
+		txtlabel:null,
+		textlabel:'radio box',
+		value:null,
+		defaultLabelClr:'black',
+		selectLabelClr:'green',
+		items:null,
+		iscurrent:false,
+		
+		constructor: function(properties) {
+			MjRadioBox.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		init: function(properties) {
+			game.configdata.creatRectImg('ui',this.itemurlvalue,0,0,1).addTo(this);
+			var bgrect = game.configdata.getPngRect(this.itemurlvalue);
+			var checkrect = game.configdata.getPngRect(this.imgcheck);
+			this.imgcheck = game.configdata.creatRectImg('ui',this.imgcheck,bgrect[2]/2-checkrect[2]/2,bgrect[3]/2-checkrect[3]/2,1).addTo(this);
+			this.imgcheck.visible = this.isSelected;
+			var self = this;
+			var font = "15px arial";
+			this.txtlabel = new Hilo.Text({
+				font:font,
+				text: this.textlabel,
+				color: '#FFF200',
+				x:bgrect[2]+ 2,
+			}).addTo(this);
+			var y = bgrect[3]/2 - this.txtlabel._fontHeight/2;
+			this.txtlabel.y = y;
+			this.setLabelColor();
+			this.on(Hilo.event.POINTER_START,function(e){
+				if(self.isSelected){
+					return;
+				}else{
+					self.isSelected = true;
+					self.imgcheck.visible = self.isSelected;
+					self.setLabelColor();
+					self.groupExe();
+					
+				}
+			});
+			
+		},
+		groupExe:function(){
+			this.iscurrent = true;
+			var currentgroup = this.groupid;
+			for(var itemid in this.items){
+				var radio = this.items[itemid];
+				if(radio.groupid && radio.groupid == currentgroup && !radio.iscurrent){
+					this.items[itemid].noCheck();
+				}
+			}
+			this.iscurrent = false;
+		},
+		noCheck:function(){
+			this.isSelected = false;
+			this.imgcheck.visible = self.isSelected;
+			this.setLabelColor();
 		},
 		setLabelColor:function(){
 			if(this.isSelected){

@@ -208,7 +208,6 @@
 			
 			game.layoutUi.layoutPanelData(game.sceneuidata.weixinlogin_uidata[0],game.screenWidth,game.screenHeight,1,'bg',this);
 			game.layoutUi.layoutPanelData(game.sceneuidata.weixinlogin_uidata[1],game.screenWidth,game.screenHeight,1,'ui',this);
-			game.layoutUi.layoutPanelData(game.configdata.testuidata,game.screenWidth,game.screenHeight,1,'ui',this);
 			
 			var self = this;
 			this.items['id_weixinlogin_btn'].on(Hilo.event.POINTER_END, function(e) {
@@ -287,7 +286,7 @@
 			var self = this;
 			this.items['id_mainscene_createroom_btn'].on(Hilo.event.POINTER_END, function(e) {
 				console.log('create a room');
-				var prompt = self.createPromptpanel('login_bg36',true);
+				var prompt = self.createPromptpanel('login_6',true,true);
 				prompt.addTo(self);
 			});
 			
@@ -298,8 +297,34 @@
 			game.layoutUi.drawStepLine(game.screenWidth,game.screenHeight,this);
 		},
 		
-		createPromptpanel:function(bgname,ismodal){
+		createPromptpanel:function(bgname,ishalf,ismodal){
 			var uidata_1 =[
+				{
+					itemid:'id_radiobox_test_11',
+					itemtype:'radiobox',
+					itemurlvalue:'23',
+					selectvalue:'22',
+					layouttype_x:'pct',
+					alignx:'left_25',
+					layouttype_y:'pct',
+					aligny:'bottom_30',
+					groupid:'groupid002',
+					lbtext:'房主',
+					ischeck:false,
+				},
+				{
+					itemid:'id_radiobox_test_22',
+					itemtype:'radiobox',
+					itemurlvalue:'23',
+					selectvalue:'22',
+					layouttype_x:'pct',
+					alignx:'left_45',
+					layouttype_y:'pct',
+					aligny:'bottom_30',
+					groupid:'groupid002',
+					lbtext:'雀圣',
+					ischeck:false,
+				},
 				{
 					itemid:'id_weixinlogin_exitbtn',
 					itemtype:'btn',
@@ -369,9 +394,16 @@
 				}).addTo(panel);
 			}
 			var rect = game.configdata.getPngRect(bgname,'bg');
-			var panelwidth = rect[2];
-			var panelheight = rect[3];
-			panel.bg = game.configdata.creatRectImg('bg',bgname,0,0,game.scalefact).addTo(panel);
+			if(ishalf){
+				var panelwidth = rect[2]*2;
+				var panelheight = rect[3];
+				panel.bg = game.configdata.createBg('bg',bgname,0,0,game.scalefact).addTo(panel);
+			}else{
+				var panelwidth = rect[2];
+				var panelheight = rect[3];
+				panel.bg = game.configdata.creatRectImg('bg',bgname,0,0,game.scalefact).addTo(panel);
+			}
+			panel.width = panelwidth;
 			panel.items = {};
 			game.layoutUi.drawStepLine(panelwidth,panelheight,panel,game.scalefact);
 			game.layoutUi.layoutPanelData(uidata_1,panelwidth,panelheight,game.scalefact,'ui',panel);
