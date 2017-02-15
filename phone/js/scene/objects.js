@@ -86,11 +86,7 @@
 			this.iscurrent = true;
 			var currentgroup = this.groupid;
 			for(var itemid in this.theparent.items){
-				
-				if(this.theparent.items[itemid].groupid  && !this.theparent.items[itemid].iscurrent){
-					//this.theparent.items[id].noCheck();
-					
-					//console.log(this.theparent.items[itemid].noCheck);
+				if(this.theparent.items[itemid].groupid && this.theparent.items[itemid].groupid == currentgroup && !this.theparent.items[itemid].iscurrent){
 					this.theparent.items[itemid].noCheck();
 				}
 			}

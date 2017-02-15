@@ -357,6 +357,32 @@
 					groupid:'groupid001',
 					lbtext:'16局',
 					ischeck:false,
+				},
+				{
+					itemid:'id_radiobox_test_11',
+					itemtype:'radiobox',
+					itemurlvalue:'23',
+					selectvalue:'22',
+					layouttype_x:'pct',
+					alignx:'left_45',
+					layouttype_y:'pct',
+					aligny:'bottom_20',
+					groupid:'groupid002',
+					lbtext:'房主',
+					ischeck:true,
+				},
+				{
+					itemid:'id_radiobox_test_22',
+					itemtype:'radiobox',
+					itemurlvalue:'23',
+					selectvalue:'22',
+					layouttype_x:'pct',
+					alignx:'left_60',
+					layouttype_y:'pct',
+					aligny:'bottom_20',
+					groupid:'groupid002',
+					lbtext:'雀圣',
+					ischeck:false,
 				}
 			];
 			var panel = new Hilo.Container();
