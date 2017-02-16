@@ -38,6 +38,8 @@
 		
 		tapstarttime:0,
 		tapendtime:0,
+		tapstartx:0,
+		tapstarty:0,
 		tapx:0,
 		tapy:0,
 		
@@ -116,8 +118,8 @@
 			
 			this.stage.on(Hilo.event.POINTER_START,function(e){
 				self.tapstarttime = game.clock.getSystemtime();
-				self.tapx = e.stageX;
-				self.tapy = e.stageY;
+				self.tapstartx = e.stageX;
+				self.tapstarty = e.stageY;
 			});
 			this.stage.on(Hilo.event.POINTER_MOVE,function(e){
 				//console.log('move');
@@ -132,8 +134,8 @@
 				//console.log('end **************************************');
 				self.tapendtime = game.clock.getSystemtime();
 				var delay = self.tapendtime - self.tapstarttime;
-				var dis_x = Math.abs(e.stageX - self.tapx);
-				var dis_y = Math.abs(e.stageY - self.tapy);
+				var dis_x = Math.abs(e.stageX - self.tapstartx);
+				var dis_y = Math.abs(e.stageY - self.tapstarty);
 				if(delay < 300 && (dis_x > 20 || dis_y > 20)){
 					console.log('滑动..........:%s:%s:%s',delay,dis_x,dis_y);
 				}
