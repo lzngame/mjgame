@@ -36,6 +36,12 @@
 		winHeight:0,
 		scalefact:1,
 		
+		tapstarttime:0,
+		tapendtime:0,
+		tapx:0,
+		tapy:0,
+		
+		
 		uiscene:null,
 		drdialog:null,
 		helpbtn:null,
@@ -60,7 +66,7 @@
 			var scalex = this.screenWidth/game.configdata.MAXSIZE.maxWidth;
 			var scaley = this.screenHeight/game.configdata.MAXSIZE.maxHeight;
 			this.scalefact = scalex;
-			if(scalex < scaley)
+			if(scalex > scaley)
 				this.scalefact = scaley;
 			
 			this.refresh();
@@ -106,8 +112,30 @@
 			this.stage.enableDOMEvent(Hilo.event.POINTER_START, true);
 			this.stage.enableDOMEvent(Hilo.event.POINTER_MOVE, true);
 			this.stage.enableDOMEvent(Hilo.event.POINTER_END, true);
+			var self = this;
 			
-			
+			this.stage.on(Hilo.event.POINTER_START,function(e){
+				self.tapstarttime = game.clock.getSystemtime();
+				self.tapx = e.stageX;
+				self.tapy = e.stageY;
+			});
+			this.stage.on(Hilo.event.POINTER_MOVE,function(e){
+				//console.log('move');
+				
+				//console.log(e);
+				//console.log(this.hitTestPoint(e.stageX,e.stageY));
+				
+			});
+			this.stage.on(Hilo.event.POINTER_END,function(e){
+				//console.log('end **************************************');
+				self.tapendtime = game.clock.getSystemtime();
+				var delay = self.tapendtime - self.tapstarttime;
+				var dis_x = Math.abs(e.stageX - self.tapx);
+				var dis_y = Math.abs(e.stageY - self.tapy);
+				if(delay < 300 && (dis_x > 20 || dis_y > 20)){
+					console.log('滑动..........:%s:%s:%s',delay,dis_x,dis_y);
+				}
+			});
 		},
 		initcanvas: function(w, h) {
 			var canvas = document.getElementById(game.configdata.CANVASID);

@@ -208,7 +208,6 @@
 			
 			game.layoutUi.layoutPanelData(game.sceneuidata.weixinlogin_uidata[0],game.screenWidth,game.screenHeight,1,'bg',this);
 			game.layoutUi.layoutPanelData(game.sceneuidata.weixinlogin_uidata[1],game.screenWidth,game.screenHeight,1,'ui',this);
-			game.layoutUi.layoutPanelData(game.configdata.testuidata,game.screenWidth,game.screenHeight,1,'ui',this);
 			
 			var self = this;
 			this.items['id_weixinlogin_btn'].on(Hilo.event.POINTER_END, function(e) {
@@ -287,7 +286,7 @@
 			var self = this;
 			this.items['id_mainscene_createroom_btn'].on(Hilo.event.POINTER_END, function(e) {
 				console.log('create a room');
-				var prompt = self.createPromptpanel('login_bg36',true);
+				var prompt = self.createPromptpanel('login_6',true,true);
 				prompt.addTo(self);
 			});
 			
@@ -298,7 +297,7 @@
 			game.layoutUi.drawStepLine(game.screenWidth,game.screenHeight,this);
 		},
 		
-		createPromptpanel:function(bgname,ismodal){
+		createPromptpanel:function(bgname,ishalf,ismodal){
 			var uidata_1 =[
 				{
 					itemid:'id_weixinlogin_exitbtn',
@@ -398,6 +397,16 @@
 			var panelwidth = rect[2];
 			var panelheight = rect[3];
 			panel.bg = game.configdata.creatRectImg('bg',bgname,0,0,game.scalefact).addTo(panel);
+			if(ishalf){
+				var panelwidth = rect[2]*2;
+				var panelheight = rect[3];
+				panel.bg = game.configdata.createBg('bg',bgname,0,0,game.scalefact).addTo(panel);
+			}else{
+				var panelwidth = rect[2];
+				var panelheight = rect[3];
+				panel.bg = game.configdata.creatRectImg('bg',bgname,0,0,game.scalefact).addTo(panel);
+			}
+			panel.width = panelwidth;
 			panel.items = {};
 			game.layoutUi.drawStepLine(panelwidth,panelheight,panel,game.scalefact);
 			game.layoutUi.layoutPanelData(uidata_1,panelwidth,panelheight,game.scalefact,'ui',panel);
@@ -406,6 +415,14 @@
 			panel.items['id_weixinlogin_exitbtn'].on(Hilo.event.POINTER_END, function(e) {
 				p.removeFromParent();
 			});
+			
+			new game.Scrollwindow({
+				x:100,
+				y:100,
+				width:150,
+				height:300,
+			}).addTo(panel);
+			
 			return panel;
 		},
 		

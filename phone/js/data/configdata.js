@@ -65,7 +65,8 @@ game.configdata = new function(){
 		return result;
 	}
 	
-	self.createRadiotbox = function(itemurlvalue,imgcheck,x,y,lbtext,groupid,ischeck,theparent){
+
+	self.createRadiotbox = function(itemurlvalue,imgcheck,x,y,lbtext,groupid,ischeck,items){
 		var result = new game.MjRadioBox({
 			itemurlvalue:itemurlvalue,
 			imgcheck:imgcheck,
@@ -74,14 +75,14 @@ game.configdata = new function(){
 			isSelected:ischeck,
 			x:x,
 			y:y,
-			theparent:theparent,
+			items:items,
 		});
 		result.scaleX = game.scalefact;
 		result.scaleY = game.scalefact;
 		return result;
 	}
 	
-	self.createButton = function(uprectname,downrectname,x,y){
+	self.createButton = function(imgsource,uprectname,downrectname,x,y){
 		var uprect = game.configdata.getPngRect(uprectname);
 		var downrect = game.configdata.getPngRect(downrectname);
 		var xp = 0;
@@ -93,7 +94,7 @@ game.configdata = new function(){
 			yp = y;
 		}
 		return new Hilo.Button({
-				image:game.getImg('ui'),
+				image:game.getImg(imgsource),
 				upState: {rect:uprect},
   				overState: {rect:downrect},
   				downState: {rect:downrect},
@@ -162,6 +163,17 @@ game.configdata = new function(){
 		});
 	}
 	
+	self.createBg = function(imgType,pngname,x,y,scalefact){
+		var bgpanel = new Hilo.Container({
+			x:x,
+			y:y
+		});
+		var leftimg = this.creatRectImg(imgType,pngname,0,0,scalefact).addTo(bgpanel);
+		var rightimg = this.creatRectImg(imgType,pngname,leftimg.width*2,0,scalefact).addTo(bgpanel);
+		rightimg.scaleX = -1;
+		return bgpanel;
+	}
+	
 	self.getPngRect = function(pngname,sourcePng){
 		var rect = null;
 		switch(sourcePng){
@@ -202,209 +214,7 @@ game.configdata = new function(){
 		}
 	}
 	
-	self.testuidata =[
-				{
-					itemid:'id_bg_girl1',
-					itemtype:'bmp',
-					itemurltype:'rect',
-					itemurlvalue:'battle_100',
-					layouttype_x:'txt',
-					alignx:'left',
-					layouttype_y:'txt',
-					aligny:'top'
-				},
-				{
-					itemid:'id_bg_girl2',
-					itemtype:'bmp',
-					itemurltype:'rect',
-					itemurlvalue:'battle_100',
-					layouttype_x:'txt',
-					alignx:'center',
-					layouttype_y:'txt',
-					aligny:'top'
-				},
-				{
-					itemid:'id_bg_girl3',
-					itemtype:'bmp',
-					itemurltype:'rect',
-					itemurlvalue:'battle_100',
-					layouttype_x:'txt',
-					alignx:'right',
-					layouttype_y:'txt',
-					aligny:'top'
-				},
-				{
-					itemid:'id_bg_girl4',
-					itemtype:'bmp',
-					itemurltype:'rect',
-					itemurlvalue:'battle_100',
-					layouttype_x:'txt',
-					alignx:'left',
-					layouttype_y:'txt',
-					aligny:'center'
-				},
-				{
-					itemid:'id_bg_girl5',
-					itemtype:'bmp',
-					itemurltype:'rect',
-					itemurlvalue:'tuiguang16',
-					layouttype_x:'txt',
-					alignx:'center',
-					layouttype_y:'txt',
-					aligny:'center'
-				},
-				{
-					itemid:'id_bg_girl6',
-					itemtype:'bmp',
-					itemurltype:'rect',
-					itemurlvalue:'battle_100',
-					layouttype_x:'txt',
-					alignx:'right',
-					layouttype_y:'txt',
-					aligny:'center'
-				},
-				{
-					itemid:'id_bg_girl7',
-					itemtype:'bmp',
-					itemurltype:'rect',
-					itemurlvalue:'battle_100',
-					layouttype_x:'txt',
-					alignx:'left',
-					layouttype_y:'txt',
-					aligny:'bottom'
-				},
-				{
-					itemid:'id_bg_girl8',
-					itemtype:'bmp',
-					itemurltype:'rect',
-					itemurlvalue:'battle_100',
-					layouttype_x:'txt',
-					alignx:'center',
-					layouttype_y:'txt',
-					aligny:'bottom'
-				},
-				{
-					itemid:'id_bg_girl9',
-					itemtype:'bmp',
-					itemurltype:'rect',
-					itemurlvalue:'battle_100',
-					layouttype_x:'txt',
-					alignx:'right',
-					layouttype_y:'txt',
-					aligny:'bottom'
-				},
-				{
-					itemid:'id_bg_girl11',
-					itemtype:'bmp',
-					itemurltype:'rect',
-					itemurlvalue:'battle_100',
-					layouttype_x:'pct',
-					alignx:'center_-5',
-					layouttype_y:'txt',
-					aligny:'center'
-				},
-				{
-					itemid:'id_bg_girl12',
-					itemtype:'bmp',
-					itemurltype:'rect',
-					itemurlvalue:'battle_100',
-					layouttype_x:'pct',
-					alignx:'center_5',
-					layouttype_y:'txt',
-					aligny:'center'
-				},
-				{
-					itemid:'id_bg_girl13',
-					itemtype:'bmp',
-					itemurltype:'rect',
-					itemurlvalue:'battle_100',
-					layouttype_x:'txt',
-					alignx:'center',
-					layouttype_y:'pct',
-					aligny:'center_-10',
-				},
-				{
-					itemid:'id_bg_girl14',
-					itemtype:'bmp',
-					itemurltype:'rect',
-					itemurlvalue:'battle_100',
-					layouttype_x:'txt',
-					alignx:'center',
-					layouttype_y:'pct',
-					aligny:'center_10',
-				},
-				{
-					itemid:'id_bg_girl15',
-					itemtype:'bmp',
-					itemurltype:'rect',
-					itemurlvalue:'battle_100',
-					layouttype_x:'pct',
-					alignx:'left_15',
-					layouttype_y:'txt',
-					aligny:'center',
-				},
-				{
-					itemid:'id_bg_girl16',
-					itemtype:'bmp',
-					itemurltype:'rect',
-					itemurlvalue:'battle_100',
-					layouttype_x:'pct',
-					alignx:'right_15',
-					layouttype_y:'txt',
-					aligny:'center',
-				},
-				{
-					itemid:'id_bg_girl17',
-					itemtype:'bmp',
-					itemurltype:'rect',
-					itemurlvalue:'battle_100',
-					layouttype_x:'pct',
-					alignx:'left_25',
-					layouttype_y:'pct',
-					aligny:'top_25',
-				},
-				{
-					itemid:'id_bg_girl18',
-					itemtype:'bmp',
-					itemurltype:'rect',
-					itemurlvalue:'battle_7',
-					layouttype_x:'pct',
-					alignx:'right_25',
-					layouttype_y:'pct',
-					aligny:'bottom_25',
-				},
-				{
-					itemid:'id_bg_girl19',
-					itemtype:'bmp',
-					itemurltype:'rect',
-					itemurlvalue:'chibeijing1',
-					layouttype_x:'follow',
-					alignx:'id_bg_girl18&100',
-					layouttype_y:'follow',
-					aligny:'id_bg_girl18&-100',
-				},
-				{
-					itemid:'id_bg_girl20',
-					itemtype:'bmp',
-					itemurltype:'rect',
-					itemurlvalue:'battle_100',
-					layouttype_x:'follow',
-					alignx:'id_bg_girl18&100',
-					layouttype_y:'follow',
-					aligny:'id_bg_girl19&50',
-				},
-				/*{
-					itemid:'id_weixinlogin_btn',
-					itemtype:'btn',
-					itemurltype:'rect',
-					itemurlvalue:'login_10',
-					btnup:'login_11',
-					layouttype_x:'txt',
-					alignx:'center',
-					layouttype_y:'txt',
-					aligny:'center'
-				}*/
-			];
+	
 };
 
 
@@ -412,42 +222,7 @@ game.sounds = new function(){
 	var self = this;
 	this.sounds_url =[
 	'bg01.mp3',   //0
-	'di01.mp3',   //1
-	'di02.mp3',   //2
-	'deadth.mp3',  //3
-	'firewarn.mp3', //4
-	'turn.mp3', //5
-	'uplv.mp3',//6
-	'opendoor.mp3',//7
-	'warn01.mp3',//8
-	'fail.mp3',//9
-	'break.mp3',//10
-	'laugh.mp3',//11
-	'ting.mp3',//12
-	'shake.mp3',//13
-	'music_logo.mp3',//14
-	'verygood.mp3',//15
-	'elec.mp3',//16
-	'annihilator.mp3',//17
-	'sayno.mp3',//18
-	'ting.mp3',//19
-	'passbg.mp3',//20
-	'dang.mp3',//21
-	'dog.mp3',//22,  
-	'knock.mp3',//23
-	'fallbone.mp3',//24
-	'aiyou.mp3',//25 哎呦喂
-	'upjack.mp3',//压千斤顶 26
-	'bee.mp3',//蜜蜂 27
-	'carstart.mp3',//汽车发动 28
-	'opencardoor.mp3',//开车门 29
-	'grybox.mp3',//撬箱子 30
-	'busrun.mp3',//开汽车 31
-	'busbump.mp3',//车碰撞 32
-	'openbusdoor.mp3',//气动阀门放气33
-	'duanqiao.mp3',//一下敲击 34
-	'water3.mp3',//水龙头35
-	'dididi.mp3',//滴滴警报36
+	
 	];
 	this.play = function(index,loop){
 		if(game.configdata.MUTE)
@@ -487,13 +262,13 @@ game.layoutUi = new function(){
 					theparent.items[itemdata.itemid] = game.configdata.creatRectImg(imgsourcename,itemdata.itemurlvalue,x,y,game.scalefact).addTo(theparent);
 				}
 				if(itemdata.itemtype === 'btn'){ 
-					theparent.items[itemdata.itemid] = game.configdata.createButton(itemdata.itemurlvalue,itemdata.btnup,x,y).addTo(theparent);
+					theparent.items[itemdata.itemid] = game.configdata.createButton('ui',itemdata.itemurlvalue,itemdata.btnup,x,y).addTo(theparent);
 				}
 				if(itemdata.itemtype === 'selectbox'){ 
 					theparent.items[itemdata.itemid] = game.configdata.createSelectbox(itemdata.itemurlvalue,itemdata.selectvalue,x,y).addTo(theparent);
 				}
 				if(itemdata.itemtype === 'radiobox'){ 
-					theparent.items[itemdata.itemid] = game.configdata.createRadiotbox(itemdata.itemurlvalue,itemdata.selectvalue,x,y,itemdata.lbtext,itemdata.groupid,itemdata.ischeck,theparent).addTo(theparent);
+					theparent.items[itemdata.itemid] = game.configdata.createRadiotbox(itemdata.itemurlvalue,itemdata.selectvalue,x,y,itemdata.lbtext,itemdata.groupid,itemdata.ischeck,theparent.items).addTo(theparent);
 				}
 				if(itemdata.itemtype == 'merrygoround'){
 					theparent.items[itemdata.itemid] = game.configdata.createMerrygoround(itemdata.headimg,itemdata.itemurlvalue,x,y).addTo(theparent);
