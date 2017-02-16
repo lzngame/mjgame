@@ -31,7 +31,7 @@
 			this.on(Hilo.event.POINTER_MOVE,function(e){
 				self.tapx = e.stageX;
 				self.tapy = e.stageY;
-				self.handleSlideoutList(e.stageX,e.stageY);
+				//self.handleSlideoutList(e.stageX,e.stageY);
 			});
 			this.on(Hilo.event.POINTER_END,function(e){
 				self.tapendtime = game.clock.getSystemtime();
@@ -104,7 +104,6 @@
 			var self = this;
 			for(var i=0;i<this.slideList.length;i++){
 				var target = this.slideList[i];
-				//console.log(target);
 				if(target.hitTestPoint(this.tapstartx,this.tapstarty)){
 					if(target.hitTestPoint(x,y)){
 						console.log('in---in');
@@ -117,7 +116,6 @@
 								target.onSlideOut(this.tapstartx,this.tapstarty,this.tapx,this.tapy);
 							}
 						}
-						//self.resetSlidePoint();
 					}
 				}
 			}

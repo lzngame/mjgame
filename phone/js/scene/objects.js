@@ -224,6 +224,7 @@
 			this.init(properties);
 		},
 		init: function(properties) {
+			console.log('scroll init');
 			var mask = 	game.drawdata.drawItemRect(1,'red','rgba(0,0,0,0)',0,0,this.width,this.height,this);
 			this.on(Hilo.event.POINTER_START,function(e){
 				console.log('tap');
@@ -248,7 +249,12 @@
 				this.movetime = game.clock.getSystemtime();
 				this.endtime = this.movetime;
 			});
+			this.on('touchout',function(e){
+				console.log(e);
+				console.log('000000000000000000***********************************');
+			});
 		},
+		//如果使用自己创建的全局方法,在Basescene 里面注册启用,这是一个滑出事件 ,等同于 touchout
 		onSlideOut(x1,y1,x2,y2){
 			if(this.parent){
 				console.log('out x:%s y:%s  --- x:%s y:%s',x1,y1,x2,y2);
@@ -259,6 +265,9 @@
 				console.log('slide-h:%s v:%s',directx,directy);
 			}
 		},
+		onUpdate:function(){
+			//console.log('9999999');
+		}
 		
 	});
 	

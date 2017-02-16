@@ -415,6 +415,7 @@
 			
 			var p = panel;
 			panel.items['id_weixinlogin_exitbtn'].on(Hilo.event.POINTER_END, function(e) {
+				p.sl.off();
 				p.removeAllChildren();
 				p.removeFromParent();
 				
@@ -425,7 +426,7 @@
 				x:100,
 				y:100,
 				width:150,
-				height:300,
+				height:200,
 			}).addTo(panel);
 			
 			panel.sl = sl;
