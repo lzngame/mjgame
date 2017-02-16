@@ -224,7 +224,7 @@
 			this.init(properties);
 		},
 		init: function(properties) {
-			var mask = 	game.drawdata.drawItemRect(1,'red','green',0,0,this.width,this.height,this);
+			var mask = 	game.drawdata.drawItemRect(1,'red','rgba(0,0,0,0)',0,0,this.width,this.height,this);
 			this.on(Hilo.event.POINTER_START,function(e){
 				console.log('tap');
 				this.tapstart = true;
@@ -240,9 +240,6 @@
 				this.disx = (this.x + this.width) - this.tapx;
 				this.disy = (this.y + this.height) - this.tapy;
 				console.log('--------- %s:%s',this.disx,this.disy);
-				//console.log(e);
-				//console.log(this.hitTestPoint(e.stageX,e.stageY));
-				
 			});
 			this.on(Hilo.event.POINTER_END,function(e){
 				console.log('end **************************************');
@@ -252,44 +249,17 @@
 				this.endtime = this.movetime;
 			});
 		},
-		onHandle:function(){
-			//console.log('execute....');
-		},
-		onUpdate:function(){
-			/*if(!this.tapstart){
-				this.movetime = game.clock.getSystemtime();
-				this.endtime = this.movetime;
-				this.dis = this.movetime - this.endtime;
-				//console.log(this.dis);
-			}else{
-				this.movetime = game.clock.getSystemtime();
-				this.dis = this.movetime - this.endtime;
-			}*/
-			
-			if(this.tapstart && !this.hitTestPoint(game.tapx,game.tapy)){
-				console.log('out----------out');
-				this.tapstart = false;
-			}
-			
-			
-			//console.log(this.hitTestPoint(this.tapx,this.tapy));
-			//console.log('%s -- %s:',this.tapstart,this.dis);
-			
-			if(Math.abs(this.dis) > 200 && this.disx < 20){
-				console.log('end--------------------------------');
-				this.ismove = false;
-				this.tapstart = false;
-				this.movetime = game.clock.getSystemtime();
-				this.endtime = this.movetime;
-			}
-			//console.log('%s:%s',this.tapstart,this.ismove);
-			if(this.tapstart && this.ismove){
-				//debugger;
-				//this.tapstart = false;
-				//this.ismove = false;
-				//console.log('end2');
+		onSlideOut(x1,y1,x2,y2){
+			if(this.parent){
+				console.log('out x:%s y:%s  --- x:%s y:%s',x1,y1,x2,y2);
 			}
 		},
+		onSlide(directx,directy){
+			if(this.parent){
+				console.log('slide-h:%s v:%s',directx,directy);
+			}
+		},
+		
 	});
 	
 	

@@ -3,14 +3,137 @@
 		Extends: Hilo.Container,
 		name:'',
 		
+		tapstarttime:0,
+		tapendtime:0,
+		tapstartx:0,
+		tapstarty:0,
+		tapx:0,
+		tapy:0,
+		
+		slideList:[],
+		
 		constructor: function(properties) {
 			BaseScene.superclass.constructor.call(this, properties);
 			this.init(properties);
 		},
+		init:function(){
+			
+		},
+		initSlideEvent: function() {
+			var self = this;
+			
+			this.on(Hilo.event.POINTER_START,function(e){
+				self.tapstarttime = game.clock.getSystemtime();
+				self.tapstartx = e.stageX;
+				self.tapstarty = e.stageY;
+				self.resetSlideList();
+			});
+			this.on(Hilo.event.POINTER_MOVE,function(e){
+				self.tapx = e.stageX;
+				self.tapy = e.stageY;
+				self.handleSlideoutList(e.stageX,e.stageY);
+			});
+			this.on(Hilo.event.POINTER_END,function(e){
+				self.tapendtime = game.clock.getSystemtime();
+				var delay = self.tapendtime - self.tapstarttime;
+				var dis_x = e.stageX - self.tapstartx;
+				var dis_y = e.stageY - self.tapstarty;
+				if(delay < 300){
+					var directx = 0;
+					if(Math.abs(dis_x) > 20){
+						var directH = '向右滑动';
+						if(dis_x > 0){
+							directx = 1;
+							self.onSlideRight(self.tapstartx,self.tapstarty,e.stageX,e.stageY);
+						}else{
+							directH = '向左滑动';
+							directx = 2;
+							self.onSlideLeft(self.tapstartx,self.tapstarty,e.stageX,e.stageY);
+						}
+						console.log(directH);
+					}
+					var directy = 0;
+					if(Math.abs(dis_y) > 20){
+						var directV = '向下滑动';
+						if(dis_y > 0){
+							directy = 1;
+							self.onSlideDown(self.tapstartx,self.tapstarty,e.stageX,e.stageY);
+						}else{
+							directV = '向上滑动';
+							directy = 2;
+							self.onSlideUp(self.tapstartx,self.tapstarty,e.stageX,e.stageY);
+						}
+						console.log(directV);
+					}
+					if(directx + directy > 0){
+						self.handleSlideList(directx,directy);
+					}
+				} 
+				self.resetSlidePoint();
+			});
+		},
+		resetSlidePoint:function(){
+			this.tapstartx = -1;
+			this.tapstarty = -1;
+			this.tapx = -1;
+			this.tapy = -1;
+			this.tapstarttime = 0;
+			this.tapendtime = 0;
+		},
+		resetSlideList:function(){
+			for(var i=0;i<this.slideList.length;i++){
+				var target = this.slideList[i];
+				target.ischeck = true;
+			}
+		},
 		fitPhonesize:function(){
 			
 		},
-		
+		handleSlideList:function(directx,directy){
+			var self = this;
+			for(var i=0;i<this.slideList.length;i++){
+				var target = this.slideList[i];
+				if(target.hitTestPoint(this.tapstartx,this.tapstarty)){
+					if(target.onSlide){
+						target.onSlide(directx,directy);
+					}
+				}
+			}
+		},
+		handleSlideoutList:function(x,y){
+			var self = this;
+			for(var i=0;i<this.slideList.length;i++){
+				var target = this.slideList[i];
+				//console.log(target);
+				if(target.hitTestPoint(this.tapstartx,this.tapstarty)){
+					if(target.hitTestPoint(x,y)){
+						console.log('in---in');
+					}else{
+						if(target.ischeck){
+
+							target.ischeck = false;
+							if(target.onSlideOut){
+								console.log('out---out--------------------------------------out');
+								target.onSlideOut(this.tapstartx,this.tapstarty,this.tapx,this.tapy);
+							}
+						}
+						//self.resetSlidePoint();
+					}
+				}
+			}
+		},
+		onSlideLeft:function(x1,y1,x2,y2){
+			
+		},
+		onSlideRight:function(x1,y1,x2,y2){
+			
+		},
+		onSlideUp:function(x1,y1,x2,y2){
+			
+		},
+		onSlideDown:function(x1,y1,x2,y2){
+			
+		},
 		deactive: function() {
 			this.destory();
 		},

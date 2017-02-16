@@ -243,9 +243,11 @@
 	
 	
 	var MainScene = ns.MainScene = Hilo.Class.create({
-		Extends: Hilo.Container,
+		Extends: game.BaseScene,
 		name: game.configdata.SCENE_NAMES.main,
 		items:null,
+		
+		
 		
 		constructor: function(properties) {
 			MainScene.superclass.constructor.call(this, properties);
@@ -288,13 +290,13 @@
 				console.log('create a room');
 				var prompt = self.createPromptpanel('login_6',true,true);
 				prompt.addTo(self);
+				self.slideList.push(prompt.sl);
+				console.log(self.getNumChildren());
 			});
 			
-			//game.layoutUi.layoutPanelData(game.sceneuidata.weixinlogin_uidata[0],game.screenWidth,game.screenHeight,1,'bg',this);
-			//game.layoutUi.layoutPanelData(game.sceneuidata.weixinlogin_uidata[1],game.screenWidth,game.screenHeight,1,'ui',this);
-			
-			
 			game.layoutUi.drawStepLine(game.screenWidth,game.screenHeight,this);
+			
+			this.initSlideEvent();
 		},
 		
 		createPromptpanel:function(bgname,ishalf,ismodal){
@@ -413,22 +415,27 @@
 			
 			var p = panel;
 			panel.items['id_weixinlogin_exitbtn'].on(Hilo.event.POINTER_END, function(e) {
+				p.removeAllChildren();
 				p.removeFromParent();
+				
+				console.log(p.getNumChildren());
 			});
 			
-			new game.Scrollwindow({
+			var sl = new game.Scrollwindow({
 				x:100,
 				y:100,
 				width:150,
 				height:300,
 			}).addTo(panel);
 			
+			panel.sl = sl;
+			
 			return panel;
 		},
 		
 		deactive: function() {
 			var scene = this;
-			game.sounds.stop(20);
+			this.off();
 			Hilo.Tween.to(this, {
 					y: -this.height,
 				}, {

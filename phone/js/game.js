@@ -36,25 +36,7 @@
 		winHeight:0,
 		scalefact:1,
 		
-		tapstarttime:0,
-		tapendtime:0,
-		tapstartx:0,
-		tapstarty:0,
-		tapx:0,
-		tapy:0,
 		
-		
-		uiscene:null,
-		drdialog:null,
-		helpbtn:null,
-		headPanel:null,
-		 
-		notepanel:null,
-		toolippanel:null,
-		toolspanel:null,
-		soundmute:null,
-		
-		boydata:null,
 		init: function() {
 			var browserInfo = Hilo.browser;
 			var winWidth = window.innerWidth || document.documentElement.clientWidth;
@@ -114,32 +96,7 @@
 			this.stage.enableDOMEvent(Hilo.event.POINTER_START, true);
 			this.stage.enableDOMEvent(Hilo.event.POINTER_MOVE, true);
 			this.stage.enableDOMEvent(Hilo.event.POINTER_END, true);
-			var self = this;
 			
-			this.stage.on(Hilo.event.POINTER_START,function(e){
-				self.tapstarttime = game.clock.getSystemtime();
-				self.tapstartx = e.stageX;
-				self.tapstarty = e.stageY;
-			});
-			this.stage.on(Hilo.event.POINTER_MOVE,function(e){
-				//console.log('move');
-				
-				//console.log(e);
-				//console.log(this.hitTestPoint(e.stageX,e.stageY));
-				self.tapx = e.stageX;
-				self.tapy = e.stageY;
-				
-			});
-			this.stage.on(Hilo.event.POINTER_END,function(e){
-				//console.log('end **************************************');
-				self.tapendtime = game.clock.getSystemtime();
-				var delay = self.tapendtime - self.tapstarttime;
-				var dis_x = Math.abs(e.stageX - self.tapstartx);
-				var dis_y = Math.abs(e.stageY - self.tapstarty);
-				if(delay < 300 && (dis_x > 20 || dis_y > 20)){
-					console.log('滑动..........:%s:%s:%s',delay,dis_x,dis_y);
-				}
-			});
 		},
 		initcanvas: function(w, h) {
 			var canvas = document.getElementById(game.configdata.CANVASID);
