@@ -226,12 +226,12 @@
 		init: function(properties) {
 			var mask = 	game.drawdata.drawItemRect(1,'red','green',0,0,this.width,this.height,this);
 			this.on(Hilo.event.POINTER_START,function(e){
-				//console.log('tap');
+				console.log('tap');
 				this.tapstart = true;
 				this.movetime = game.clock.getSystemtime();
 			});
 			this.on(Hilo.event.POINTER_MOVE,function(e){
-				//console.log('move');
+				console.log('move');
 				this.ismove = true;
 				this.movetime = game.clock.getSystemtime();
 				this.endtime = this.movetime;
@@ -256,7 +256,7 @@
 			//console.log('execute....');
 		},
 		onUpdate:function(){
-			if(!this.tapstart){
+			/*if(!this.tapstart){
 				this.movetime = game.clock.getSystemtime();
 				this.endtime = this.movetime;
 				this.dis = this.movetime - this.endtime;
@@ -264,9 +264,15 @@
 			}else{
 				this.movetime = game.clock.getSystemtime();
 				this.dis = this.movetime - this.endtime;
+			}*/
+			
+			if(this.tapstart && !this.hitTestPoint(game.tapx,game.tapy)){
+				console.log('out----------out');
+				this.tapstart = false;
 			}
 			
-			console.log(this.hitTestPoint(this.tapx,this.tapy));
+			
+			//console.log(this.hitTestPoint(this.tapx,this.tapy));
 			//console.log('%s -- %s:',this.tapstart,this.dis);
 			
 			if(Math.abs(this.dis) > 200 && this.disx < 20){

@@ -124,6 +124,8 @@
 				
 				//console.log(e);
 				//console.log(this.hitTestPoint(e.stageX,e.stageY));
+				self.tapx = e.stageX;
+				self.tapy = e.stageY;
 				
 			});
 			this.stage.on(Hilo.event.POINTER_END,function(e){
