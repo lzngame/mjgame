@@ -82,6 +82,18 @@ game.configdata = new function(){
 		return result;
 	}
 	
+	self.createScalebutton = function(imgsource,rectname,x,y){
+		var rect = game.configdata.getPngRect(rectname,imgsource);
+		return new game.ScaleButton({
+				image:game.getImg(imgsource),
+				rect: rect,
+   				x:x,
+   				y:y,
+   				scaleX:game.scalefact,
+   				scaleY:game.scalefact,
+			});
+	}
+	
 	self.createButton = function(imgsource,uprectname,downrectname,x,y){
 		var uprect = game.configdata.getPngRect(uprectname);
 		var downrect = game.configdata.getPngRect(downrectname);
@@ -263,6 +275,9 @@ game.layoutUi = new function(){
 				}
 				if(itemdata.itemtype === 'btn'){ 
 					theparent.items[itemdata.itemid] = game.configdata.createButton('ui',itemdata.itemurlvalue,itemdata.btnup,x,y).addTo(theparent);
+				}
+				if(itemdata.itemtype === 'scalebtn'){ 
+					theparent.items[itemdata.itemid] = game.configdata.createScalebutton('ui',itemdata.itemurlvalue,x,y).addTo(theparent);
 				}
 				if(itemdata.itemtype === 'selectbox'){ 
 					theparent.items[itemdata.itemid] = game.configdata.createSelectbox(itemdata.itemurlvalue,itemdata.selectvalue,x,y).addTo(theparent);

@@ -445,6 +445,33 @@
 			sl.scaleY = game.scalefact;
 			panel.sl = sl;
 			
+			new game.AlphaButton({
+				image:game.getImg('ui'),
+				rect:game.configdata.getPngRect('login_bg96','ui'),
+				x:530,
+				y:200,
+				//scaleX:0.7,
+				//scaleY:0.7,
+				handler:function(){
+					console.log('test alpha button');
+				}
+			}).addTo(panel);
+			
+			
+			new game.ScaleButton({
+				image:game.getImg('ui'),
+				rect:game.configdata.getPngRect('login_bg96','ui'),
+				x:530,
+				y:200,
+				addscale:0.2,
+				alpha:0.3,
+				scaleX:0.4,
+				scaleY:0.4,
+				handler:function(){
+					console.log('test alpha button');
+				}
+			}).addTo(panel);
+			
 			return panel;
 		},
 		

@@ -352,4 +352,80 @@
 	});
 	
 	
+	//AlphaButton ---- 透明度改变效果的按钮
+	var AlphaButton = ns.AlphaButton = Hilo.Class.create({
+		Extends: Hilo.Bitmap,
+		name:'AlphaButton',
+		handler:null,
+		buttondata:null,
+		constructor: function(properties) {
+			AlphaButton.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		
+		init: function(properties) {
+			this.on(Hilo.event.POINTER_START,function(e){
+				this.alpha = 0.7;
+			});
+			this.on(Hilo.event.POINTER_MOVE,function(e){
+				
+			});
+			this.on(Hilo.event.POINTER_END,function(e){
+				this.alpha = 1;
+				
+				if(this.handler){
+					this.handler(this.buttondata);
+				}
+			});
+			this.on('touchout',function(e){
+				this.alpha = 1;
+			});
+		},
+		
+		
+	});
+	//ScaleButton ---- Scale改变效果的按钮
+	var ScaleButton = ns.ScaleButton = Hilo.Class.create({
+		Extends: Hilo.Bitmap,
+		name:'ScaleButton',
+		handler:null,
+		addscale:0.2,
+		currentScale:1,
+		buttondata:null,
+		
+		constructor: function(properties) {
+			ScaleButton.superclass.constructor.call(this, properties);
+			this.init(properties);
+			this.currentScale = this.scaleX;
+			console.log(this.currentScale);
+		},
+		
+		init: function(properties) {
+			this.pivotX = this.width/2;
+			this.pivotY = this.height/2;
+			
+			
+			this.on(Hilo.event.POINTER_START,function(e){
+				this.scaleX = (this.currentScale + this.addscale);
+				this.scaleY = (this.currentScale + this.addscale);
+			});
+			this.on(Hilo.event.POINTER_MOVE,function(e){
+				
+			});
+			this.on(Hilo.event.POINTER_END,function(e){
+				this.scaleX = this.currentScale;
+				this.scaleY = this.currentScale;
+				if(this.handler){
+					this.handler(this.buttondata);
+				}
+			});
+			this.on('touchout',function(e){
+				this.scaleX = this.currentScale;
+				this.scaleY = this.currentScale;
+			});
+		},
+		
+		
+	});
+	
 })(window.game);

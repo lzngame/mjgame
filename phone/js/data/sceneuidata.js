@@ -67,73 +67,67 @@ game.sceneuidata = new function(){
 			[
 				{
 					itemid:'id_mainscene_expandable_btn',
-					itemtype:'btn',
+					itemtype:'scalebtn',
 					itemurlvalue:'tuiguang15',
 					btnup:'tuiguang15',
 					layouttype_x:'pct',
 					alignx:'right_34',
 					layouttype_y:'pct',
-					aligny:'top_2'
+					aligny:'top_8'
 				},
 				{
 					itemid:'id_mainscene_share_btn',
-					itemtype:'btn',
+					itemtype:'scalebtn',
 					itemurlvalue:'1',
-					btnup:'1',
 					layouttype_x:'pct',
 					alignx:'right_26',
 					layouttype_y:'pct',
-					aligny:'top_2'
+					aligny:'top_8'
 				},
 				{
 					itemid:'id_mainscene_score_btn',
-					itemtype:'btn',
+					itemtype:'scalebtn',
 					itemurlvalue:'login_bg14',
-					btnup:'login_bg14',
 					layouttype_x:'pct',
 					alignx:'right_18',
 					layouttype_y:'pct',
-					aligny:'top_2'
+					aligny:'top_8'
 				},
 				{
 					itemid:'id_mainscene_help_btn',
-					itemtype:'btn',
+					itemtype:'scalebtn',
 					itemurlvalue:'battle_5',
-					btnup:'battle_5',
 					layouttype_x:'pct',
 					alignx:'right_10',
 					layouttype_y:'pct',
-					aligny:'top_2'
+					aligny:'top_8'
 				},
 				{
 					itemid:'id_mainscene_setting_btn',
-					itemtype:'btn',
+					itemtype:'scalebtn',
 					itemurlvalue:'battle_2',
-					btnup:'battle_2',
 					layouttype_x:'pct',
 					alignx:'right_2',
 					layouttype_y:'pct',
-					aligny:'top_2'
+					aligny:'top_8'
 				},
 				{
 					itemid:'id_mainscene_createroom_btn',
-					itemtype:'btn',
+					itemtype:'scalebtn',
 					itemurlvalue:'5',
-					btnup:'6',
 					layouttype_x:'pct',
-					alignx:'left_25',
+					alignx:'left_45',
 					layouttype_y:'pct',
-					aligny:'top_25'
+					aligny:'top_50'
 				},
 				{
 					itemid:'id_mainscene_enterroom_btn',
-					itemtype:'btn',
+					itemtype:'scalebtn',
 					itemurlvalue:'6',
-					btnup:'5',
 					layouttype_x:'pct',
-					alignx:'left_63',
+					alignx:'left_80',
 					layouttype_y:'pct',
-					aligny:'top_25'
+					aligny:'top_50'
 				},
 				{
 					itemid:'id_mainscene_merrygoround_bottom',
