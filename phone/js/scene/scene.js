@@ -132,7 +132,7 @@
 				game.loadqueue.off('complete');
 				game.loadqueue.off('load');
 				
-				game.switchScene(game.configdata.SCENE_NAMES.weixinlogin);
+				game.switchScene(game.configdata.SCENE_NAMES.main);
 			});
 			game.loadqueue.start();
 		},
@@ -425,9 +425,10 @@
 			var sl = new game.Scrollwindow({
 				x:100,
 				y:100,
-				width:150,
-				height:200,
+				width:180,
+				height:260,
 			}).addTo(panel);
+			sl.addImgs(['img/loadbanner/activity1.png','img/loadbanner/activity2.png','img/loadbanner/activity3.png','img/loadbanner/activity4.png'],163,249);
 			
 			panel.sl = sl;
 			

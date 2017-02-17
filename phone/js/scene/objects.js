@@ -209,49 +209,102 @@
 	var Scrollwindow = ns.Scrollwindow = Hilo.Class.create({
 		Extends: Hilo.Container,
 		name:'Scrollwindow',
-		speed:3,
-		ismove:false,
+		imgs:0,
+		imgpanel:null,
+		roundmask:null,
+		currentIndex:0,
 		tapstart:false,
-		movetime:0,
-		endtime:0,
-		dis:0,
+		tapstartx:0,
+		tapstarty:0,
 		tapx:0,
 		tapy:0,
 		disx:0,
 		disy:0,
+		slidedisx:0,
+		space:5,
+		itemwidth:0,
 		constructor: function(properties) {
 			Scrollwindow.superclass.constructor.call(this, properties);
 			this.init(properties);
 		},
+		addImgs:function(imglist,w,h){
+			this.itemwidth = this.space + w;
+			this.imgs = imglist.length;
+			for(var i=0;i<imglist.length;i++){
+				var imgurl = imglist[i];
+				var img = new Hilo.Bitmap({
+					image:imgurl,
+					x:i*(this.itemwidth),
+					y:this.height/2 - h/2,
+				}).addTo(this.imgpanel);
+			}
+		},
 		init: function(properties) {
 			console.log('scroll init');
-			var mask = 	game.drawdata.drawItemRect(1,'red','rgba(0,0,0,0)',0,0,this.width,this.height,this);
+			var bg = 	game.drawdata.drawItemRoundrect(1,'red','rgba(0,0,0,0)',0,0,this.width,this.height,5,this);
+			this.roundmask = 	game.drawdata.drawItemRoundrect(1,'rgba(0,0,0,0)','rgba(0,0,0,0)',(this.width-150)/2,(this.height-250)/2,150,250,5,this);
+			this.imgpanel = new Hilo.Container().addTo(this);
+			this.imgpanel.pointerEnabled = false;
+			this.imgpanel.mask = this.roundmask;
 			this.on(Hilo.event.POINTER_START,function(e){
-				console.log('tap');
 				this.tapstart = true;
-				this.movetime = game.clock.getSystemtime();
+				this.tapstartx = e.stageX;
+				this.tapstarty = e.stageY;
+				this.tapstart = true;
+				this.disx = e.stageX - this.x - this.imgpanel.x;
+				this.disy = e.stageY - this.y - this.imgpanel.y;
 			});
 			this.on(Hilo.event.POINTER_MOVE,function(e){
-				console.log('move');
-				this.ismove = true;
-				this.movetime = game.clock.getSystemtime();
-				this.endtime = this.movetime;
-				this.tapx = e.stageX;
-				this.tapy = e.stageY;
-				this.disx = (this.x + this.width) - this.tapx;
-				this.disy = (this.y + this.height) - this.tapy;
-				console.log('--------- %s:%s',this.disx,this.disy);
+				/*if(this.imgpanel.x > 50){
+					this.tapstart = false;
+					this.autoSlideTo(0,200);
+				}else{
+					if(this.tapstart){
+						var x = e.stageX - this.x;
+						var y = e.stageY - this.y;
+						this.imgpanel.x = x - this.disx;
+					}
+				}*/
+				if(this.tapstart){
+					var x = e.stageX - this.x;
+					var y = e.stageY - this.y;
+					this.imgpanel.x = x - this.disx;
+					this.slidedisx = e.stageX - this.tapstartx;
+					console.log(this.slidedisx);
+				}
 			});
 			this.on(Hilo.event.POINTER_END,function(e){
 				console.log('end **************************************');
-				this.ismove = false;
+				
+				if(Math.abs(this.slidedisx) > 60){
+					if(this.slidedisx < 0){
+						this.currentIndex++;
+						if(this.currentIndex > this.imgs-1){
+							this.currentIndex = this.imgs -1;
+						}
+					}else{
+						this.currentIndex--;
+						if(this.currentIndex < 0){
+							this.currentIndex = 0;
+						}
+					}
+				}
+				this.autoSlideTo(-this.itemwidth * this.currentIndex,200);
 				this.tapstart = false;
-				this.movetime = game.clock.getSystemtime();
-				this.endtime = this.movetime;
+				this.disx = 0;
+				this.slidedisx = 0;
 			});
 			this.on('touchout',function(e){
-				console.log(e);
+				
 				console.log('000000000000000000***********************************');
+			});
+		},
+		autoSlideTo:function(targetx,durationtime){
+			var self = this;
+			new Hilo.Tween.to(self.imgpanel,{
+				x:targetx
+			},{
+				duration:durationtime,
 			});
 		},
 		//如果使用自己创建的全局方法,在Basescene 里面注册启用,这是一个滑出事件 ,等同于 touchout
