@@ -1,0 +1,10 @@
+CACHE MANIFEST
+# 2017-02-17 v1.0.0
+/css/style.css
+
+
+NETWORK:
+/js/*
+
+FALLBACK:
+/html5/ /404.html

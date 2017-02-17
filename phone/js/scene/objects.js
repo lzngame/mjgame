@@ -223,6 +223,10 @@
 		slidedisx:0,
 		space:5,
 		itemwidth:0,
+		
+		autoSumtime:0,
+		autoInterval:0,
+		autoDirect:false,
 		constructor: function(properties) {
 			Scrollwindow.superclass.constructor.call(this, properties);
 			this.init(properties);
@@ -230,6 +234,7 @@
 		addImgs:function(imglist,w,h){
 			this.itemwidth = this.space + w;
 			this.imgs = imglist.length;
+
 			for(var i=0;i<imglist.length;i++){
 				var imgurl = imglist[i];
 				var img = new Hilo.Bitmap({
@@ -237,6 +242,12 @@
 					x:i*(this.itemwidth),
 					y:this.height/2 - h/2,
 				}).addTo(this.imgpanel);
+				var btn = game.configdata.createButton('ui','login_13','login_14',img.x,img.y).addTo(this.imgpanel);
+				btn.pointerEnabled = true;
+				img.pointerEnabled = false;
+				btn.on(Hilo.event.POINTER_END,function(e){
+					console.log(this.x);
+				});
 			}
 		},
 		init: function(properties) {
@@ -244,7 +255,7 @@
 			var bg = 	game.drawdata.drawItemRoundrect(1,'red','rgba(0,0,0,0)',0,0,this.width,this.height,5,this);
 			this.roundmask = 	game.drawdata.drawItemRoundrect(1,'rgba(0,0,0,0)','rgba(0,0,0,0)',(this.width-150)/2,(this.height-250)/2,150,250,5,this);
 			this.imgpanel = new Hilo.Container().addTo(this);
-			this.imgpanel.pointerEnabled = false;
+			//this.imgpanel.pointerEnabled = false;
 			this.imgpanel.mask = this.roundmask;
 			this.on(Hilo.event.POINTER_START,function(e){
 				this.tapstart = true;
@@ -275,8 +286,15 @@
 			});
 			this.on(Hilo.event.POINTER_END,function(e){
 				console.log('end **************************************');
-				
-				if(Math.abs(this.slidedisx) > 60){
+				this.slideEnd();
+			});
+			this.on('touchout',function(e){
+				this.slideEnd();
+				console.log('000000000000000000***********************************');
+			});
+		},
+		slideEnd:function(){
+			if(Math.abs(this.slidedisx) > 60){
 					if(this.slidedisx < 0){
 						this.currentIndex++;
 						if(this.currentIndex > this.imgs-1){
@@ -289,15 +307,10 @@
 						}
 					}
 				}
-				this.autoSlideTo(-this.itemwidth * this.currentIndex,200);
-				this.tapstart = false;
-				this.disx = 0;
-				this.slidedisx = 0;
-			});
-			this.on('touchout',function(e){
-				
-				console.log('000000000000000000***********************************');
-			});
+			this.autoSlideTo(-this.itemwidth * this.currentIndex,200);
+			this.tapstart = false;
+			this.disx = 0;
+			this.slidedisx = 0;
 		},
 		autoSlideTo:function(targetx,durationtime){
 			var self = this;
@@ -319,7 +332,21 @@
 			}
 		},
 		onUpdate:function(){
-			//console.log('9999999');
+			this.autoInterval++;
+			if(this.autoInterval > 300){
+				this.autoInterval = 0;
+				if(this.currentIndex == 0 || this.currentIndex == this.imgs-1){
+					this.autoDirect = !this.autoDirect;
+				}
+				
+				if(this.autoDirect){
+					this.slidedisx = 65;
+				}else{
+					this.slidedisx = -65;
+				}
+				this.slideEnd();
+				console.log(this.autoDirect);
+			}
 		}
 		
 	});

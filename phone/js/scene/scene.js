@@ -132,7 +132,7 @@
 				game.loadqueue.off('complete');
 				game.loadqueue.off('load');
 				
-				game.switchScene(game.configdata.SCENE_NAMES.main);
+				game.switchScene(game.configdata.SCENE_NAMES.weixinlogin);
 			});
 			game.loadqueue.start();
 		},
@@ -285,6 +285,17 @@
 			});
 			
 			game.layoutUi.layoutPanelData(game.sceneuidata.main_uidata[1],game.screenWidth,game.screenHeight,1,'ui',this);
+			var sl = new game.Scrollwindow({
+				x:10,
+				y:game.screenHeight/2 - (260*game.scalefact)/2,
+				width:180,
+				height:260,
+			}).addTo(this);
+			sl.addImgs(['img/loadbanner/activity1.png','img/loadbanner/activity2.png','img/loadbanner/activity3.png','img/loadbanner/activity4.png'],163,249);
+			sl.scaleX = game.scalefact;
+			sl.scaleY = game.scalefact;
+			
+			
 			var self = this;
 			this.items['id_mainscene_createroom_btn'].on(Hilo.event.POINTER_END, function(e) {
 				console.log('create a room');
@@ -427,9 +438,11 @@
 				y:100,
 				width:180,
 				height:260,
+				
 			}).addTo(panel);
 			sl.addImgs(['img/loadbanner/activity1.png','img/loadbanner/activity2.png','img/loadbanner/activity3.png','img/loadbanner/activity4.png'],163,249);
-			
+			sl.scaleX = game.scalefact;
+			sl.scaleY = game.scalefact;
 			panel.sl = sl;
 			
 			return panel;

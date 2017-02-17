@@ -26,7 +26,6 @@
 				self.tapstarttime = game.clock.getSystemtime();
 				self.tapstartx = e.stageX;
 				self.tapstarty = e.stageY;
-				self.resetSlideList();
 			});
 			this.on(Hilo.event.POINTER_MOVE,function(e){
 				self.tapx = e.stageX;
@@ -80,12 +79,7 @@
 			this.tapstarttime = 0;
 			this.tapendtime = 0;
 		},
-		resetSlideList:function(){
-			for(var i=0;i<this.slideList.length;i++){
-				var target = this.slideList[i];
-				target.ischeck = true;
-			}
-		},
+		
 		fitPhonesize:function(){
 			
 		},
@@ -100,26 +94,7 @@
 				}
 			}
 		},
-		handleSlideoutList:function(x,y){
-			var self = this;
-			for(var i=0;i<this.slideList.length;i++){
-				var target = this.slideList[i];
-				if(target.hitTestPoint(this.tapstartx,this.tapstarty)){
-					if(target.hitTestPoint(x,y)){
-						console.log('in---in');
-					}else{
-						if(target.ischeck){
-
-							target.ischeck = false;
-							if(target.onSlideOut){
-								console.log('out---out--------------------------------------out');
-								target.onSlideOut(this.tapstartx,this.tapstarty,this.tapx,this.tapy);
-							}
-						}
-					}
-				}
-			}
-		},
+		
 		onSlideLeft:function(x1,y1,x2,y2){
 			
 		},
