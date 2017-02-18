@@ -266,16 +266,6 @@
 				this.disy = e.stageY - this.y - this.imgpanel.y;
 			});
 			this.on(Hilo.event.POINTER_MOVE,function(e){
-				/*if(this.imgpanel.x > 50){
-					this.tapstart = false;
-					this.autoSlideTo(0,200);
-				}else{
-					if(this.tapstart){
-						var x = e.stageX - this.x;
-						var y = e.stageY - this.y;
-						this.imgpanel.x = x - this.disx;
-					}
-				}*/
 				if(this.tapstart){
 					var x = e.stageX - this.x;
 					var y = e.stageY - this.y;
@@ -345,10 +335,8 @@
 					this.slidedisx = -65;
 				}
 				this.slideEnd();
-				console.log(this.autoDirect);
 			}
 		}
-		
 	});
 	
 	
@@ -384,6 +372,7 @@
 		
 		
 	});
+	
 	//ScaleButton ---- Scale改变效果的按钮
 	var ScaleButton = ns.ScaleButton = Hilo.Class.create({
 		Extends: Hilo.Bitmap,
@@ -424,8 +413,96 @@
 				this.scaleY = this.currentScale;
 			});
 		},
+	});
+	
+	//IconButton ---- 普通按钮上面居中一个Icon
+	var IconButton = ns.IconButton = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name:'IconButton',
+		imgsource:null,
+		btnupimg:null,
+		btndownimg:null,
+		iconimg:null,
+		bgbtn:null,
+		handler:null,
+		buttondata:null,
 		
+		constructor: function(properties) {
+			IconButton.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
 		
+		init: function(properties) {
+			var img = game.getImg(this.imgsource);
+			var uprect = game.configdata.getPngRect(this.btnupimg,this.imgsource);
+			var downrect = game.configdata.getPngRect(this.btndownimg,this.imgsource);
+			this.width = uprect[2];
+			this.height = uprect[3];
+			this.bgbtn = new Hilo.Button({
+				image:img,
+				upState: {rect:uprect},
+  				overState: {rect:downrect},
+  				downState: {rect:downrect},
+   				disabledState: {rect:downrect},
+			}).addTo(this);
+			var imgrect = game.configdata.getPngRect(this.iconimg,this.imgsource);
+			var frontimg = new Hilo.Bitmap({
+				image:img,
+				rect:imgrect,
+				x:(uprect[2]-imgrect[2])/2,
+				y:(uprect[3]-imgrect[3])/2,
+			}).addTo(this);
+			frontimg.pointerEnabled = false;
+			var self = this;
+			this.bgbtn.on(Hilo.event.POINTER_END,function(e){
+				if(self.handler){
+					self.handler(self.buttondata);
+				}
+			});
+		},
+	});
+	
+	//IconNumber ---- 有背景的数字Icon
+	var IconNumber = ns.IconNumber = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name:'IconNumber',
+		imgsource:null,
+		bgimg:null,
+		numimg:null,
+		defaultvalue:-1,
+		numsimglist:null,
+		
+		constructor: function(properties) {
+			IconNumber.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		
+		init: function(properties) {
+			var img = game.getImg(this.imgsource);
+			rect = game.configdata.getPngRect(this.bgimg,this.imgsource);
+			this.width = rect[2];
+			this.height = rect[3];
+			
+			new Hilo.Bitmap({
+				image:img,
+				rect:rect,
+			}).addTo(this);
+			this.numimg = new Hilo.Bitmap().addTo(this);
+		},
+		setNum:function(n){
+			this.defaultvalue = n;
+			var item = this.numsimglist[n];
+			var img = game.getImg(this.imgsource);
+			rect = game.configdata.getPngRect(item,this.imgsource);
+			this.numimg.setImage(img,rect);
+			this.numimg.visible = true;
+			this.numimg.x = (this.width - rect[2])/2;
+			this.numimg.y = (this.height - rect[3])/2;
+		},
+		clear:function(){
+			this.numimg.visible = false;
+			this.defaultvalue = -1;
+		}
 	});
 	
 })(window.game);
