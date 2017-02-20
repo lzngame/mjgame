@@ -23,12 +23,12 @@ game.sceneuidata = new function(){
 				{
 					itemid:'id_weixinlogin_btn',
 					itemtype:'btn',
-					itemurlvalue:'login_10',
-					btnup:'login_11',
+					itemurlvalue:'login_1',
+					btnup:'login_2',
 					layouttype_x:'txt',
 					alignx:'center',
-					layouttype_y:'txt',
-					aligny:'center'
+					layouttype_y:'pct',
+					aligny:'top_62'
 				},
 				{
 					itemid:'id_agreeweixinlogin_selectbox',
@@ -96,7 +96,7 @@ game.sceneuidata = new function(){
 				{
 					itemid:'id_mainscene_help_btn',
 					itemtype:'scalebtn',
-					itemurlvalue:'battle_5',
+					itemurlvalue:'login_bg14',
 					layouttype_x:'pct',
 					alignx:'right_10',
 					layouttype_y:'pct',
@@ -105,7 +105,7 @@ game.sceneuidata = new function(){
 				{
 					itemid:'id_mainscene_setting_btn',
 					itemtype:'scalebtn',
-					itemurlvalue:'battle_2',
+					itemurlvalue:'login_bg14',
 					layouttype_x:'pct',
 					alignx:'right_2',
 					layouttype_y:'pct',

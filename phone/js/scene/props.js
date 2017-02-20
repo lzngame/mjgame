@@ -105,6 +105,8 @@
 		name:'InputNumpanel',
 		numpanel:null,
 		inputpanel:null,
+		vspace:5,
+		numcount:6,
 		
 		constructor: function(properties) {
 			InputNumpanel.superclass.constructor.call(this, properties);
@@ -117,25 +119,29 @@
 			['login_bg59',7],['login_bg60',8],['login_bg61',9],
 			['login_bg51',100],['login_bg62',0],['login_bg52',200],
 				];
+			this.numpanel = new game.NumbersPanel({
+				imgsource:'ui',
+				numcount:this.numcount,
+				bgimg:'login_bg48',
+				numsimglist:['whiteNum0','whiteNum1','whiteNum2','whiteNum3','whiteNum4','whiteNum5','whiteNum6','whiteNum7','whiteNum8','whiteNum9'],
+			}).addTo(this);
 			this.inputpanel = new game.NumbersKeyPanel({
 				imgsource:'ui',
 				btnupimg:'login_bg49',
 				btndownimg:'login_bg50',
 				btns:btns,
-				x:300,
-				y:10,
 				btnhandle:this.test,
+				y:this.vspace+this.numpanel.height,
 				
 			}).addTo(this);
-			
-			this.numpanel = new game.NumbersPanel({
-				imgsource:'ui',
-				x:50,
-				y:50,
-				numcount:9,
-				bgimg:'login_bg48',
-				numsimglist:['whiteNum0','whiteNum1','whiteNum2','whiteNum3','whiteNum4','whiteNum5','whiteNum6','whiteNum7','whiteNum8','whiteNum9'],
-			}).addTo(this);
+			if(this.inputpanel.width > this.numpanel.width){
+				this.width = this.inputpanel.width;
+			}else{
+				this.width = this.numpanel.width;
+			}
+			this.height = this.inputpanel.height + this.vspace +this.numpanel.height;
+			this.inputpanel.x = (this.width - this.inputpanel.width)/2;
+			this.numpanel.x = (this.width - this.numpanel.width)/2;
 		},
 		test:function(n){
 			var panel = this.parent.parent;

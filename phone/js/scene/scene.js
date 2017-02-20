@@ -304,6 +304,12 @@
 				self.slideList.push(prompt.sl);
 				console.log(self.getNumChildren());
 			});
+			this.items['id_mainscene_enterroom_btn'].on(Hilo.event.POINTER_END, function(e) {
+				console.log('create a room');
+				var prompt = self.createPromptpanel2('login_6',true,true);
+				prompt.addTo(self);
+				console.log(self.getNumChildren());
+			});
 			
 			game.layoutUi.drawStepLine(game.screenWidth,game.screenHeight,this);
 			
@@ -317,10 +323,19 @@
 					itemtype:'btn',
 					itemurlvalue:'login_13',
 					btnup:'login_14',
-					layouttype_x:'pct',
-					alignx:'left_75',
-					layouttype_y:'pct',
-					aligny:'top_25'
+					layouttype_x:'txt',
+					alignx:'right',
+					layouttype_y:'txt',
+					aligny:'top'
+				},
+				{
+					itemid:'id_title_creat',
+					itemtype:'bmp',
+					itemurlvalue:'login_bg6',
+					layouttype_x:'txt',
+					alignx:'center',
+					layouttype_y:'txt',
+					aligny:'top'
 				},
 				{
 					itemid:'id_1',
@@ -445,8 +460,70 @@
 			sl.scaleY = game.scalefact;
 			panel.sl = sl;
 			
+			return panel;
+		},
+		
+		createPromptpanel2:function(bgname,ishalf,ismodal){
+			var uidata_1 =[
+				{
+					itemid:'id_weixinlogin_exitbtn',
+					itemtype:'btn',
+					itemurlvalue:'login_13',
+					btnup:'login_14',
+					layouttype_x:'txt',
+					alignx:'right',
+					layouttype_y:'txt',
+					aligny:'top'
+				},
+				{
+					itemid:'id_title_enter',
+					itemtype:'bmp',
+					itemurlvalue:'login_bg7',
+					layouttype_x:'txt',
+					alignx:'center',
+					layouttype_y:'txt',
+					aligny:'top'
+				},
+				
+			];
+			var panel = new Hilo.Container();
+			if(ismodal){
+				panel.modalmask = new Hilo.Bitmap({
+					width:this.width,
+					height:this.height,
+					image:game.getImg('loginbg'),
+					alpha:0.6,
+				}).addTo(panel);
+			}
+			var rect = game.configdata.getPngRect(bgname,'bg');
+			var panelwidth = rect[2];
+			var panelheight = rect[3];
+			panel.bg = game.configdata.creatRectImg('bg',bgname,0,0,game.scalefact).addTo(panel);
+			if(ishalf){
+				var panelwidth = rect[2]*2;
+				var panelheight = rect[3];
+				panel.bg = game.configdata.createBg('bg',bgname,0,0,game.scalefact).addTo(panel);
+			}else{
+				var panelwidth = rect[2];
+				var panelheight = rect[3];
+				panel.bg = game.configdata.creatRectImg('bg',bgname,0,0,game.scalefact).addTo(panel);
+			}
+			panel.width = panelwidth;
+			panel.height = panelheight;
+			panel.items = {};
+			game.layoutUi.drawStepLine(panelwidth,panelheight,panel,game.scalefact);
+			game.layoutUi.layoutPanelData(uidata_1,panelwidth,panelheight,game.scalefact,'ui',panel);
 			
-			var numpanel = new game.InputNumpanel({x:100,y:10,scaleX:game.scalefact,scaleY:game.scalefact}).addTo(panel);
+			var p = panel;
+			panel.items['id_weixinlogin_exitbtn'].on(Hilo.event.POINTER_END, function(e) {
+				p.removeAllChildren();
+				p.removeFromParent();
+				console.log(p.getNumChildren());
+			});
+			
+			var numpanel = new game.InputNumpanel({numcount:6,x:350,y:10,scaleX:game.scalefact,scaleY:game.scalefact}).addTo(panel);
+			numpanel.x = (panel.width - numpanel.width)*game.scalefact/2;
+			numpanel.y = panel.height * game.scalefact -numpanel.height * game.scalefact - panel.height * game.scalefact * 0.1;
 			
 			return panel;
 		},
