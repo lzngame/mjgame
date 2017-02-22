@@ -113,6 +113,8 @@ game.configdata = new function(){
    				disabledState: {rect:downrect},
    				x:xp,
    				y:yp,
+   				width:uprect[2],
+   				height:uprect[3],
    				scaleX:game.scalefact,
    				scaleY:game.scalefact,
 			});
@@ -197,6 +199,53 @@ game.configdata = new function(){
 		rightimg.scaleX = -1;
 		return bgpanel;
 	}
+	
+	self.createBgPanel = function(data,bgname,ishalf,ismodal,theparent,close_uprect,close_downrect,close_imgsource,close_offsetx,titlebg,titlefront){
+			var panel = new Hilo.Container();
+			var rect = game.configdata.getPngRect(bgname,'bg');
+			var panelwidth = rect[2];
+			var panelheight = rect[3];
+			if(ishalf){
+				panelwidth = rect[2]*2;
+				game.configdata.createBg('bg',bgname,0,0,game.scalefact).addTo(panel);
+			}else{
+				game.configdata.creatRectImg('bg',bgname,0,0,game.scalefact).addTo(panel);
+			}
+			panel.width = panelwidth;
+			panel.height = panelheight;
+			panel.x = theparent.width/2  - panel.width*game.scalefact/2;
+			panel.y = theparent.height/2 - panel.height*game.scalefact/2;
+			
+			if(ismodal){
+				panel.modalmask = new Hilo.Bitmap({
+					width:theparent.width,
+					height:theparent.height,
+					image:game.getImg('loginbg'),
+					alpha:0.7,
+					x:-panel.x,
+					y:-panel.y,
+				}).addTo(panel);
+			}
+			game.layoutUi.drawStepLine(panel.width,panel.height,panel,game.scalefact);
+			
+			if(!close_offsetx){
+				close_offsetx = 0;
+			}
+			var closebtn = game.configdata.createButton(close_imgsource,close_uprect,close_downrect,0,0).addTo(panel);
+			closebtn.x = panelwidth * game.scalefact - closebtn.width*game.scalefact - close_offsetx*game.scalefact;
+			closebtn.on(Hilo.event.POINTER_END, function(e) {
+				panel.removeAllChildren();
+				panel.removeFromParent();
+				//p.numpanel.numpanel.clearAll();
+				console.log(panel.getNumChildren());
+			});
+			
+			var titleIcon = new game.DoubleIcon({imgsource:'ui',bgimg:titlebg,frontimg:titlefront,scaleX:game.scalefact,scaleY:game.scalefact}).addTo(panel);
+			titleIcon.x = (panel.width - titleIcon.width) * game.scalefact /2;
+			panel.items = {};
+			game.layoutUi.layoutPanelData(data,panel.width,panel.height,game.scalefact,'ui',panel);
+			return panel;
+		},
 	
 	self.getPngRect = function(pngname,sourcePng){
 		var rect = null;

@@ -299,15 +299,26 @@
 			var self = this;
 			this.items['id_mainscene_createroom_btn'].on(Hilo.event.POINTER_END, function(e) {
 				console.log('create a room');
-				var prompt = self.createPromptpanel('login_6',true,true);
+				var prompt = self.createPromptpanel('login_bg35',true,true,self);
 				prompt.addTo(self);
 				self.slideList.push(prompt.sl);
 				console.log(self.getNumChildren());
 			});
+			
 			this.items['id_mainscene_enterroom_btn'].on(Hilo.event.POINTER_END, function(e) {
 				console.log('create a room');
-				var prompt = self.createPromptpanel2('login_6',true,true);
+				var prompt = self.createPromptpanel2([],'login_bg35',true,true,self);
 				prompt.addTo(self);
+				
+				console.log('%s:%s',prompt.x,prompt.y);
+				console.log(self.getNumChildren());
+			});
+			
+			this.items['id_mainscene_expandable_btn'].on(Hilo.event.POINTER_END, function(e) {
+				var prompt = self.createPromptpanel3(game.sceneuidata.main_uidata[2],'login_bg35',true,true,self);
+				prompt.addTo(self);
+				
+				console.log('%s:%s',prompt.x,prompt.y);
 				console.log(self.getNumChildren());
 			});
 			
@@ -316,28 +327,8 @@
 			this.initSlideEvent();
 		},
 		
-		createPromptpanel:function(bgname,ishalf,ismodal){
+		createPromptpanel:function(bgname,ishalf,ismodal,theparent){
 			var uidata_1 =[
-				{
-					itemid:'id_weixinlogin_exitbtn',
-					itemtype:'btn',
-					itemurlvalue:'login_13',
-					btnup:'login_14',
-					layouttype_x:'txt',
-					alignx:'right',
-					layouttype_y:'txt',
-					aligny:'top'
-				},
-				{
-					itemid:'id_title_creat',
-					itemtype:'doublebmp',
-					itemurlvalue:'login_bg111',
-					frontimg:'login_bg42',
-					layouttype_x:'txt',
-					alignx:'center',
-					layouttype_y:'txt',
-					aligny:'top'
-				},
 				{
 					itemid:'id_1',
 					itemtype:'bmp',
@@ -413,42 +404,8 @@
 					ischeck:false,
 				}
 			];
-			var panel = new Hilo.Container();
-			if(ismodal){
-				panel.modalmask = new Hilo.Bitmap({
-					width:this.width,
-					height:this.height,
-					image:game.getImg('loginbg'),
-					alpha:0.6,
-				}).addTo(panel);
-			}
-			var rect = game.configdata.getPngRect(bgname,'bg');
-			var panelwidth = rect[2];
-			var panelheight = rect[3];
-			panel.bg = game.configdata.creatRectImg('bg',bgname,0,0,game.scalefact).addTo(panel);
-			if(ishalf){
-				var panelwidth = rect[2]*2;
-				var panelheight = rect[3];
-				panel.bg = game.configdata.createBg('bg',bgname,0,0,game.scalefact).addTo(panel);
-			}else{
-				var panelwidth = rect[2];
-				var panelheight = rect[3];
-				panel.bg = game.configdata.creatRectImg('bg',bgname,0,0,game.scalefact).addTo(panel);
-			}
-			panel.width = panelwidth;
-			panel.items = {};
-			game.layoutUi.drawStepLine(panelwidth,panelheight,panel,game.scalefact);
-			game.layoutUi.layoutPanelData(uidata_1,panelwidth,panelheight,game.scalefact,'ui',panel);
 			
-			var p = panel;
-			panel.items['id_weixinlogin_exitbtn'].on(Hilo.event.POINTER_END, function(e) {
-				p.sl.off();
-				p.removeAllChildren();
-				p.removeFromParent();
-				
-				console.log(p.getNumChildren());
-			});
-			
+			var panel = game.configdata.createBgPanel(uidata_1,bgname,ishalf,ismodal,theparent,'login_13','login_14','ui',55,'login_bg111','login_bg42');
 			var sl = new game.Scrollwindow({
 				x:100,
 				y:100,
@@ -464,70 +421,18 @@
 			return panel;
 		},
 		
-		createPromptpanel2:function(bgname,ishalf,ismodal){
-			var uidata_1 =[
-				{
-					itemid:'id_weixinlogin_exitbtn',
-					itemtype:'btn',
-					itemurlvalue:'login_13',
-					btnup:'login_14',
-					layouttype_x:'txt',
-					alignx:'right',
-					layouttype_y:'txt',
-					aligny:'top'
-				},
-				{
-					itemid:'id_title_enter',
-					itemtype:'doublebmp',
-					itemurlvalue:'login_bg111',
-					frontimg:'login_bg43',
-					layouttype_x:'txt',
-					alignx:'center',
-					layouttype_y:'txt',
-					aligny:'top'
-				},
-				
-			];
-			var panel = new Hilo.Container();
-			if(ismodal){
-				panel.modalmask = new Hilo.Bitmap({
-					width:this.width,
-					height:this.height,
-					image:game.getImg('loginbg'),
-					alpha:0.6,
-				}).addTo(panel);
-			}
-			var rect = game.configdata.getPngRect(bgname,'bg');
-			var panelwidth = rect[2];
-			var panelheight = rect[3];
-			panel.bg = game.configdata.creatRectImg('bg',bgname,0,0,game.scalefact).addTo(panel);
-			if(ishalf){
-				var panelwidth = rect[2]*2;
-				var panelheight = rect[3];
-				panel.bg = game.configdata.createBg('bg',bgname,0,0,game.scalefact).addTo(panel);
-			}else{
-				var panelwidth = rect[2];
-				var panelheight = rect[3];
-				panel.bg = game.configdata.creatRectImg('bg',bgname,0,0,game.scalefact).addTo(panel);
-			}
-			panel.width = panelwidth;
-			panel.height = panelheight;
-			panel.items = {};
-			game.layoutUi.drawStepLine(panelwidth,panelheight,panel,game.scalefact);
-			game.layoutUi.layoutPanelData(uidata_1,panelwidth,panelheight,game.scalefact,'ui',panel);
-			
-			var p = panel;
-			
+		createPromptpanel2:function(data,bgname,ishalf,ismodal,theparent){
+			var panel = game.configdata.createBgPanel(data,bgname,ishalf,ismodal,theparent,'login_13','login_14','ui',55,'login_bg111','login_bg43');
 			var numpanel = new game.InputNumpanel({numcount:6,x:350,y:10,scaleX:game.scalefact,scaleY:game.scalefact}).addTo(panel);
 			numpanel.x = (panel.width - numpanel.width)*game.scalefact/2;
-			numpanel.y = panel.height * game.scalefact -numpanel.height * game.scalefact - panel.height * game.scalefact * 0.1;
-			p.numpanel = numpanel;
-			panel.items['id_weixinlogin_exitbtn'].on(Hilo.event.POINTER_END, function(e) {
-				p.removeAllChildren();
-				p.removeFromParent();
-				p.numpanel.numpanel.clearAll();
-				console.log(p.getNumChildren());
-			});
+			numpanel.y = panel.height * game.scalefact -numpanel.height * game.scalefact - panel.height * game.scalefact * 0.05;
+			panel.numpanel = numpanel;
+			
+			return panel;
+		},
+		
+		createPromptpanel3:function(data,bgname,ishalf,ismodal,theparent){
+			var panel = game.configdata.createBgPanel(data,bgname,ishalf,ismodal,theparent,'login_13','login_14','ui',55,'login_bg111','fenxiang');
 			return panel;
 		},
 		

@@ -139,6 +139,29 @@ game.sceneuidata = new function(){
 					layouttype_y:'pct',
 					aligny:'top_90'
 				}
+			],
+			//---------- 2：分享
+			[
+				{
+					itemid:'id_shareweixin_btn',
+					itemtype:'scalebtn',
+					itemurlvalue:'fenxiang2',
+					btnup:'fenxiang2',
+					layouttype_x:'pct',
+					alignx:'left_38',
+					layouttype_y:'pct',
+					aligny:'top_45'
+				},
+				{
+					itemid:'id_sharepenyouquan_btn',
+					itemtype:'scalebtn',
+					itemurlvalue:'fenxiang3',
+					btnup:'fenxiang3',
+					layouttype_x:'pct',
+					alignx:'left_63',
+					layouttype_y:'pct',
+					aligny:'top_45'
+				},
 			]
 		];
 	
