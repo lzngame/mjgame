@@ -47,7 +47,7 @@
 		name:'NumbersPanel',
 		numcount:6,
 		currentindex:-1,
-		nums:[],
+		nums:null,
 		hspace:5,
 		imgsource:null,
 		bgimg:null,
@@ -61,7 +61,7 @@
 			var rect = game.configdata.getPngRect(this.bgimg,this.imgsource);
 			this.width = rect[2] * this.numcount + this.hspace * (this.numcount-1);
 			this.height =rect[3];
-			
+			this.nums = [];
 			for(var i=0;i<this.numcount;i++){
 				var num = new game.IconNumber({
 					imgsource:this.imgsource,
@@ -69,8 +69,11 @@
 					bgimg:this.bgimg,
 					numsimglist:this.numsimglist
 			    }).addTo(this);
-			    this.nums.push(num);;
+			    this.nums.push(num);
 			}
+			console.log('----------------------');
+			console.log(this.nums.length);
+			console.log('----------------------');
 		},
 		clearAll:function(){
 			for(var i=0;i<this.nums.length;i++){

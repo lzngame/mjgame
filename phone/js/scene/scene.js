@@ -330,8 +330,9 @@
 				},
 				{
 					itemid:'id_title_creat',
-					itemtype:'bmp',
-					itemurlvalue:'login_bg6',
+					itemtype:'doublebmp',
+					itemurlvalue:'login_bg111',
+					frontimg:'login_bg42',
 					layouttype_x:'txt',
 					alignx:'center',
 					layouttype_y:'txt',
@@ -477,8 +478,9 @@
 				},
 				{
 					itemid:'id_title_enter',
-					itemtype:'bmp',
-					itemurlvalue:'login_bg7',
+					itemtype:'doublebmp',
+					itemurlvalue:'login_bg111',
+					frontimg:'login_bg43',
 					layouttype_x:'txt',
 					alignx:'center',
 					layouttype_y:'txt',
@@ -515,16 +517,17 @@
 			game.layoutUi.layoutPanelData(uidata_1,panelwidth,panelheight,game.scalefact,'ui',panel);
 			
 			var p = panel;
-			panel.items['id_weixinlogin_exitbtn'].on(Hilo.event.POINTER_END, function(e) {
-				p.removeAllChildren();
-				p.removeFromParent();
-				console.log(p.getNumChildren());
-			});
 			
 			var numpanel = new game.InputNumpanel({numcount:6,x:350,y:10,scaleX:game.scalefact,scaleY:game.scalefact}).addTo(panel);
 			numpanel.x = (panel.width - numpanel.width)*game.scalefact/2;
 			numpanel.y = panel.height * game.scalefact -numpanel.height * game.scalefact - panel.height * game.scalefact * 0.1;
-			
+			p.numpanel = numpanel;
+			panel.items['id_weixinlogin_exitbtn'].on(Hilo.event.POINTER_END, function(e) {
+				p.removeAllChildren();
+				p.removeFromParent();
+				p.numpanel.numpanel.clearAll();
+				console.log(p.getNumChildren());
+			});
 			return panel;
 		},
 		

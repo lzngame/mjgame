@@ -2,7 +2,7 @@
 	var BaseScene = ns.BaseScene = Hilo.Class.create({
 		Extends: Hilo.Container,
 		name:'',
-		
+		isHandleSlide:true,
 		tapstarttime:0,
 		tapendtime:0,
 		tapstartx:0,
@@ -11,6 +11,7 @@
 		tapy:0,
 		
 		slideList:[],
+		
 		
 		constructor: function(properties) {
 			BaseScene.superclass.constructor.call(this, properties);
@@ -32,12 +33,15 @@
 				self.tapy = e.stageY;
 				//self.handleSlideoutList(e.stageX,e.stageY);
 			});
-			this.on(Hilo.event.POINTER_END,function(e){
-				self.tapendtime = game.clock.getSystemtime();
-				var delay = self.tapendtime - self.tapstarttime;
-				var dis_x = e.stageX - self.tapstartx;
-				var dis_y = e.stageY - self.tapstarty;
-				if(delay < 300){
+			this.on(Hilo.event.POINTER_END,this.onSlideHandle);
+		},
+		onSlideHandle:function(e){
+			var self = this;
+			self.tapendtime = game.clock.getSystemtime();
+			var delay = self.tapendtime - self.tapstarttime;
+			var dis_x = e.stageX - self.tapstartx;
+			var dis_y = e.stageY - self.tapstarty;
+			if(delay < 300 && this.isHandleSlide){
 					var directx = 0;
 					if(Math.abs(dis_x) > 20){
 						var directH = '向右滑动';
@@ -67,9 +71,8 @@
 					if(directx + directy > 0){
 						self.handleSlideList(directx,directy);
 					}
-				} 
-				self.resetSlidePoint();
-			});
+			} 
+			self.resetSlidePoint();
 		},
 		resetSlidePoint:function(){
 			this.tapstartx = -1;

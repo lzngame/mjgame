@@ -166,6 +166,18 @@ game.configdata = new function(){
 			});
 	}
 	
+	self.creatDoubleImg = function(imgType,bgname,pngname,x,y,scalefact){
+		return new game.DoubleIcon({
+				imgsource:imgType,
+				x:x,
+				y:y,
+				bgimg:bgname,
+				frontimg:pngname,
+				scaleX:scalefact,
+				scaleY:scalefact
+			});
+	}
+	
 	self.createMerrygoround = function(headimg,itemurlvalue,x,y){
 		return new game.Merrygoround({
 			x:x,
@@ -272,6 +284,9 @@ game.layoutUi = new function(){
 				tmpposdic[itemdata.itemid] = [x,y,w,h];
 				if(itemdata.itemtype === 'bmp'){ 
 					theparent.items[itemdata.itemid] = game.configdata.creatRectImg(imgsourcename,itemdata.itemurlvalue,x,y,game.scalefact).addTo(theparent);
+				}
+				if(itemdata.itemtype === 'doublebmp'){ 
+					theparent.items[itemdata.itemid] = game.configdata.creatDoubleImg(imgsourcename,itemdata.itemurlvalue,itemdata.frontimg,x,y,game.scalefact).addTo(theparent);
 				}
 				if(itemdata.itemtype === 'btn'){ 
 					theparent.items[itemdata.itemid] = game.configdata.createButton('ui',itemdata.itemurlvalue,itemdata.btnup,x,y).addTo(theparent);

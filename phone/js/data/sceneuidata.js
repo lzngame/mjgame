@@ -12,7 +12,7 @@ game.sceneuidata = new function(){
 				{
 					itemid:'id_weixinlogbg_girl_bmp',
 					itemtype:'bmp',
-					itemurlvalue:'login_girl',
+					itemurlvalue:'login_bg',
 					layouttype_x:'txt',
 					alignx:'center',
 					layouttype_y:'pct',

@@ -505,4 +505,37 @@
 		}
 	});
 	
+	//DoubleIcon ---- 	前层居中背景的Icon
+	var DoubleIcon = ns.DoubleIcon = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name:'DoubleIcon',
+		imgsource:null,
+		bgimg:null,
+		frontimg:null,
+		
+		constructor: function(properties) {
+			DoubleIcon.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		
+		init: function(properties) {
+			var img = game.getImg(this.imgsource);
+			var rect = game.configdata.getPngRect(this.bgimg,this.imgsource);
+			var rectfront = game.configdata.getPngRect(this.frontimg,this.imgsource);
+			this.width = rect[2];
+			this.height = rect[3];
+			
+			new Hilo.Bitmap({
+				image:img,
+				rect:rect,
+			}).addTo(this);
+			new Hilo.Bitmap({
+				image:img,
+				rect:rectfront,
+				x:(rect[2]-rectfront[2])/2,
+				y:(rect[3]-rectfront[3])/2,
+			}).addTo(this);
+		},
+	});
+	
 })(window.game);
