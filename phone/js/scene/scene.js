@@ -441,28 +441,44 @@
 			return panel;
 		},
 		createPromptpanel4:function(data,bgname,ishalf,ismodal,theparent){
-			var panel = game.configdata.createBgPanel([],bgname,ishalf,ismodal,theparent,'login_13','login_14','ui',55,'login_bg111','fenxiang');
+			var panel = game.configdata.createBgPanel([],bgname,ishalf,ismodal,theparent,'login_13','login_14','ui',55,'login_bg111','login_bg63');
 			var scrollwin = new game.Scrollwindow({
-				width:450,
-				height:250,
-				x:90,
-				y:50,
+				width:panel.width * game.scalefact * 6/8,
+				height:panel.height * game.scalefact * 6/8,
+				x:panel.width* game.scalefact/8,
+				y:panel.height* game.scalefact/8,
 			}).addTo(panel);
 			var txt = new Hilo.Text({
-				text:
-				"离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。",
-				font:'120%  黑体',
-				color:'red',
-				background:'yellow',
-				width:350,
-				maxWidth:350,
-				textAlign:'center',
+				text:"",
+				font:'14px  黑体',
+				color:'black',
+				background:'rgba(0,0,0,0)',
+				width:scrollwin.width,
+				maxWidth:scrollwin.width-60,
+				textAlign:'left',
 				height:1850,
 				lineSpacing:5,
+				x:30,
+				y:10,
 				textVAlign:'top',
 			});
 			scrollwin.addContent(txt,1850);
 			this.slideList.push(scrollwin);
+			
+			
+			$.ajax({
+				type:'GET',
+				url:'../phone/txtdata/test.txt',
+				timeout:100,
+				success:function(data){
+					console.log(data);
+					txt.text = data;
+				},
+				error:function(xhr,type){
+					console.log(type);
+					console.log(xhr);
+				}
+			})
 			
 			return panel;
 		},

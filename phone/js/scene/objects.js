@@ -372,10 +372,12 @@
 		
 		init: function(properties) {
 			console.log('scroll init');
-			var bg = game.drawdata.drawItemRect(1,'red','rgba(0,0,0,0)',0,0,this.width,this.height,this);
-			this.roundmask = 	game.drawdata.drawItemRect(1,'green','blue',10,10,this.width-20,this.height-20,this);
+			var bg = game.drawdata.drawItemRect(1,'green','rgba(0,0,0,0)',0,0,this.width,this.height,this);
+			this.roundmask = 	game.drawdata.drawItemRect(1,'rgba(0,0,0,0)','rgba(0,0,0,0)',0,0,this.width,this.height,this);
 			
 			this.contentpanel = new Hilo.Container().addTo(this);
+			this.contentpanel.pointerEnabled = false;
+			
 			this.contentpanel.mask = this.roundmask;
 			this.on(Hilo.event.POINTER_START,function(e){
 				this.tapstart = true;
