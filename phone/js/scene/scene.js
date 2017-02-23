@@ -335,15 +335,6 @@
 		createPromptpanel:function(bgname,ishalf,ismodal,theparent){
 			var uidata_1 =[
 				{
-					itemid:'id_1',
-					itemtype:'bmp',
-					itemurlvalue:'11',
-					layouttype_x:'pct',
-					alignx:'left_25',
-					layouttype_y:'pct',
-					aligny:'top_25'
-				},
-				{
 					itemid:'id_radiobox_test_1',
 					itemtype:'radiobox',
 					itemurlvalue:'23',
@@ -351,7 +342,7 @@
 					layouttype_x:'pct',
 					alignx:'left_30',
 					layouttype_y:'pct',
-					aligny:'bottom_10',
+					aligny:'bottom_30',
 					groupid:'groupid001',
 					lbtext:'4局',
 					ischeck:true,
@@ -364,7 +355,7 @@
 					layouttype_x:'pct',
 					alignx:'left_45',
 					layouttype_y:'pct',
-					aligny:'bottom_10',
+					aligny:'bottom_30',
 					groupid:'groupid001',
 					lbtext:'8局',
 					ischeck:false,
@@ -377,7 +368,7 @@
 					layouttype_x:'pct',
 					alignx:'left_60',
 					layouttype_y:'pct',
-					aligny:'bottom_10',
+					aligny:'bottom_30',
 					groupid:'groupid001',
 					lbtext:'16局',
 					ischeck:false,
@@ -390,7 +381,7 @@
 					layouttype_x:'pct',
 					alignx:'left_45',
 					layouttype_y:'pct',
-					aligny:'bottom_20',
+					aligny:'bottom_40',
 					groupid:'groupid002',
 					lbtext:'房主',
 					ischeck:true,
@@ -403,7 +394,7 @@
 					layouttype_x:'pct',
 					alignx:'left_60',
 					layouttype_y:'pct',
-					aligny:'bottom_20',
+					aligny:'bottom_40',
 					groupid:'groupid002',
 					lbtext:'雀圣',
 					ischeck:false,
@@ -411,18 +402,18 @@
 			];
 			
 			var panel = game.configdata.createBgPanel(uidata_1,bgname,ishalf,ismodal,theparent,'login_13','login_14','ui',55,'login_bg111','login_bg42');
-			var sl = new game.ScrollBmpwindow({
-				x:100,
-				y:100,
-				width:180,
-				height:260,
-				
+			var btn = new game.RoomSurebtn({
+				itemurlvalue:'login_10',
+				defaultNum:5,
+				caricon:'chuangqian',
+				sureicon:'login_bg72',
+				btndown:'login_11',
+				imgsource:'ui',
+				scaleX:game.scalefact,
+				scaleY:game.scalefact,
 			}).addTo(panel);
-			sl.addImgs(['img/loadbanner/activity1.png','img/loadbanner/activity2.png','img/loadbanner/activity3.png','img/loadbanner/activity4.png'],163,249);
-			sl.scaleX = game.scalefact;
-			sl.scaleY = game.scalefact;
-			panel.sl = sl;
-			
+			btn.x = (panel.width - btn.width) *game.scalefact/2;
+			btn.y = panel.height * game.scalefact - btn.height * game.scalefact - 20;
 			return panel;
 		},
 		

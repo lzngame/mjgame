@@ -149,12 +149,14 @@
 				color: '#FFF200',
 				x:this.caricon.x + 28,
 			}).addTo(this);
-			var y = uprect[3]/2 - this.numlabel._fontHeight/2;
+			var y = uprect[3]/2 - this.numlabel._fontHeight/2 + 2;
 			this.numlabel.y = y;
 			this.caricon.pointerEnabled = false;
 			this.sureicon.pointerEnabled = false;
 			this.numlabel.pointerEnabled = false;
 			var self = this;
+			this.width = uprect[2];
+			this.height = uprect[3];
 			this.btnbody.on(Hilo.event.POINTER_START,function(e){
 				console.log('car num btn');
 				self.setLabelNum(Math.floor(Math.random()*10));
