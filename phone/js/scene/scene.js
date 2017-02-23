@@ -285,7 +285,7 @@
 			});
 			
 			game.layoutUi.layoutPanelData(game.sceneuidata.main_uidata[1],game.screenWidth,game.screenHeight,1,'ui',this);
-			var sl = new game.Scrollwindow({
+			var sl = new game.ScrollBmpwindow({
 				x:10,
 				y:game.screenHeight/2 - (260*game.scalefact)/2,
 				width:180,
@@ -320,6 +320,11 @@
 				
 				console.log('%s:%s',prompt.x,prompt.y);
 				console.log(self.getNumChildren());
+			});
+			
+			this.items['id_mainscene_score_btn'].on(Hilo.event.POINTER_END, function(e) {
+				var prompt = self.createPromptpanel4(game.sceneuidata.main_uidata[2],'login_bg35',true,true,self);
+				prompt.addTo(self);
 			});
 			
 			game.layoutUi.drawStepLine(game.screenWidth,game.screenHeight,this);
@@ -406,7 +411,7 @@
 			];
 			
 			var panel = game.configdata.createBgPanel(uidata_1,bgname,ishalf,ismodal,theparent,'login_13','login_14','ui',55,'login_bg111','login_bg42');
-			var sl = new game.Scrollwindow({
+			var sl = new game.ScrollBmpwindow({
 				x:100,
 				y:100,
 				width:180,
@@ -433,6 +438,32 @@
 		
 		createPromptpanel3:function(data,bgname,ishalf,ismodal,theparent){
 			var panel = game.configdata.createBgPanel(data,bgname,ishalf,ismodal,theparent,'login_13','login_14','ui',55,'login_bg111','fenxiang');
+			return panel;
+		},
+		createPromptpanel4:function(data,bgname,ishalf,ismodal,theparent){
+			var panel = game.configdata.createBgPanel([],bgname,ishalf,ismodal,theparent,'login_13','login_14','ui',55,'login_bg111','fenxiang');
+			var scrollwin = new game.Scrollwindow({
+				width:450,
+				height:250,
+				x:90,
+				y:50,
+			}).addTo(panel);
+			var txt = new Hilo.Text({
+				text:
+				"离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。离离原上草,\n一岁一枯荣。\n野火烧不尽,\n春风吹又生。",
+				font:'120%  黑体',
+				color:'red',
+				background:'yellow',
+				width:350,
+				maxWidth:350,
+				textAlign:'center',
+				height:1850,
+				lineSpacing:5,
+				textVAlign:'top',
+			});
+			scrollwin.addContent(txt,1850);
+			this.slideList.push(scrollwin);
+			
 			return panel;
 		},
 		

@@ -180,6 +180,21 @@ game.configdata = new function(){
 			});
 	}
 	
+	self.createTitletext = function(textvalue,font,color,bg,x,y,w){
+		return new Hilo.Text({
+				text:textvalue,
+				font:font,
+				color:color,
+				x:x-w/2,
+				y:y,
+				background:bg,
+				width:w,
+				maxWidth:w,
+				textAlign:'center',
+		});
+		
+	}
+	
 	self.createMerrygoround = function(headimg,itemurlvalue,x,y){
 		return new game.Merrygoround({
 			x:x,
@@ -331,6 +346,9 @@ game.layoutUi = new function(){
 				var w = rect[2] * game.scalefact;
 				var h = rect[3] * game.scalefact;
 				tmpposdic[itemdata.itemid] = [x,y,w,h];
+				if(itemdata.itemtype == 'texttitle'){
+					theparent.items[itemdata.itemid] = game.configdata.createTitletext(itemdata.textvalue,itemdata.font,itemdata.color,itemdata.bg,x,y,w).addTo(theparent);
+				}
 				if(itemdata.itemtype === 'bmp'){ 
 					theparent.items[itemdata.itemid] = game.configdata.creatRectImg(imgsourcename,itemdata.itemurlvalue,x,y,game.scalefact).addTo(theparent);
 				}

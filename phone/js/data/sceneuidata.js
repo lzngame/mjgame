@@ -140,7 +140,7 @@ game.sceneuidata = new function(){
 					aligny:'top_90'
 				}
 			],
-			//---------- 2：分享
+			//---------- 2：分享按钮弹出窗口  朋友圈分享按钮  微信分享按钮
 			[
 				{
 					itemid:'id_shareweixin_btn',
@@ -153,6 +153,19 @@ game.sceneuidata = new function(){
 					aligny:'top_45'
 				},
 				{
+					itemid:'id_shareweixin_text',
+					itemtype:'texttitle',
+					itemurlvalue:'fenxiang2',
+					textvalue:'微信',
+					color:'#333333',
+					font:'16px 黑体',
+					bg:'rgba(0,0,0,0)',
+					layouttype_x:'pct',
+					alignx:'left_38',
+					layouttype_y:'pct',
+					aligny:'bottom_55'
+				},
+				{
 					itemid:'id_sharepenyouquan_btn',
 					itemtype:'scalebtn',
 					itemurlvalue:'fenxiang3',
@@ -161,6 +174,19 @@ game.sceneuidata = new function(){
 					alignx:'left_63',
 					layouttype_y:'pct',
 					aligny:'top_45'
+				},
+				{
+					itemid:'id_shareweixin_text',
+					itemtype:'texttitle',
+					itemurlvalue:'fenxiang2',
+					textvalue:'朋友圈',
+					color:'#333333',
+					font:'16px 黑体',
+					bg:'rgba(0,0,0,0)',
+					layouttype_x:'pct',
+					alignx:'left_63',
+					layouttype_y:'pct',
+					aligny:'bottom_55'
 				},
 			]
 		];

@@ -204,11 +204,10 @@
 			}
 		},
 	});
-	
-	//Scrollwindow ---- 滑动滚动窗口
-	var Scrollwindow = ns.Scrollwindow = Hilo.Class.create({
+	//Scrollwindow ---- 滑动图片滚动窗口
+	var ScrollBmpwindow = ns.ScrollBmpwindow = Hilo.Class.create({
 		Extends: Hilo.Container,
-		name:'Scrollwindow',
+		name:'ScrollBmpwindow',
 		imgs:0,
 		imgpanel:null,
 		roundmask:null,
@@ -228,7 +227,7 @@
 		autoInterval:0,
 		autoDirect:false,
 		constructor: function(properties) {
-			Scrollwindow.superclass.constructor.call(this, properties);
+			ScrollBmpwindow.superclass.constructor.call(this, properties);
 			this.init(properties);
 		},
 		addImgs:function(imglist,w,h){
@@ -336,6 +335,163 @@
 				}
 				this.slideEnd();
 			}
+		}
+	});
+	
+	
+	//Scrollwindow ---- 滑动滚动窗口
+	var Scrollwindow = ns.Scrollwindow = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name:'Scrollwindow',
+		contentpanel:null,
+		panelheight:0,
+		roundmask:null,
+		currentposy:0,
+		tapstart:false,
+		tapstartx:0,
+		tapstarty:0,
+		tapx:0,
+		tapy:0,
+		disx:0,
+		disy:0,
+		slidedisx:0,
+		space:5,
+		itemwidth:0,
+		
+		autoSumtime:0,
+		autoInterval:0,
+		autoDirect:false,
+		constructor: function(properties) {
+			Scrollwindow.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		addContent:function(contentlayer,layerheight){
+			contentlayer.addTo(this.contentpanel);
+			this.panelheight = layerheight;
+		},
+		
+		init: function(properties) {
+			console.log('scroll init');
+			var bg = game.drawdata.drawItemRect(1,'red','rgba(0,0,0,0)',0,0,this.width,this.height,this);
+			this.roundmask = 	game.drawdata.drawItemRect(1,'green','blue',10,10,this.width-20,this.height-20,this);
+			
+			this.contentpanel = new Hilo.Container().addTo(this);
+			this.contentpanel.mask = this.roundmask;
+			this.on(Hilo.event.POINTER_START,function(e){
+				this.tapstart = true;
+				this.tapstartx = e.stageX;
+				this.tapstarty = e.stageY;
+				this.tapstart = true;
+				this.disx = e.stageX - this.x - this.contentpanel.x;
+				this.disy = e.stageY - this.y - this.contentpanel.y;
+			});
+			this.on(Hilo.event.POINTER_MOVE,function(e){
+				if(this.tapstart){
+					var x = e.stageX - this.x;
+					var y = e.stageY - this.y;
+					//this.contentpanel.x = x - this.disx;
+					//this.slidedisx = e.stageX - this.tapstartx;
+					this.contentpanel.y = y - this.disy;
+					this.slidedisy = e.stageY - this.tapstarty;
+					console.log(this.slidedisy);
+				}
+			});
+			this.on(Hilo.event.POINTER_END,function(e){
+				console.log('end **************************************');
+				this.slideEnd();
+			});
+			this.on('touchout',function(e){
+				this.slideEnd();
+				console.log('000000000000000000***********************************');
+			});
+		},
+		slideEnd:function(){
+			var self = this;
+			if(this.contentpanel.y > 0){
+				new Hilo.Tween.to(self.contentpanel,{
+					y:0
+				},{
+					duration:200,
+				});
+			}
+			if(this.contentpanel.y < self.height - self.panelheight){
+				var y = self.height - self.panelheight;
+				console.log(y);
+				new Hilo.Tween.to(self.contentpanel,{
+					y:y
+				},{
+					duration:200,
+				});
+			}
+		},
+		autoSlideTo:function(targetx,durationtime){
+			var self = this;
+			new Hilo.Tween.to(self.imgpanel,{
+				x:targetx
+			},{
+				duration:durationtime,
+			});
+		},
+		//如果使用自己创建的全局方法,在Basescene 里面注册启用,这是一个滑出事件 ,等同于 touchout
+		onSlideOut(x1,y1,x2,y2){
+			if(this.parent){
+				console.log('out x:%s y:%s  --- x:%s y:%s',x1,y1,x2,y2);
+			}
+		},
+		onSlide(directx,directy){
+			if(this.parent){
+				console.log('slide-h:%s v:%s',directx,directy);
+			}
+			if(directy != 0){
+				var dis = 1;
+				if(directy == 2){
+					dis = -1;
+				}
+				var self = this;
+				var space = 200;
+				var dur = 1000;
+				var currenty = self.contentpanel.y;
+				var disTop = 0 - currenty;
+				var disBottom = currenty - (self.height - self.panelheight);
+				if(directy == 1 && disTop < 200){
+					space = 50;
+					dur = 400;
+					console.log('+000000000');
+				}
+				if(directy == 2 && disBottom < 200){
+					space = 50;
+					console.log('-000000000');
+					dur = 400;
+				}
+				
+				
+				Hilo.Tween.to(self.contentpanel, {
+				    y:currenty + dis*space,
+				}, {
+    				duration:dur,
+				    ease:Hilo.Ease.Quart.EaseOut,
+    				onComplete:function(){
+        				console.log('complete');
+        				self.slideEnd();
+   					 }
+				});
+			}
+		},
+		onUpdate:function(){
+			/*this.autoInterval++;
+			if(this.autoInterval > 300){
+				this.autoInterval = 0;
+				if(this.currentIndex == 0 || this.currentIndex == this.imgs-1){
+					this.autoDirect = !this.autoDirect;
+				}
+				
+				if(this.autoDirect){
+					this.slidedisx = 65;
+				}else{
+					this.slidedisx = -65;
+				}
+				this.slideEnd();
+			}*/
 		}
 	});
 	
