@@ -9,5 +9,5 @@ self.IMAGEDATA_3 ={"login_bg": [0, 1163, 457, 337], "battlebg": [0, 434, 768, 43
 //self.IMAGEDATA_3 ={"login_bg": [0, 1163, 457, 337], "battlebg": [0, 0, 768, 432], "login_bg35": [0, 1502, 364, 373], "login_bg36": [0, 868, 555, 293], "login_bg46": [0, 1877, 263, 138], "2": [0, 434, 768, 432], "login_bg96": [265, 1929, 169, 92], "login_7": [459, 1163, 220, 164], "login_6": [366, 1502, 362, 425], "login_8": [459, 1329, 168, 157], "login_bg100": [557, 868, 139, 120]} ;
 
 //self.IMAGEDATA_3 = {"login_girl": [557, 868, 457, 337], "battlebg": [0, 0, 768, 432], "login_bg35": [770, 429, 364, 374], "login_bg36": [0, 868, 555, 293], "login_6": [770, 0, 365, 427], "loginbg": [0, 434, 768, 432]} ;
-self.DOWNLOADLIST_PNGS =["bgs.png","battlebg.png", "loginbg.png", "login_girl.png", "mjbattle.png", "ui.png"];
+self.DOWNLOADLIST_PNGS =["loadgif.png","bgs.png","battlebg.png", "loginbg.png", "login_girl.png", "mjbattle.png", "ui.png"];
 }

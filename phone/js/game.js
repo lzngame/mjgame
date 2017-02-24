@@ -123,6 +123,19 @@
 			var img = this.loadqueue.getContent(id);
 			return img;
 		},
+		
+		sendMsg:function(sendObj,inceptObj,msgtype,msgdata){
+			if(inceptObj){
+				if(inceptObj.executeMsg){
+					inceptObj.executeMsg(sendObj,msgtype,msgdata);
+				}else{
+					console.log('消息接收方无处理函数');
+				}
+			}else{
+				console.log('无消息接收方');
+			}
+		},
+		
 		pauseGame: function(ispause) {
 			ispause ? this.ticker.pause() : this.ticker.resume();
 		},
