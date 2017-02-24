@@ -97,6 +97,13 @@
 				this.currentindex--;
 			}
 		},
+		getNumsValue:function(){
+			var result = '';
+			for(var i=0;i<this.nums.length;i++){
+				result += this.nums[i].defaultvalue.toString();
+			}
+			return result;
+		},
 		onUpdate:function(){
 			
 		},
@@ -110,7 +117,7 @@
 		inputpanel:null,
 		vspace:5,
 		numcount:6,
-		
+		inceptHandle:null,
 		constructor: function(properties) {
 			InputNumpanel.superclass.constructor.call(this, properties);
 			this.init(properties);
@@ -133,7 +140,7 @@
 				btnupimg:'login_bg49',
 				btndownimg:'login_bg50',
 				btns:btns,
-				btnhandle:this.test,
+				btnhandle:this.inputSingleNum,
 				y:this.vspace+this.numpanel.height,
 				
 			}).addTo(this);
@@ -146,7 +153,7 @@
 			this.inputpanel.x = (this.width - this.inputpanel.width)/2;
 			this.numpanel.x = (this.width - this.numpanel.width)/2;
 		},
-		test:function(n){
+		inputSingleNum:function(n){
 			var panel = this.parent.parent;
 			if(n == 200){
 				panel.numpanel.delNum();
@@ -155,6 +162,7 @@
 			}else{
 				panel.numpanel.addNum(n);
 			}
+			panel.inceptHandle(panel.numpanel.getNumsValue());
 		},
 		
 		onUpdate:function(){

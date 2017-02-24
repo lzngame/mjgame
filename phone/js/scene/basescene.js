@@ -10,6 +10,9 @@
 		tapx:0,
 		tapy:0,
 		
+		loadgif:null,
+		currentpanel:null,
+		
 		slideList:[],
 		
 		
@@ -110,6 +113,29 @@
 		onSlideDown:function(x1,y1,x2,y2){
 			
 		},
+		
+		showLoadgif:function(isshow){
+			if(isshow){
+				if(!this.loadgif){
+					this.loadgif = game.configdata.createLoadpanel();
+					this.loadgif.addTo(this);
+				}
+			}else{
+				console.log('remove loadgif');
+				this.loadgif.removeFromParent();
+				this.loadgif = null;
+			}
+		},
+		
+		executeMsg:function(sendobj,inceptobj,msgtype,msgdata){
+			console.log('pring msg ----------------------');
+			console.log(sendobj);
+			console.log(inceptobj);
+			console.log(msgtype);
+			console.log(msgdata);
+			console.log('pring msg ----------------------');
+		},
+		
 		deactive: function() {
 			this.destory();
 		},

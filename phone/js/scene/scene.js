@@ -206,8 +206,8 @@
 				}
 			});
 			
-			game.layoutUi.layoutPanelData(game.sceneuidata.weixinlogin_uidata[0],game.screenWidth,game.screenHeight,1,'bg',this);
-			game.layoutUi.layoutPanelData(game.sceneuidata.weixinlogin_uidata[1],game.screenWidth,game.screenHeight,1,'ui',this);
+			game.layoutUi.layoutPanelData(game.sceneuidata.weixinlogin_uidata[0],game.screenWidth,game.screenHeight,1,this);
+			game.layoutUi.layoutPanelData(game.sceneuidata.weixinlogin_uidata[1],game.screenWidth,game.screenHeight,1,this);
 			
 			var self = this;
 			this.items['id_weixinlogin_btn'].on(Hilo.event.POINTER_END, function(e) {
@@ -248,6 +248,9 @@
 		items:null,
 		
 		
+		testmsg1:null,
+		testmsg2:null,
+		testmsg3:null,
 		
 		constructor: function(properties) {
 			MainScene.superclass.constructor.call(this, properties);
@@ -261,7 +264,37 @@
 			this.x = game.screenWidth/2 - this.width/2;
 			this.items = {};
 		},
-		
+		executeMsg:function(sendobj,msgtype,msgdata){
+			var self = this;
+			switch(msgtype){
+				case 'test_1':
+					new Hilo.Tween.to(this,{
+						alpha:1,
+					},{
+						duration:10,
+						delay:2000,
+						onComplete:function(){
+							self.showLoadgif(false);
+						}
+					});
+					break;
+				case 'hide':
+					new Hilo.Tween.to(this,{
+						alpha:1,
+					},{
+						duration:10,
+						delay:2000,
+						onComplete:function(){
+							self.showLoadgif(false);
+							if(self.currentpanel){
+								self.currentpanel.hide();
+								self.createPointoutWindow([],'login_bg81').addTo(self);
+							}
+						}
+					});
+					break;
+			}
+		},
 		active:function(data) {
 			console.log('%s active:', this.name);
 			this.addTo(game.stage);
@@ -284,7 +317,7 @@
 				}
 			});
 			
-			game.layoutUi.layoutPanelData(game.sceneuidata.main_uidata[1],game.screenWidth,game.screenHeight,1,'ui',this);
+			game.layoutUi.layoutPanelData(game.sceneuidata.main_uidata[1],game.screenWidth,game.screenHeight,1,this);
 			var sl = new game.ScrollBmpwindow({
 				x:10,
 				y:game.screenHeight/2 - (260*game.scalefact)/2,
@@ -309,17 +342,15 @@
 				console.log('create a room');
 				var prompt = self.createPromptpanel2([],'login_bg35',true,true,self);
 				prompt.addTo(self);
-				
-				console.log('%s:%s',prompt.x,prompt.y);
-				console.log(self.getNumChildren());
+				prompt.iscurrent = true;
+				self.currentpanel = prompt;
 			});
 			
 			this.items['id_mainscene_expandable_btn'].on(Hilo.event.POINTER_END, function(e) {
 				var prompt = self.createPromptpanel3(game.sceneuidata.main_uidata[2],'login_bg35',true,true,self);
 				prompt.addTo(self);
-				
-				console.log('%s:%s',prompt.x,prompt.y);
-				console.log(self.getNumChildren());
+				self.showLoadgif(true);
+				game.sendMsg(self,game.networker,'testmsg',1000);
 			});
 			
 			this.items['id_mainscene_score_btn'].on(Hilo.event.POINTER_END, function(e) {
@@ -327,90 +358,23 @@
 				prompt.addTo(self);
 			});
 			
+			this.items['id_mainscene_help_btn'].on(Hilo.event.POINTER_END, function(e) {
+				self.createPointoutWindow([],'login_bg81').addTo(self);
+			});
+			
 			game.layoutUi.drawStepLine(game.screenWidth,game.screenHeight,this);
 			
 			this.initSlideEvent();
 		},
 		
+		createPointoutWindow:function(data,title){
+			var self = this;
+			var panel = game.configdata.createBgPanel(data,'login_bg35',true,true,self,'login_13','login_14','ui',55,'login_bg111',title);
+			return panel;
+		},
+		
 		createPromptpanel:function(bgname,ishalf,ismodal,theparent){
-			var uidata_1 =[
-				{
-					itemid:'id_1',
-					itemtype:'bmp',
-					itemurlvalue:'11',
-					layouttype_x:'pct',
-					alignx:'left_25',
-					layouttype_y:'pct',
-					aligny:'top_25'
-				},
-				{
-					itemid:'id_radiobox_test_1',
-					itemtype:'radiobox',
-					itemurlvalue:'23',
-					selectvalue:'22',
-					layouttype_x:'pct',
-					alignx:'left_30',
-					layouttype_y:'pct',
-					aligny:'bottom_10',
-					groupid:'groupid001',
-					lbtext:'4局',
-					ischeck:true,
-				},
-				{
-					itemid:'id_radiobox_test_2',
-					itemtype:'radiobox',
-					itemurlvalue:'23',
-					selectvalue:'22',
-					layouttype_x:'pct',
-					alignx:'left_45',
-					layouttype_y:'pct',
-					aligny:'bottom_10',
-					groupid:'groupid001',
-					lbtext:'8局',
-					ischeck:false,
-				},
-				{
-					itemid:'id_radiobox_test_3',
-					itemtype:'radiobox',
-					itemurlvalue:'23',
-					selectvalue:'22',
-					layouttype_x:'pct',
-					alignx:'left_60',
-					layouttype_y:'pct',
-					aligny:'bottom_10',
-					groupid:'groupid001',
-					lbtext:'16局',
-					ischeck:false,
-				},
-				{
-					itemid:'id_radiobox_test_11',
-					itemtype:'radiobox',
-					itemurlvalue:'23',
-					selectvalue:'22',
-					layouttype_x:'pct',
-					alignx:'left_45',
-					layouttype_y:'pct',
-					aligny:'bottom_20',
-					groupid:'groupid002',
-					lbtext:'房主',
-					ischeck:true,
-				},
-				{
-					itemid:'id_radiobox_test_22',
-					itemtype:'radiobox',
-					itemurlvalue:'23',
-					selectvalue:'22',
-					layouttype_x:'pct',
-					alignx:'left_60',
-					layouttype_y:'pct',
-					aligny:'bottom_20',
-					groupid:'groupid002',
-					lbtext:'雀圣',
-					ischeck:false,
-				}
-			];
-			
-			var panel = game.configdata.createBgPanel(uidata_1,bgname,ishalf,ismodal,theparent,'login_13','login_14','ui',55,'login_bg111','login_bg42');
+			var panel = game.configdata.createBgPanel(game.sceneuidata.main_uidata[3],bgname,ishalf,ismodal,theparent,'login_13','login_14','ui',55,'login_bg111','login_bg42');
 			var sl = new game.ScrollBmpwindow({
 				x:100,
 				y:100,
@@ -431,8 +395,8 @@
 			var numpanel = new game.InputNumpanel({numcount:6,x:350,y:10,scaleX:game.scalefact,scaleY:game.scalefact}).addTo(panel);
 			numpanel.x = (panel.width - numpanel.width)*game.scalefact/2;
 			numpanel.y = panel.height * game.scalefact -numpanel.height * game.scalefact - panel.height * game.scalefact * 0.05;
+			numpanel.inceptHandle = this.inceptNum;
 			panel.numpanel = numpanel;
-			
 			return panel;
 		},
 		
@@ -465,6 +429,14 @@
 			this.slideList.push(scrollwin);
 			
 			return panel;
+		},
+		inceptNum:function(numst){
+			console.log(numst);
+			if(numst.length >= 6 && !isNaN(numst)){
+				var scene = this.parent.parent;
+				scene.showLoadgif(true);
+				game.sendMsg(scene,game.networker,'testmsg_num',1000);
+			}
 		},
 		
 		deactive: function() {

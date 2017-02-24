@@ -217,6 +217,7 @@ game.configdata = new function(){
 	
 	self.createBgPanel = function(data,bgname,ishalf,ismodal,theparent,close_uprect,close_downrect,close_imgsource,close_offsetx,titlebg,titlefront){
 			var panel = new Hilo.Container();
+			panel.iscurrent = false;
 			var rect = game.configdata.getPngRect(bgname,'bg');
 			var panelwidth = rect[2];
 			var panelheight = rect[3];
@@ -230,6 +231,14 @@ game.configdata = new function(){
 			panel.height = panelheight;
 			panel.x = theparent.width/2  - panel.width*game.scalefact/2;
 			panel.y = theparent.height/2 - panel.height*game.scalefact/2;
+			panel.hide = function(){
+				if(this.iscurrent){
+					this.parent.currentpanel = null;
+				}
+				this.removeAllChildren();
+				this.removeFromParent();
+				console.log(this.getNumChildren());
+			};
 			
 			if(ismodal){
 				panel.modalmask = new Hilo.Bitmap({
@@ -249,18 +258,49 @@ game.configdata = new function(){
 			var closebtn = game.configdata.createButton(close_imgsource,close_uprect,close_downrect,0,0).addTo(panel);
 			closebtn.x = panelwidth * game.scalefact - closebtn.width*game.scalefact - close_offsetx*game.scalefact;
 			closebtn.on(Hilo.event.POINTER_END, function(e) {
-				panel.removeAllChildren();
-				panel.removeFromParent();
-				//p.numpanel.numpanel.clearAll();
-				console.log(panel.getNumChildren());
+				panel.hide();
 			});
 			
 			var titleIcon = new game.DoubleIcon({imgsource:'ui',bgimg:titlebg,frontimg:titlefront,scaleX:game.scalefact,scaleY:game.scalefact}).addTo(panel);
 			titleIcon.x = (panel.width - titleIcon.width) * game.scalefact /2;
 			panel.items = {};
-			game.layoutUi.layoutPanelData(data,panel.width,panel.height,game.scalefact,'ui',panel);
+			game.layoutUi.layoutPanelData(data,panel.width,panel.height,game.scalefact,panel);
 			return panel;
 		},
+		
+	self.createLoadgif = function(){
+		var atlas = new Hilo.TextureAtlas({
+                image: game.getImg('loadgif'),
+                width: 144,
+                height: 144,
+                frames: {
+                    frameWidth: 48,
+                    frameHeight: 48,
+                    numFrames: 9
+                },
+                sprites: {
+                    loading: {from:0, to:7}
+                }
+            });
+       	 return new Hilo.Sprite({
+                frames: atlas.getSprite('loading'),
+                interval: 8,
+                width:48,
+                height:48
+            });
+	},
+	
+	self.createLoadpanel = function(){
+		var panel = new Hilo.Container();
+		var w = game.screenWidth ;
+		var h = game.screenHeight;
+		var bg = game.configdata.creatRectImg('bg','battlebg',0,0,game.scalefact).addTo(panel);
+		bg.alpha = 0.5;
+		var loadgif = game.configdata.createLoadgif().addTo(panel);
+		loadgif.x = w/2 - loadgif.width/2;
+		loadgif.y = h/2 - loadgif.height/2;
+		return panel;
+	},
 	
 	self.getPngRect = function(pngname,sourcePng){
 		var rect = null;
@@ -305,6 +345,21 @@ game.configdata = new function(){
 	
 };
 
+game.networker = new function(){
+	var self = this;
+	this.executeMsg = function(sendobj,msgtype,msgdata){
+		switch(msgtype){
+			case 'testmsg':
+				game.sendMsg(this,sendobj,'test_1',200);
+				break;
+			case 'testmsg_num':
+				game.sendMsg(this,sendobj,'hide',200);
+				break;
+		}
+	};
+	
+};
+
 
 game.sounds = new function(){
 	var self = this;
@@ -330,17 +385,18 @@ game.sounds = new function(){
 
 game.layoutUi = new function(){
 	var self = this;
-	this.layoutPanelData = function(uidata,panelwidth,panelheight,scalefact,imgsourcename,theparent){
-			if(!imgsourcename){
-				imgsourcename = 'ui';
-			}
+	this.layoutPanelData = function(uidata,panelwidth,panelheight,scalefact,theparent){
 			var tmpposdic = {};
 			panelwidth = panelwidth * scalefact;
 			panelheight = panelheight * scalefact;
 			for(var i=0;i<uidata.length;i++){
 				var itemdata = uidata[i];
-				var posxy = game.layoutUi.getItemPos(itemdata,panelwidth,panelheight,imgsourcename,tmpposdic);
-				var rect = game.configdata.getPngRect(itemdata.itemurlvalue,imgsourcename);
+				var imgsource = itemdata.imgsource;
+				if(!imgsource){
+					imgsource = 'ui';
+				}
+				var posxy = game.layoutUi.getItemPos(itemdata,panelwidth,panelheight,imgsource,tmpposdic);
+				var rect = game.configdata.getPngRect(itemdata.itemurlvalue,imgsource);
 				var x = posxy[0];
 				var y = posxy[1];
 				var w = rect[2] * game.scalefact;
@@ -350,10 +406,10 @@ game.layoutUi = new function(){
 					theparent.items[itemdata.itemid] = game.configdata.createTitletext(itemdata.textvalue,itemdata.font,itemdata.color,itemdata.bg,x,y,w).addTo(theparent);
 				}
 				if(itemdata.itemtype === 'bmp'){ 
-					theparent.items[itemdata.itemid] = game.configdata.creatRectImg(imgsourcename,itemdata.itemurlvalue,x,y,game.scalefact).addTo(theparent);
+					theparent.items[itemdata.itemid] = game.configdata.creatRectImg(imgsource,itemdata.itemurlvalue,x,y,game.scalefact).addTo(theparent);
 				}
 				if(itemdata.itemtype === 'doublebmp'){ 
-					theparent.items[itemdata.itemid] = game.configdata.creatDoubleImg(imgsourcename,itemdata.itemurlvalue,itemdata.frontimg,x,y,game.scalefact).addTo(theparent);
+					theparent.items[itemdata.itemid] = game.configdata.creatDoubleImg(imgsource,itemdata.itemurlvalue,itemdata.frontimg,x,y,game.scalefact).addTo(theparent);
 				}
 				if(itemdata.itemtype === 'btn'){ 
 					theparent.items[itemdata.itemid] = game.configdata.createButton('ui',itemdata.itemurlvalue,itemdata.btnup,x,y).addTo(theparent);
@@ -373,20 +429,20 @@ game.layoutUi = new function(){
 			}
 	};
 	
-	this.getItemPos = function(itemdata,panelwidth,panelheight,imgsourcename,tmpposdic){
+	this.getItemPos = function(itemdata,panelwidth,panelheight,imgsource,tmpposdic){
 			if(itemdata.layouttype_x === 'txt'){
 						var aligntype = itemdata.alignx;
 						if(aligntype === 'center'){
 							aligntype = 'center_x';
 						}
-						var x= this.getItemTxtPos(aligntype,itemdata.itemurlvalue,panelwidth,panelheight,imgsourcename);
+						var x= this.getItemTxtPos(aligntype,itemdata.itemurlvalue,panelwidth,panelheight,imgsource);
 				}
 			if(itemdata.layouttype_y === 'txt'){
 						aligntype = itemdata.aligny;
 						if(aligntype === 'center'){
 							aligntype = 'center_y';
 						}
-						var y= this.getItemTxtPos(aligntype,itemdata.itemurlvalue,panelwidth,panelheight,imgsourcename);
+						var y= this.getItemTxtPos(aligntype,itemdata.itemurlvalue,panelwidth,panelheight,imgsource);
 				}
 			if(itemdata.layouttype_x === 'pct'){
 						var aligntype = itemdata.alignx;
@@ -397,7 +453,7 @@ game.layoutUi = new function(){
 						}else{
 							aligntype = tm[0];
 						}
-						var x= this.getItemPctPos(aligntype,value,itemdata.itemurlvalue,panelwidth,panelheight,imgsourcename);
+						var x= this.getItemPctPos(aligntype,value,itemdata.itemurlvalue,panelwidth,panelheight,imgsource);
 					}
 			if(itemdata.layouttype_y === 'pct'){
 						aligntype = itemdata.aligny;
@@ -408,7 +464,7 @@ game.layoutUi = new function(){
 						}else{
 							aligntype = tm[0];
 						}
-						var y= this.getItemPctPos(aligntype,value,itemdata.itemurlvalue,panelwidth,panelheight,imgsourcename);
+						var y= this.getItemPctPos(aligntype,value,itemdata.itemurlvalue,panelwidth,panelheight,imgsource);
 					}
 			if(itemdata.layouttype_x === 'follow'){
 						var aligntype = itemdata.alignx;
@@ -427,8 +483,8 @@ game.layoutUi = new function(){
 			return [x,y];
 		};
 		
-	this.getItemPctPos = function(relativepos,pctvalue,namevalue,panelwidth,panelheight,imgsourcename){
-			var rect = game.configdata.getPngRect(namevalue,imgsourcename);
+	this.getItemPctPos = function(relativepos,pctvalue,namevalue,panelwidth,panelheight,imgsource){
+			var rect = game.configdata.getPngRect(namevalue,imgsource);
 			var result = 0;
 			var w = rect[2] * game.scalefact;
 			var h = rect[3] * game.scalefact;
@@ -466,8 +522,8 @@ game.layoutUi = new function(){
 			return result;
 		};
 		
-	this.getItemTxtPos = function(txtvalue,namevalue,panelwidth,panelheight,imgsourcename){
-			var rect = game.configdata.getPngRect(namevalue,imgsourcename);
+	this.getItemTxtPos = function(txtvalue,namevalue,panelwidth,panelheight,imgsource){
+			var rect = game.configdata.getPngRect(namevalue,imgsource);
 			var result = 0;
 			var w = rect[2] * game.scalefact;
 			var h = rect[3] * game.scalefact;
@@ -567,6 +623,11 @@ game.drawdata = new function(){
 	this.drawItemRect = function(linesize,lineclr,fillclr,x,y,w,h,parent){
 		 var g1 = new Hilo.Graphics({x:x, y:y});
          g1.lineStyle(linesize,lineclr).beginFill(fillclr).drawRect(0, 0, w, h).endFill().addTo(parent);
+         return g1;
+	};
+	this.drawSingleRect = function(linesize,lineclr,fillclr,x,y,w,h){
+		 var g1 = new Hilo.Graphics({x:x, y:y});
+         g1.lineStyle(linesize,lineclr).beginFill(fillclr).drawRect(0, 0, w, h).endFill();
          return g1;
 	};
 	this.drawItemRoundrect = function(linesize,lineclr,fillclr,x,y,w,h,r,parent){

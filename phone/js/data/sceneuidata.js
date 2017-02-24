@@ -12,6 +12,7 @@ game.sceneuidata = new function(){
 				{
 					itemid:'id_weixinlogbg_girl_bmp',
 					itemtype:'bmp',
+					imgsource:'bg',
 					itemurlvalue:'login_bg',
 					layouttype_x:'txt',
 					alignx:'center',
@@ -143,6 +144,16 @@ game.sceneuidata = new function(){
 			//---------- 2：分享按钮弹出窗口  朋友圈分享按钮  微信分享按钮
 			[
 				{
+					itemid:'id_weixinsharebg_bmp',
+					itemtype:'bmp',
+					itemurlvalue:'login_bg36',
+					imgsource:'bg',
+					layouttype_x:'txt',
+					alignx:'center',
+					layouttype_y:'txt',
+					aligny:'center'
+				},
+				{
 					itemid:'id_shareweixin_btn',
 					itemtype:'scalebtn',
 					itemurlvalue:'fenxiang2',
@@ -188,7 +199,100 @@ game.sceneuidata = new function(){
 					layouttype_y:'pct',
 					aligny:'bottom_55'
 				},
-			]
+			],
+			// -------- 3 创建房间窗口数据
+			[
+				{
+					itemid:'id_1',
+					itemtype:'bmp',
+					itemurlvalue:'11',
+					layouttype_x:'pct',
+					alignx:'left_25',
+					layouttype_y:'pct',
+					aligny:'top_25'
+				},
+				{
+					itemid:'id_radiobox_test_1',
+					itemtype:'radiobox',
+					itemurlvalue:'23',
+					selectvalue:'22',
+					layouttype_x:'pct',
+					alignx:'left_30',
+					layouttype_y:'pct',
+					aligny:'bottom_10',
+					groupid:'groupid001',
+					lbtext:'4局',
+					ischeck:true,
+				},
+				{
+					itemid:'id_radiobox_test_2',
+					itemtype:'radiobox',
+					itemurlvalue:'23',
+					selectvalue:'22',
+					layouttype_x:'pct',
+					alignx:'left_45',
+					layouttype_y:'pct',
+					aligny:'bottom_10',
+					groupid:'groupid001',
+					lbtext:'8局',
+					ischeck:false,
+				},
+				{
+					itemid:'id_radiobox_test_3',
+					itemtype:'radiobox',
+					itemurlvalue:'23',
+					selectvalue:'22',
+					layouttype_x:'pct',
+					alignx:'left_60',
+					layouttype_y:'pct',
+					aligny:'bottom_10',
+					groupid:'groupid001',
+					lbtext:'16局',
+					ischeck:false,
+				},
+				{
+					itemid:'id_radiobox_test_11',
+					itemtype:'radiobox',
+					itemurlvalue:'23',
+					selectvalue:'22',
+					layouttype_x:'pct',
+					alignx:'left_45',
+					layouttype_y:'pct',
+					aligny:'bottom_20',
+					groupid:'groupid002',
+					lbtext:'房主',
+					ischeck:true,
+				},
+				{
+					itemid:'id_radiobox_test_22',
+					itemtype:'radiobox',
+					itemurlvalue:'23',
+					selectvalue:'22',
+					layouttype_x:'pct',
+					alignx:'left_60',
+					layouttype_y:'pct',
+					aligny:'bottom_20',
+					groupid:'groupid002',
+					lbtext:'雀圣',
+					ischeck:false,
+				}
+			],
+			//---------- 4：提示弹出窗口  朋友圈分享按钮  微信分享按钮
+			[
+				{
+					itemid:'id_shareweixin_text',
+					itemtype:'texttitle',
+					itemurlvalue:'zeng',
+					textvalue:'不存在此房间',
+					color:'#333333',
+					font:'16px 黑体',
+					bg:'rgba(0,0,0,0)',
+					layouttype_x:'txt',
+					alignx:'center',
+					layouttype_y:'txt',
+					aligny:'center'
+				},
+			],
 		];
 	
 	self.createAtlas = function(data){
