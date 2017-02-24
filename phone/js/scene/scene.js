@@ -301,7 +301,6 @@
 				console.log('create a room');
 				var prompt = self.createPromptpanel('login_bg35',true,true,self);
 				prompt.addTo(self);
-				self.slideList.push(prompt.sl);
 				console.log(self.getNumChildren());
 			});
 			
