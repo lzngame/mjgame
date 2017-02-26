@@ -27,6 +27,7 @@ game.configdata = new function(){
 		login:'LOGIN_SCENE_NAME',
 		weixinlogin:'WEIXIN_LOGIN_SCENENAME',
 		main:'MAIN_SCENE_NAME',
+		play:'PLAY_SCENE_NAME',
 		over:'GAME_SCENE_NAME',
 		shop:'SHOP_SCENE_NAME',
 	};
@@ -185,7 +186,7 @@ game.configdata = new function(){
 				text:textvalue,
 				font:font,
 				color:color,
-				x:x-w/2,
+				x:x,
 				y:y,
 				background:bg,
 				width:w,
@@ -353,7 +354,11 @@ game.networker = new function(){
 				game.sendMsg(this,sendobj,'test_1',200);
 				break;
 			case 'testmsg_num':
-				game.sendMsg(this,sendobj,'hide',200);
+				var isright = false;
+				if(msgdata == '112233'){
+					isright = true;
+				}
+				game.sendMsg(this,sendobj,'hide',isright);
 				break;
 		}
 	};
@@ -415,7 +420,7 @@ game.layoutUi = new function(){
 					theparent.items[itemdata.itemid] = game.configdata.createButton('ui',itemdata.itemurlvalue,itemdata.btnup,x,y).addTo(theparent);
 				}
 				if(itemdata.itemtype === 'scalebtn'){ 
-					theparent.items[itemdata.itemid] = game.configdata.createScalebutton('ui',itemdata.itemurlvalue,x,y).addTo(theparent);
+					theparent.items[itemdata.itemid] = game.configdata.createScalebutton('ui',itemdata.itemurlvalue,x+w/2,y+h/2).addTo(theparent);
 				}
 				if(itemdata.itemtype === 'selectbox'){ 
 					theparent.items[itemdata.itemid] = game.configdata.createSelectbox(itemdata.itemurlvalue,itemdata.selectvalue,x,y).addTo(theparent);

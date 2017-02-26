@@ -247,11 +247,6 @@
 		name: game.configdata.SCENE_NAMES.main,
 		items:null,
 		
-		
-		testmsg1:null,
-		testmsg2:null,
-		testmsg3:null,
-		
 		constructor: function(properties) {
 			MainScene.superclass.constructor.call(this, properties);
 			this.init(properties);
@@ -288,7 +283,11 @@
 							self.showLoadgif(false);
 							if(self.currentpanel){
 								self.currentpanel.hide();
-								self.createPointoutWindow([],'login_9','对不起，没有此房间').addTo(self);
+								if(msgdata){
+									game.switchScene(game.configdata.SCENE_NAMES.play);
+								}else{
+									self.createPointoutWindow([],'login_9','对不起，没有此房间').addTo(self);
+								}
 							}
 						}
 					});
@@ -462,7 +461,7 @@
 			if(numst.length >= 6 && !isNaN(numst)){
 				var scene = this.parent.parent;
 				scene.showLoadgif(true);
-				game.sendMsg(scene,game.networker,'testmsg_num',1000);
+				game.sendMsg(scene,game.networker,'testmsg_num',numst);
 			}
 		},
 		
