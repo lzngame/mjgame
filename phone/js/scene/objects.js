@@ -206,7 +206,7 @@
 			}
 		},
 	});
-	//Scrollwindow ---- 滑动图片滚动窗口
+	//ScrollBmpwindow ---- 滑动图片滚动窗口
 	var ScrollBmpwindow = ns.ScrollBmpwindow = Hilo.Class.create({
 		Extends: Hilo.Container,
 		name:'ScrollBmpwindow',
@@ -224,6 +224,9 @@
 		slidedisx:0,
 		space:5,
 		itemwidth:0,
+		pointlayer:null,
+		pointimg:null,
+		pointspace:20,
 		
 		autoSumtime:0,
 		autoInterval:0,
@@ -250,6 +253,23 @@
 					console.log(this.x);
 				});
 			}
+			for(var i=0;i<imglist.length;i++){
+				var imgurl = game.getImg('ui');
+				var img = new Hilo.Bitmap({
+					image:imgurl,
+					rect:game.configdata.getPngRect('11','ui'),
+					x:i*this.pointspace,
+				}).addTo(this.pointlayer);
+			}
+			this.pointimg = new Hilo.Bitmap({
+				image:imgurl,
+				rect:game.configdata.getPngRect('10','ui'),
+				x:this.currentIndex * this.pointspace
+			}).addTo(this.pointlayer);
+			
+			this.pointlayer.width = (this.imgs - 1) * this.pointspace;
+			this.pointlayer.x = (this.width-this.pointlayer.width)/2;
+			this.pointlayer.y = this.height - 10;
 		},
 		init: function(properties) {
 			console.log('scroll init');
@@ -258,6 +278,7 @@
 			this.imgpanel = new Hilo.Container().addTo(this);
 			//this.imgpanel.pointerEnabled = false;
 			this.imgpanel.mask = this.roundmask;
+			this.pointlayer = new Hilo.Container().addTo(this);
 			this.on(Hilo.event.POINTER_START,function(e){
 				this.tapstart = true;
 				this.tapstartx = e.stageX;
@@ -302,6 +323,7 @@
 			this.tapstart = false;
 			this.disx = 0;
 			this.slidedisx = 0;
+			this.pointimg.x = this.currentIndex * this.pointspace;
 		},
 		autoSlideTo:function(targetx,durationtime){
 			var self = this;
