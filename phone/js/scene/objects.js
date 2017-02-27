@@ -482,20 +482,7 @@
 			}
 		},
 		onUpdate:function(){
-			/*this.autoInterval++;
-			if(this.autoInterval > 300){
-				this.autoInterval = 0;
-				if(this.currentIndex == 0 || this.currentIndex == this.imgs-1){
-					this.autoDirect = !this.autoDirect;
-				}
-				
-				if(this.autoDirect){
-					this.slidedisx = 65;
-				}else{
-					this.slidedisx = -65;
-				}
-				this.slideEnd();
-			}*/
+			
 		}
 	});
 	
@@ -698,4 +685,146 @@
 		},
 	});
 	
+	//麻将牌 --- 自己的
+	var MjSelf = ns.MjSelf = Hilo.Class.create({
+		Extends: Hilo.Container,
+		mjid:'w_1',
+		name:'MjSelf',
+		imgsource:'mj',
+		bgimg:null,
+		frontimg:null,
+		goldimg:null,
+		rectfront:null,
+		bgrects:['selfmj_30','selfmj_23','selfmj_22'],
+		bgrect:0,
+		state:0,   //0 正常 1放下（吃/碰/明杠）2暗杠
+		swidth:0,
+		sheight:0,
+		isgold:false,
+		putdownOffsety:7,
+		
+		currentposy:0,
+		currentposx:0,
+		tapstart:false,
+		tapstartx:0,
+		tapstarty:0,
+		tapx:0,
+		tapy:0,
+		disx:0,
+		disy:0,
+		tempindex:null,
+		hadmove:false,
+		
+		initx:0,
+		inity:0,
+		
+		constructor: function(properties) {
+			MjSelf.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		
+		init: function(properties) {
+			var img = game.getImg(this.imgsource);
+			this.bgrect = game.configdata.getPngRect(this.bgrects[this.state],this.imgsource);
+			var offsety = this.putdownOffsety;
+			if(this.state != 0){
+				offsety = 0;
+			}
+			var frontname = game.mjdata.mj[this.mjid][1];
+			this.rectfront = game.configdata.getPngRect(frontname,this.imgsource);
+			this.width = this.bgrect[2];
+			this.height = this.bgrect[3];
+			this.swidth =  this.width  * game.scalefact;
+			this.sheight = this.height * game.scalefact;
+			this.bgimg = new Hilo.Bitmap({
+				image:img,
+				rect:this.bgrect,
+			}).addTo(this);
+			this.frontimg = new Hilo.Bitmap({
+				image:img,
+				rect:this.rectfront,
+				x:(this.bgrect[2]-this.rectfront[2])/2,
+				y:(this.bgrect[3]-this.rectfront[3])/2 + offsety,
+			}).addTo(this);
+			
+			this.initx = this.x;
+			this.inity = this.y;
+			this.initTouch();
+		},
+		initTouch:function(){
+			this.on(Hilo.event.POINTER_START,function(e){
+				this.tapstart = true;
+				this.tapstartx = e.stageX;
+				this.tapstarty = e.stageY;
+				this.tapstart = true;
+				this.disx = e.stageX - this.x ;//- this.contentpanel.x;
+				this.disy = e.stageY - this.y ;//- this.contentpanel.y;
+				//this.y -= 30;
+				this.tempindex = new Hilo.Container().addTo(this.parent);
+				console.log(this.tempindex.depth);
+				this.parent.swapChildren(this.tempindex,this);
+				console.log(this.tempindex.depth);
+				console.log(this.depth);
+			});
+			this.on(Hilo.event.POINTER_MOVE,function(e){
+				if(this.tapstart){
+					var x = e.stageX - this.disx;
+					var y = e.stageY - this.disy;
+					this.x = x;
+					this.y = y;
+					this.hadmove = true;
+					console.log(this.hadmove);
+				}
+			});
+			this.on(Hilo.event.POINTER_END,function(e){
+				this.tapstart = false;
+				if(!this.hadmove){
+					this.y = this.inity -30;
+				}else{
+					var dis = this.inity - this.y;
+					if(dis > 60){
+						this.setState(1);
+					}else{
+						this.y = this.inity;
+						this.x = this.initx;
+					}
+				}
+				
+				
+				this.hadmove = false;
+				console.log(dis);
+				this.tempindex.removeFromParent();
+				console.log(this.tempindex.depth);
+			});
+			this.on('touchout',function(e){
+				//this.slideEnd();
+				console.log('000000000000000000***********************************');
+			});
+		},
+		setState:function(state){
+			this.state = state;
+			if(this.state != 0){
+				this.frontimg.y = 0;
+			}
+			if(this.state == 2){
+				this.frontimg.visible = false;
+			}else{
+				this.frontimg.visible = true;
+			}
+			this.bgrect = game.configdata.getPngRect(this.bgrects[this.state],this.imgsource);
+			this.bgimg.setImage(game.getImg(this.imgsource),this.bgrect);
+		},
+		setGold:function(isgold){
+			var goldrect = game.configdata.getPngRect('18','ui');
+			var x = this.width - goldrect[2];
+			var y = this.height - goldrect[3];
+			this.isgold = true;
+			this.goldimg = new Hilo.Bitmap({
+				image:game.getImg('ui'),
+				x:x,
+				y:y,
+				rect:goldrect
+			}).addTo(this);
+		}
+	});
 })(window.game);
