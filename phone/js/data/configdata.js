@@ -642,6 +642,43 @@ game.drawdata = new function(){
 	};
 };
 
+game.mjdata = new function(){
+	var self = this;
+	self.mj = {
+		w_1:['一万','selfmj_32'],
+		w_2:['两万','selfmj_33'],
+		w_3:['三万','selfmj_34'],
+		w_4:['四万','selfmj_35'],
+		w_5:['五万','selfmj_36'],
+		w_6:['六万','selfmj_37'],
+		w_7:['七万','selfmj_38'],
+		w_8:['八万','selfmj_39'],
+		w_9:['九万','selfmj_40'],
+		
+		t_1:['一条','selfmj_41'],
+		t_2:['两条','selfmj_42'],
+		t_3:['三条','selfmj_43'],
+		t_4:['四条','selfmj_44'],
+		t_5:['五条','selfmj_45'],
+		t_6:['六条','selfmj_46'],
+		t_7:['七条','selfmj_47'],
+		t_8:['八条','selfmj_48'],
+		t_9:['九条','selfmj_49'],
+		
+		b_1:['一饼','selfmj_50'],
+		b_2:['两饼','selfmj_51'],
+		b_3:['三饼','selfmj_52'],
+		b_4:['四饼','selfmj_53'],
+		b_5:['五饼','selfmj_54'],
+		b_6:['六饼','selfmj_55'],
+		b_7:['七饼','selfmj_56'],
+		b_8:['八饼','selfmj_57'],
+		b_9:['九饼','selfmj_58'],
+		
+	};
+	
+};
+
 
 function addfps(x,y,parent){
 	var fps = new game.FpsPanel({x:x,y:y});

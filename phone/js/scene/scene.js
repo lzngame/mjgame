@@ -348,8 +348,19 @@
 			this.items['id_mainscene_expandable_btn'].on(Hilo.event.POINTER_END, function(e) {
 				var prompt = self.createPromptpanel3(game.sceneuidata.main_uidata[2],'login_bg35',true,true,self);
 				prompt.addTo(self);
-				self.showLoadgif(true);
-				game.sendMsg(self,game.networker,'testmsg',1000);
+				//self.showLoadgif(true);
+				//game.sendMsg(self,game.networker,'testmsg',1000);
+				
+				
+				var mj_tmp1 = new game.MjSelf({x:44, y:207, mjid:'b_5'}).addTo(prompt);
+				var mj_tmp11 = new game.MjSelf({x:94, y:207, mjid:'b_3'}).addTo(prompt);
+				
+				var mj_tmp2 = new game.MjSelf({x:154,y:207,mjid:'t_7'}).addTo(prompt);
+				var mj_tmp3 = new game.MjSelf({x:214,y:207,mjid:'w_7'}).addTo(prompt);
+				mj_tmp3.setState(1);
+				mj_tmp2.setState(2);
+				mj_tmp11.setGold(true);
+				
 			});
 			
 			this.items['id_mainscene_score_btn'].on(Hilo.event.POINTER_END, function(e) {
