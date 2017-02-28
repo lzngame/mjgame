@@ -801,11 +801,16 @@
 			this.on(Hilo.event.POINTER_END,function(e){
 				this.tapstart = false;
 				if(!this.hadmove){
-					this.y = this.inity -30;
+					if(this.y < this.inity){
+						game.sendMsg(this,game.scenes[game.configdata.SCENE_NAMES.play],'isme',this.mjid);
+					}else{
+						this.y = this.inity -30;
+					}
 				}else{
 					var dis = this.inity - this.y;
 					if(dis > 60){
-						this.setState(1);
+						//this.setState(1);
+						game.sendMsg(this,game.scenes[game.configdata.SCENE_NAMES.play],'isme',this.mjid);
 					}else{
 						this.y = this.inity;
 						this.x = this.initx;
@@ -817,7 +822,7 @@
 				console.log(dis);
 				this.tempindex.removeFromParent();
 				console.log(this.tempindex.depth);
-				game.sendMsg(this,game.scenes[game.configdata.SCENE_NAMES.play],'isme',this.mjid);
+
 			});
 			this.on('touchout',function(e){
 				//this.slideEnd();

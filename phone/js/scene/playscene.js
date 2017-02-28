@@ -84,6 +84,9 @@
 		mjlayer:null,
 		currentmj:null,
 		
+		takmjbtn:null,
+		isThrow:false,
+		
 		constructor: function(properties) {
 			PlayMainscene.superclass.constructor.call(this, properties);
 			this.init(properties);
@@ -102,9 +105,10 @@
 						sendobj.y -= 100;
 						sendobj.setState(1);
 						sendobj.removeFromParent();
+						self.isThrow = false;
 						self.currentmj = null;
-						self.addRandMj();
-						self.sortMj();
+						//self.addRandMj();
+						//self.sortMj();
 					}else{
 						if(self.currentmj){
 							self.currentmj.y = self.currentmj.inity;
@@ -124,6 +128,26 @@
 			
 			
 			this.deal();
+			var self = this;
+			this.takemjbtn = game.configdata.createButton('ui','login_10','login_11',10,140).addTo(this);
+			this.takemjbtn.on(Hilo.event.POINTER_END,function(e){
+				if(!self.isThrow){
+					self.takemj();
+					self.isThrow = true;
+				}
+			});
+			
+		},
+		
+		takemj:function(){
+			var id = this.createRandomMjid();
+			var mj = new game.MjSelf({mjid:id,scaleX:game.scalefact,scaleY:game.scalefact}).addTo(this.mjlayer);
+			var x = this.width - mj.swidth - 50;
+			var y = this.height - mj.sheight - 20;
+			mj.x = x;
+			mj.y = y;
+			mj.initx = mj.x;
+			mj.inity = mj.y;
 		},
 		
 		sortMj:function(){
@@ -132,7 +156,7 @@
 			for(var i=0;i<l.length;i++){
 				var mj = l[i];
 				mj.x = (mj.swidth+1)*i;
-				mj.y = 200;
+				mj.y = this.height - 20 -mj.sheight;
 				mj.initx = mj.x;
 				mj.inity = mj.y;
 			}
