@@ -100,21 +100,19 @@
 		executeMsg:function(sendobj,msgtype,msgdata){
 			var self = this;
 			switch(msgtype){
-				case 'isme':
-					if(sendobj == self.currentmj){
-						sendobj.y -= 100;
-						sendobj.setState(1);
-						sendobj.removeFromParent();
-						self.isThrow = false;
-						self.currentmj = null;
-						//self.addRandMj();
-						//self.sortMj();
-					}else{
-						if(self.currentmj){
-							self.currentmj.y = self.currentmj.inity;
-						}
-						self.currentmj = sendobj;
-					}
+				case game.mjdata.msg.SELECT:
+					if(self.currentmj)
+						self.currentmj.backQueue();
+					self.currentmj = sendobj;
+					console.log('点选此牌');
+					console.log(self.mjlayer.getNumChildren());
+					break;
+				case game.mjdata.msg.THROW:
+					sendobj.removeFromParent();
+					self.currentmj = null;
+					self.isThrow = false;
+					console.log(self.mjlayer.getNumChildren());
+					self.sortMj();
 					break;
 			}
 		},
@@ -136,7 +134,6 @@
 					self.isThrow = true;
 				}
 			});
-			
 		},
 		
 		takemj:function(){
@@ -151,8 +148,9 @@
 		},
 		
 		sortMj:function(){
-			this.mjlayer.sortChildren(this._sortmj);
 			var l = this.mjlayer.children;
+			console.log('张数：%s',l.length);
+			this.mjlayer.sortChildren(this._sortmj);
 			for(var i=0;i<l.length;i++){
 				var mj = l[i];
 				mj.x = (mj.swidth+1)*i;

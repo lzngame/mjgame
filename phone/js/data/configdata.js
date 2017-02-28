@@ -650,6 +650,10 @@ game.drawdata = new function(){
 
 game.mjdata = new function(){
 	var self = this;
+	self.msg ={
+		THROW:'throw_mj_msg_100',
+		SELECT:'select_mj_msg_101',
+	},
 	self.mj = {
 		w_1:['一万','selfmj_32'],
 		w_2:['两万','selfmj_33'],

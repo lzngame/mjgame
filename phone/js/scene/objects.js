@@ -740,6 +740,8 @@
 		initx:0,
 		inity:0,
 		
+		isSelected:false,
+		
 		constructor: function(properties) {
 			MjSelf.superclass.constructor.call(this, properties);
 			this.init(properties);
@@ -779,14 +781,10 @@
 				this.tapstartx = e.stageX;
 				this.tapstarty = e.stageY;
 				this.tapstart = true;
-				this.disx = e.stageX - this.x ;//- this.contentpanel.x;
-				this.disy = e.stageY - this.y ;//- this.contentpanel.y;
-				//this.y -= 30;
-				this.tempindex = new Hilo.Container().addTo(this.parent);
-				console.log(this.tempindex.depth);
+				this.disx = e.stageX - this.x ;
+				this.disy = e.stageY - this.y ;
+				this.tempindex = this.parent.children[this.parent.getNumChildren()-1];
 				this.parent.swapChildren(this.tempindex,this);
-				console.log(this.tempindex.depth);
-				console.log(this.depth);
 			});
 			this.on(Hilo.event.POINTER_MOVE,function(e){
 				if(this.tapstart){
@@ -795,39 +793,62 @@
 					this.x = x;
 					this.y = y;
 					this.hadmove = true;
+					
 					console.log(this.hadmove);
 				}
 			});
 			this.on(Hilo.event.POINTER_END,function(e){
 				this.tapstart = false;
+				
 				if(!this.hadmove){
-					if(this.y < this.inity){
-						game.sendMsg(this,game.scenes[game.configdata.SCENE_NAMES.play],'isme',this.mjid);
+					if(this.isSelected){
+						console.log('type--1----mj---throw');
+						game.sendMsg(this,game.scenes[game.configdata.SCENE_NAMES.play],game.mjdata.msg.THROW,this.mjid);
 					}else{
-						this.y = this.inity -30;
+						console.log('type--1----mj---choice');
+						this.y = this.inity -20;
+						this.x = this.initx;
+						this.isSelected = true;
+						game.sendMsg(this,game.scenes[game.configdata.SCENE_NAMES.play],game.mjdata.msg.SELECT,this.mjid);
 					}
 				}else{
+					console.log('move mj');
 					var dis = this.inity - this.y;
-					if(dis > 60){
-						//this.setState(1);
-						game.sendMsg(this,game.scenes[game.configdata.SCENE_NAMES.play],'isme',this.mjid);
+					if(Math.abs(dis) < 10){
+						if(this.isSelected){
+							console.log('type--2----mj---throw');
+							game.sendMsg(this,game.scenes[game.configdata.SCENE_NAMES.play],game.mjdata.msg.THROW,this.mjid);
+						}else{
+							console.log('type--2----mj---choice');
+							this.y = this.inity -20;
+							this.x = this.initx;
+							this.isSelected = true;
+							game.sendMsg(this,game.scenes[game.configdata.SCENE_NAMES.play],game.mjdata.msg.SELECT,this.mjid);
+						}
 					}else{
-						this.y = this.inity;
-						this.x = this.initx;
+						if(dis > 60){
+							console.log('type--3----mj---throw');
+							game.sendMsg(this,game.scenes[game.configdata.SCENE_NAMES.play],game.mjdata.msg.THROW,this.mjid);
+						}else{
+							this.y = this.inity;
+							this.x = this.initx;
+							console.log('复位');
+						}
 					}
+					
+					console.log(dis);
 				}
-				
-				
 				this.hadmove = false;
-				console.log(dis);
-				this.tempindex.removeFromParent();
-				console.log(this.tempindex.depth);
-
+				
 			});
 			this.on('touchout',function(e){
 				//this.slideEnd();
 				console.log('000000000000000000***********************************');
 			});
+		},
+		backQueue:function(){
+			this.y = this.inity;
+			this.isSelected = false;
 		},
 		setState:function(state){
 			this.state = state;
