@@ -842,7 +842,48 @@
 				
 			});
 			this.on('touchout',function(e){
-				//this.slideEnd();
+				this.tapstart = false;
+				
+				if(!this.hadmove){
+					if(this.isSelected){
+						console.log('type--1----mj---throw');
+						game.sendMsg(this,game.scenes[game.configdata.SCENE_NAMES.play],game.mjdata.msg.THROW,this.mjid);
+					}else{
+						console.log('type--1----mj---choice');
+						this.y = this.inity -20;
+						this.x = this.initx;
+						this.isSelected = true;
+						game.sendMsg(this,game.scenes[game.configdata.SCENE_NAMES.play],game.mjdata.msg.SELECT,this.mjid);
+					}
+				}else{
+					console.log('move mj');
+					var dis = this.inity - this.y;
+					if(Math.abs(dis) < 10){
+						if(this.isSelected){
+							console.log('type--2----mj---throw');
+							game.sendMsg(this,game.scenes[game.configdata.SCENE_NAMES.play],game.mjdata.msg.THROW,this.mjid);
+						}else{
+							console.log('type--2----mj---choice');
+							this.y = this.inity -20;
+							this.x = this.initx;
+							this.isSelected = true;
+							game.sendMsg(this,game.scenes[game.configdata.SCENE_NAMES.play],game.mjdata.msg.SELECT,this.mjid);
+						}
+					}else{
+						if(dis > 60){
+							console.log('type--3----mj---throw');
+							game.sendMsg(this,game.scenes[game.configdata.SCENE_NAMES.play],game.mjdata.msg.THROW,this.mjid);
+						}else{
+							this.y = this.inity;
+							this.x = this.initx;
+							console.log('复位');
+						}
+					}
+					
+					console.log(dis);
+				}
+				this.hadmove = false;
+				
 				console.log('000000000000000000***********************************');
 			});
 		},
@@ -875,5 +916,39 @@
 				rect:goldrect
 			}).addTo(this);
 		}
+	});
+	
+	
+	//麻将牌 --- 其他
+	var MjScene = ns.MjScene = Hilo.Class.create({
+		Extends: Hilo.Container,
+		mjid:'w_1-1',  //w_1:麻将  1:方向  (1:正常 2:左倒 3:右倒)
+		name:'MjScene',
+		imgsource:'mj',
+		mjimg:null,
+		rectfront:null,
+		direct:1,   //1:正常 2:左倒 3:右倒
+		swidth:0,
+		sheight:0,
+		
+		constructor: function(properties) {
+			MjScene.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		
+		init: function(properties) {
+			var img = game.getImg(this.imgsource);
+			var mjdata = this.mjid.split('-');
+			var frontname = game.mjdata.smallmj[mjdata[0]][parseInt(mjdata[1])];
+			this.rectfront = game.configdata.getPngRect(frontname,this.imgsource);
+			this.width = this.rectfront[2];
+			this.height = this.rectfront[3];
+			this.swidth =  this.width  * game.scalefact;
+			this.sheight = this.height * game.scalefact;
+			this.mjimg = new Hilo.Bitmap({
+				image:img,
+				rect:this.rectfront,
+			}).addTo(this);
+		},
 	});
 })(window.game);

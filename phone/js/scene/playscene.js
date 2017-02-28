@@ -84,6 +84,8 @@
 		mjlayer:null,
 		currentmj:null,
 		
+		throwmjInitx:0,
+		
 		takmjbtn:null,
 		isThrow:false,
 		
@@ -109,6 +111,7 @@
 					break;
 				case game.mjdata.msg.THROW:
 					sendobj.removeFromParent();
+					self._throwmj(sendobj.mjid);
 					self.currentmj = null;
 					self.isThrow = false;
 					console.log(self.mjlayer.getNumChildren());
@@ -134,6 +137,13 @@
 					self.isThrow = true;
 				}
 			});
+			
+		},
+		
+		_throwmj:function(mjid){
+			var idname = mjid+'-1';
+			this.throwmjInitx += 24;
+			new game.MjScene({mjid:idname,x:this.throwmjInitx,y:50}).addTo(this);
 		},
 		
 		takemj:function(){

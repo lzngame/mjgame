@@ -687,6 +687,39 @@ game.mjdata = new function(){
 		
 	};
 	
+	self.smallmj = {
+		w_1:['一万','battle_32'],
+		w_2:['两万','battle_33'],
+		w_3:['三万','battle_34'],
+		w_4:['四万','battle_35'],
+		w_5:['五万','battle_36'],
+		w_6:['六万','battle_37'],
+		w_7:['七万','battle_38'],
+		w_8:['八万','battle_39'],
+		w_9:['九万','battle_40'],
+		
+		t_1:['一条','battle_41'],
+		t_2:['两条','battle_42'],
+		t_3:['三条','battle_43'],
+		t_4:['四条','battle_44'],
+		t_5:['五条','battle_45'],
+		t_6:['六条','battle_46'],
+		t_7:['七条','battle_47'],
+		t_8:['八条','battle_48'],
+		t_9:['九条','battle_49'],
+		
+		b_1:['一饼','battle_50'],
+		b_2:['两饼','battle_51'],
+		b_3:['三饼','battle_52'],
+		b_4:['四饼','battle_53'],
+		b_5:['五饼','battle_54'],
+		b_6:['六饼','battle_55'],
+		b_7:['七饼','battle_56'],
+		b_8:['八饼','battle_57'],
+		b_9:['九饼','battle_58'],
+		
+	};
+	
 };
 
 
