@@ -5,7 +5,7 @@ game.configdata = new function(){
 	var self = this;
 	// 配置信息    只读属性
 	self.CANVASID = 'CANVAS_ID';
-	self.NOLINE = true;
+	self.NOLINE = false;
 	self.BGCOLOR ='#000000';
 	self.FPS = 60;
 	self.RESOURCE_BASEDIR = 'img';
@@ -20,14 +20,13 @@ game.configdata = new function(){
 	
 	self.DEFAULTHEROHP = 4;
 	
-	
-	
 	self.SCENE_NAMES ={
 		load:'LOAD_SCENE_NAME',
 		login:'LOGIN_SCENE_NAME',
 		weixinlogin:'WEIXIN_LOGIN_SCENENAME',
 		main:'MAIN_SCENE_NAME',
 		play:'PLAY_SCENE_NAME',
+		invite:'INVITE_SCENE_NAME',
 		over:'GAME_SCENE_NAME',
 		shop:'SHOP_SCENE_NAME',
 	};
@@ -121,7 +120,7 @@ game.configdata = new function(){
 			});
 	}
 	
-	self.creatRectImg = function(imgType,pngname,x,y,scalefact){
+	self.createRectImg = function(imgType,pngname,x,y,scalefact){
 		var rect_data = null;
 		var imgsource = null;
 		switch(imgType){
@@ -210,8 +209,8 @@ game.configdata = new function(){
 			x:x,
 			y:y
 		});
-		var leftimg = this.creatRectImg(imgType,pngname,0,0,scalefact).addTo(bgpanel);
-		var rightimg = this.creatRectImg(imgType,pngname,leftimg.width*2,0,scalefact).addTo(bgpanel);
+		var leftimg = this.createRectImg(imgType,pngname,0,0,scalefact).addTo(bgpanel);
+		var rightimg = this.createRectImg(imgType,pngname,leftimg.width*2,0,scalefact).addTo(bgpanel);
 		rightimg.scaleX = -1;
 		return bgpanel;
 	}
@@ -226,7 +225,7 @@ game.configdata = new function(){
 				panelwidth = rect[2]*2;
 				game.configdata.createBg('bg',bgname,0,0,game.scalefact).addTo(panel);
 			}else{
-				game.configdata.creatRectImg('bg',bgname,0,0,game.scalefact).addTo(panel);
+				game.configdata.createRectImg('bg',bgname,0,0,game.scalefact).addTo(panel);
 			}
 			panel.width = panelwidth;
 			panel.height = panelheight;
@@ -295,7 +294,7 @@ game.configdata = new function(){
 		var panel = new Hilo.Container();
 		var w = game.screenWidth ;
 		var h = game.screenHeight;
-		var bg = game.configdata.creatRectImg('bg','battlebg',0,0,game.scalefact).addTo(panel);
+		var bg = game.configdata.createRectImg('bg','battlebg',0,0,game.scalefact).addTo(panel);
 		bg.alpha = 0.5;
 		var loadgif = game.configdata.createLoadgif().addTo(panel);
 		loadgif.x = w/2 - loadgif.width/2;
@@ -411,7 +410,7 @@ game.layoutUi = new function(){
 					theparent.items[itemdata.itemid] = game.configdata.createTitletext(itemdata.textvalue,itemdata.font,itemdata.color,itemdata.bg,x,y,w).addTo(theparent);
 				}
 				if(itemdata.itemtype === 'bmp'){ 
-					theparent.items[itemdata.itemid] = game.configdata.creatRectImg(imgsource,itemdata.itemurlvalue,x,y,game.scalefact).addTo(theparent);
+					theparent.items[itemdata.itemid] = game.configdata.createRectImg(imgsource,itemdata.itemurlvalue,x,y,game.scalefact).addTo(theparent);
 				}
 				if(itemdata.itemtype === 'doublebmp'){ 
 					theparent.items[itemdata.itemid] = game.configdata.creatDoubleImg(imgsource,itemdata.itemurlvalue,itemdata.frontimg,x,y,game.scalefact).addTo(theparent);
@@ -571,16 +570,18 @@ game.layoutUi = new function(){
 	
 	
 	this.drawStepLine = function(panelwidth,panelheight,panel,scalefact){
+		if(game.configdata.NOLINE){
 			if(!scalefact){
-				scalefact = 1.0;
-			}
+					scalefact = 1.0;
+				}
 			var w = panelwidth/4 * scalefact;
 			var h = panelheight/4 * scalefact;
 			for(var i=0;i<16;i++){
-				var x = i%4 * w;
-				var y = Math.floor(i/4) * h;
-				this.drawLine(x,y,w,h,panel);
+					var x = i%4 * w;
+					var y = Math.floor(i/4) * h;
+					this.drawLine(x,y,w,h,panel);
 			}
+		}
 	};
 		
 	this.drawLine = function(initx,inity,w,h,panel){

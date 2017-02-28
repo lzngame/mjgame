@@ -119,6 +119,7 @@
 			this.scenes[game.configdata.SCENE_NAMES.weixinlogin]  = new game.WeixinLoginScene();
 			this.scenes[game.configdata.SCENE_NAMES.main]  = new game.MainScene();
 			this.scenes[game.configdata.SCENE_NAMES.play]  = new game.PlayMainscene();
+			this.scenes[game.configdata.SCENE_NAMES.invite]  = new game.InviteMainscene();
 		},
 		getImg: function(id) {
 			var img = this.loadqueue.getContent(id);

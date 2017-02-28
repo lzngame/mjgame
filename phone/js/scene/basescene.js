@@ -10,10 +10,13 @@
 		tapx:0,
 		tapy:0,
 		
+		bg:null,
+		
 		loadgif:null,
 		currentpanel:null,
 		
 		slideList:[],
+		funcs:null,
 		
 		
 		constructor: function(properties) {
@@ -23,6 +26,32 @@
 		init:function(){
 			
 		},
+		initBtnHandle:function(){
+			var self = this;
+			for(var idname in this.funcs){
+				this.items[idname].idname = idname;
+				this.items[idname].on(Hilo.event.POINTER_END, function(e) {
+					self.funcs[this.idname]();
+				});
+			}
+		},
+		disBtnHandle:function(){
+			var self = this;
+			for(var idname in this.funcs){
+				this.items[idname].off();
+			}
+		},
+		initBg:function(imgsource,bgname){
+			if(bgname){
+				this.bg = game.configdata.createRectImg(imgsource,bgname,0,0,1).addTo(this);
+			}else{
+				this.bg = new Hilo.Bitmap({image:game.getImg(imgsource),}).addTo(this);
+			}
+			this.bg.width = this.width;
+			this.bg.height = this.height;
+			game.layoutUi.drawStepLine(game.screenWidth,game.screenHeight,this);
+		},
+		
 		initSlideEvent: function() {
 			var self = this;
 			

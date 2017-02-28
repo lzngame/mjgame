@@ -13,10 +13,10 @@
 			this.init(properties);
 		},
 		init: function(properties){
-			game.configdata.creatRectImg('ui',this.imgbg,0,0,1).addTo(this);
+			game.configdata.createRectImg('ui',this.imgbg,0,0,1).addTo(this);
 			var bgrect = game.configdata.getPngRect(this.imgbg);
 			var checkrect = game.configdata.getPngRect(this.imgcheck);
-			this.imgcheck = game.configdata.creatRectImg('ui',this.imgcheck,bgrect[2]/2-checkrect[2]/2,bgrect[3]/2-checkrect[3]/2,1).addTo(this);
+			this.imgcheck = game.configdata.createRectImg('ui',this.imgcheck,bgrect[2]/2-checkrect[2]/2,bgrect[3]/2-checkrect[3]/2,1).addTo(this);
 			this.imgcheck.visible = this.isSelected;
 			var self = this;
 			this.on(Hilo.event.POINTER_START,function(e){
@@ -52,10 +52,10 @@
 			this.init(properties);
 		},
 		init: function(properties) {
-			game.configdata.creatRectImg('ui',this.itemurlvalue,0,0,1).addTo(this);
+			game.configdata.createRectImg('ui',this.itemurlvalue,0,0,1).addTo(this);
 			var bgrect = game.configdata.getPngRect(this.itemurlvalue);
 			var checkrect = game.configdata.getPngRect(this.imgcheck);
-			this.imgcheck = game.configdata.creatRectImg('ui',this.imgcheck,bgrect[2]/2-checkrect[2]/2,bgrect[3]/2-checkrect[3]/2,1).addTo(this);
+			this.imgcheck = game.configdata.createRectImg('ui',this.imgcheck,bgrect[2]/2-checkrect[2]/2,bgrect[3]/2-checkrect[3]/2,1).addTo(this);
 			this.imgcheck.visible = this.isSelected;
 			var self = this;
 			var font = "15px arial";
@@ -136,9 +136,9 @@
    				disabledState: {rect:downrect},
 			}).addTo(this);
 			
-			this.caricon = game.configdata.creatRectImg(this.imgsource,this.caricon,23,0,1).addTo(this);
+			this.caricon = game.configdata.createRectImg(this.imgsource,this.caricon,23,0,1).addTo(this);
 			this.caricon.y = (uprect[3] - this.caricon.height)/2; 
-			this.sureicon = game.configdata.creatRectImg(this.imgsource,this.sureicon,this.caricon.x + this.caricon.width + 15,0,1).addTo(this);
+			this.sureicon = game.configdata.createRectImg(this.imgsource,this.sureicon,this.caricon.x + this.caricon.width + 15,0,1).addTo(this);
 			this.sureicon.y = (uprect[3] - this.caricon.height)/2; 
 			
 			var self = this;
@@ -184,9 +184,9 @@
 			this.init(properties);
 		},
 		init: function(properties) {
-			var head = game.configdata.creatRectImg('ui',this.headimg,0,0,1).addTo(this);
-			var bg  = game.configdata.creatRectImg('ui',this.itemurlvalue,head.width,0,1).addTo(this);
-			var mask = 	game.drawdata.drawItemRect(1,'black','rgba(1,0,0,0)',bg.x,bg.y,bg.width,bg.height,this);
+			var head = game.configdata.createRectImg('ui',this.headimg,0,0,1).addTo(this);
+			var bg  = game.configdata.createRectImg('ui',this.itemurlvalue,head.width,0,1).addTo(this);
+			var mask = 	game.drawdata.drawItemRect(1,'rgba(0,0,0,0)','rgba(0,0,0,0)',bg.x,bg.y,bg.width,bg.height,this);
 			var font = "14px arial";
 			this.txt = new Hilo.Text({
 				font:font,
@@ -817,6 +817,7 @@
 				console.log(dis);
 				this.tempindex.removeFromParent();
 				console.log(this.tempindex.depth);
+				game.sendMsg(this,game.scenes[game.configdata.SCENE_NAMES.play],'isme',this.mjid);
 			});
 			this.on('touchout',function(e){
 				//this.slideEnd();

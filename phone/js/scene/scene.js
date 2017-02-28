@@ -164,8 +164,10 @@
 		},
 	});
 	
+	
+	
 	var WeixinLoginScene = ns.WeixinLoginScene = Hilo.Class.create({
-		Extends: Hilo.Container,
+		Extends: game.BaseScene,
 		name: game.configdata.SCENE_NAMES.weixinlogin,
 		items:null,
 		
@@ -182,19 +184,11 @@
 			this.items = {};
 		},
 		
-		
-		
 		active:function(data) {
 			console.log('%s active:', this.name);
 			this.addTo(game.stage);
 			this.alpha = 1;
-			var img = game.getImg('ui');
-			
-			var bg = new Hilo.Bitmap({
-				width:this.width,
-				height:this.height,
-				image:game.getImg('loginbg'),
-			}).addTo(this);
+			this.initBg('loginbg');
 			
 			Hilo.Tween.to(this, {
 				y: game.screenHeight/2 - this.height/2
@@ -212,10 +206,11 @@
 			var self = this;
 			this.items['id_weixinlogin_btn'].on(Hilo.event.POINTER_END, function(e) {
 				console.log('switch main scene');
-				game.switchScene(game.configdata.SCENE_NAMES.main);
+				game.switchScene(game.configdata.SCENE_NAMES.play);
 			});
-			game.layoutUi.drawStepLine(game.screenWidth,game.screenHeight,this);
+
 		},
+		
 		
 		deactive: function() {
 			var scene = this;
@@ -226,7 +221,7 @@
 					duration: 500,
 					ease: Hilo.Ease.Back.EaseIn,
 					onComplete: function() {
-						console.log('main scene destory');
+						console.log('scenename:%s tween destory',scene.name);
 						scene.destory();
 					}
 				});
@@ -284,7 +279,7 @@
 							if(self.currentpanel){
 								self.currentpanel.hide();
 								if(msgdata){
-									game.switchScene(game.configdata.SCENE_NAMES.play);
+									game.switchScene(game.configdata.SCENE_NAMES.invite);
 								}else{
 									self.createPointoutWindow([],'login_9','对不起，没有此房间').addTo(self);
 								}
@@ -298,13 +293,9 @@
 			console.log('%s active:', this.name);
 			this.addTo(game.stage);
 			this.alpha = 1;
-			var img = game.getImg('ui');
 			
-			var bg = new Hilo.Bitmap({
-				width:this.width,
-				height:this.height,
-				image:game.getImg('loginbg'),
-			}).addTo(this);
+			this.initBg('loginbg');
+			
 			
 			Hilo.Tween.to(this, {
 				y: game.screenHeight/2 - this.height/2
@@ -351,14 +342,7 @@
 				//game.sendMsg(self,game.networker,'testmsg',1000);
 				
 				
-				var mj_tmp1 = new game.MjSelf({x:44, y:207, mjid:'b_5'}).addTo(prompt);
-				var mj_tmp11 = new game.MjSelf({x:94, y:207, mjid:'b_3'}).addTo(prompt);
 				
-				var mj_tmp2 = new game.MjSelf({x:154,y:207,mjid:'t_7'}).addTo(prompt);
-				var mj_tmp3 = new game.MjSelf({x:214,y:207,mjid:'w_7'}).addTo(prompt);
-				mj_tmp3.setState(1);
-				mj_tmp2.setState(2);
-				mj_tmp11.setGold(true);
 				
 			});
 			
@@ -378,7 +362,7 @@
 				$('#testp').remove();
 			});
 			
-			game.layoutUi.drawStepLine(game.screenWidth,game.screenHeight,this);
+
 			
 			this.initSlideEvent();
 		},
@@ -468,7 +452,6 @@
 			return panel;
 		},
 		inceptNum:function(numst){
-			console.log(numst);
 			if(numst.length >= 6 && !isNaN(numst)){
 				var scene = this.parent.parent;
 				scene.showLoadgif(true);
