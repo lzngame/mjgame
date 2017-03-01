@@ -88,6 +88,7 @@
 		
 		takmjbtn:null,
 		isThrow:false,
+		pointer:null,
 		
 		constructor: function(properties) {
 			PlayMainscene.superclass.constructor.call(this, properties);
@@ -138,19 +139,23 @@
 				}
 			});
 			
+			this.pointer = new game.Pointermj({imgsource:'ui',rectname:'tbattle_21',scaleX:game.scalefact,scaleY:game.scalefact}).addTo(this);
 		},
 		
 		_throwmj:function(mjid){
 			var idname = mjid+'-1';
 			this.throwmjInitx += 24;
-			new game.MjScene({mjid:idname,x:this.throwmjInitx,y:50}).addTo(this);
+			var throwmj = new game.MjScene({mjid:idname,x:this.throwmjInitx,y:50}).addTo(this);
+			this.pointer.x = throwmj.x ;
+			this.pointer.y = throwmj.y -25;
+			this.swapChildren(this.pointer,throwmj);
 		},
 		
 		takemj:function(){
 			var id = this.createRandomMjid();
 			var mj = new game.MjSelf({mjid:id,scaleX:game.scalefact,scaleY:game.scalefact}).addTo(this.mjlayer);
 			var x = this.width - mj.swidth - 50;
-			var y = this.height - mj.sheight - 20;
+			var y = this.height - mj.sheight - 10;
 			mj.x = x;
 			mj.y = y;
 			mj.initx = mj.x;
@@ -163,8 +168,8 @@
 			this.mjlayer.sortChildren(this._sortmj);
 			for(var i=0;i<l.length;i++){
 				var mj = l[i];
-				mj.x = (mj.swidth+1)*i;
-				mj.y = this.height - 20 -mj.sheight;
+				mj.x = (mj.swidth)*i +10;
+				mj.y = this.height - 10 -mj.sheight;
 				mj.initx = mj.x;
 				mj.inity = mj.y;
 			}
