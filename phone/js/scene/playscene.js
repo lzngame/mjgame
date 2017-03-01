@@ -81,6 +81,7 @@
 		Extends: game.BaseScene,
 		name: game.configdata.SCENE_NAMES.play,
 		items:null,
+		bglayer:null,
 		mjlayer:null,
 		currentmj:null,
 		
@@ -88,6 +89,7 @@
 		throwmjInitx:0,
 		throwmjInity:0,
 		throwNum:0,
+		throwupNum:0,
 		
 		takmjbtn:null,
 		isThrow:false,
@@ -136,12 +138,17 @@
 			this.addTo(game.stage);
 			this.initBg('bg','battlebg');
 			
+			this.bglayer = new Hilo.Container().addTo(this);
+			this.bglayer.pointerChildren = false;
 			this.throwlayer = new Hilo.Container().addTo(this);
+			this.throwuplayer = new Hilo.Container().addTo(this);
+			
 			this.mjlayer = new Hilo.Container().addTo(this);
 			
 			
 			
 			this.deal();
+			this._dealUp();
 			var self = this;
 			this.takemjbtn = game.configdata.createButton('ui','login_bg49','login_bg50',10,140).addTo(this);
 			this.takemjbtn.on(Hilo.event.POINTER_END,function(e){
@@ -152,13 +159,19 @@
 			});
 			
 			this.pointer_mj = new game.Pointermj({imgsource:'ui',rectname:'tbattle_21',scaleX:game.scalefact,scaleY:game.scalefact,visible:false}).addTo(this);
-			this.pointer_user = new game.Pointeruser({imgsource:'ui',rectname:'battle_10',x:this.width/2,y:this.height/2,scaleX:game.scalefact,scaleY:game.scalefact}).addTo(this);
-			var txt = game.configdata.createBgTitletext('剩余73张','12px 黑体','yellow','ui','login_bg9').addTo(this);
+			this.pointer_user = new game.Pointeruser({imgsource:'ui',rectname:'battle_10',x:this.width/2,y:this.height/2,scaleX:game.scalefact,scaleY:game.scalefact}).addTo(this.bglayer);
+			var txt = game.configdata.createBgTitletext('剩余73张','12px 黑体','yellow','ui','login_bg9').addTo(this.bglayer);
 			txt.x = this.width/2 - txt.width - 50;
 			txt.y = this.height/2 - txt.height/2;
-			var txt2 = game.configdata.createBgTitletext('剩余3局','12px 黑体','yellow','ui','login_bg9').addTo(this);
+			var txt2 = game.configdata.createBgTitletext('剩余3局','12px 黑体','yellow','ui','login_bg9').addTo(this.bglayer);
 			txt2.x = this.width/2 + 50;
 			txt2.y = this.height/2 - txt.height/2;
+			var txt3 = game.configdata.createBgTitletext('房间号:123980','14px 黑体','white','ui','login_bg17').addTo(this.bglayer);
+			txt3.x = this.width/2 - txt3.width/2;
+			txt3.y = 0;
+			var goldmj = new game.Goldmj({mjid:'b_3',imgsource:'ui',bgrectname:'15'}).addTo(this.bglayer);
+			goldmj.scaleX = game.scalefact;
+			goldmj.scaleY = game.scalefact;
 		},
 		
 		_throwmj:function(mjid){
@@ -187,7 +200,28 @@
 			var d = Math.floor(Math.random()*4);
 			var dir =['up','down','right','left'];
 			this.pointer_user.setDirect(dir[d]);
+			
+			this._throwmjup();
 		},
+		
+		_throwmjup:function(){
+			var mjid = this.createRandomMjid();
+			var idname = mjid+'-1';
+			var throwmj = new game.MjScene({mjid:idname}).addTo(this.throwuplayer);
+			debugger;
+			var  x =  (this.throwupNum % 17) * throwmj.swidth + this.width/8;
+			var  y =  Math.floor(this.throwupNum / 17) *  throwmj.sheight + this.height + 70;
+			throwmj.x = x;
+			throwmj.y = x;
+			this.throwupNum ++;
+
+			
+			throwmj.pointerEnabled = false;
+			this.pointer_mj.x = throwmj.x ;
+			this.pointer_mj.y = throwmj.y -25;
+			
+		},
+		
 		
 		takemj:function(){
 			var id = this.createRandomMjid();
@@ -216,6 +250,12 @@
 		deal:function(){
 			for(var i=0;i<13;i++){
 				this.addRandMj();
+			}
+		},
+		
+		_dealUp:function(){
+			for(var i=0;i<13;i++){
+				var mj = game.configdata.createRectImg('mj','battle_80',i*22+300,30,1).addTo(this);
 			}
 		},
 		

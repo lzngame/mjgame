@@ -980,20 +980,31 @@
 				duration:200,
 			});
 		},
+	});
+	
+	//Goldmj--- 金牌
+	var Goldmj = ns.Goldmj = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name: 'Goldmj',
+		imgsource:null,
+		bgrectname: null,
+		mjid:null,
 
-		onUpdate: function() {
-			//this.imgbody.rotation += 2;
-			/*this.sumtime++;
-			if(this.sumtime > 10){
-				this.sumtime = 0;
-				this.ischange = !this.ischange;
-				this.imgbody.y = 0;
-			}
-			if(this.ischange){
-				this.imgbody.y -= this.speed;
-			}else{
-				this.imgbody.y += this.speed;
-			}*/
+		constructor: function(properties) {
+			Goldmj.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		init: function(properties) {
+			var bgrect = game.configdata.getPngRect(this.bgrectname,this.imgsource);
+			this.width = bgrect[2];
+			this.height = bgrect[3];
+			game.configdata.createRectImg(this.imgsource, this.bgrectname, 0, 0, 1).addTo(this);
+			//var mj = new game.MjSelf({mjid:this.mjid,scaleX:0.6,scaleY:0.6}).addTo(this);
+			var idname = this.mjid + '-1';
+			var mj = new game.MjScene({mjid:idname}).addTo(this);
+			mj.x = this.width/2 - mj.width/2;
+			mj.y = this.height/2 - mj.height/2 + 10;
+			mj.pointerEnabled = false;
 		},
 	});
 })(window.game);
