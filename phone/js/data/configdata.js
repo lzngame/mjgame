@@ -193,7 +193,7 @@ game.configdata = new function() {
 
 	self.createBgTitletext = function(textvalue, font, color, imgsource, rectname) {
 		var obj = new Hilo.Container();
-		var bg = game.configdata.createRectImg(imgsource,rectname,0,0,1).addTo(obj);
+		var bg = game.configdata.createRectImg(imgsource, rectname, 0, 0, 1).addTo(obj);
 		var bgrect = game.configdata.getPngRect(rectname, imgsource);
 		var w = bgrect[2];
 		var h = bgrect[3];
@@ -207,7 +207,7 @@ game.configdata = new function() {
 			maxWidth: w,
 			textAlign: 'center',
 		}).addTo(obj);
-		txt.y = h/2 - txt._fontHeight/2;
+		txt.y = h / 2 - txt._fontHeight / 2;
 		obj.txt = txt;
 		obj.width = w;
 		obj.height = h;
@@ -376,7 +376,22 @@ game.networker = new function() {
 				}
 				game.sendMsg(this, sendobj, 'hide', isright);
 				break;
+			case game.mjdata.msg.THROWMJ:
+				var mjid = msgdata;
+				self.nextuserHandle(sendobj);
+				break;
 		}
+	};
+	this.nextuserHandle = function(playscene){
+		new Hilo.Tween.to(this,{
+			alpha:1
+		},{
+			duration:10,
+			delay:2500,
+			onComplete:function(){
+				game.sendMsg(this, playscene, game.mjdata.msg.THROWMJ, 'b_8');
+			}
+		});
 	};
 
 };
@@ -667,6 +682,8 @@ game.mjdata = new function() {
 	self.msg = {
 			THROW: 'throw_mj_msg_100',
 			SELECT: 'select_mj_msg_101',
+			THROWMJ: 'throw_mj_mjid_102',
+
 		},
 		self.mj = {
 			w_1: ['一万', 'selfmj_32'],

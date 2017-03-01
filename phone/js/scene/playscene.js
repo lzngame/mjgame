@@ -131,6 +131,10 @@
 					console.log(self.mjlayer.getNumChildren());
 					self.sortMj();
 					break;
+				case game.mjdata.msg.THROWMJ:
+					self.pointer_user.setDirect('down');
+					self._throwmjup();
+					break;
 			}
 		},
 		active:function(data) {
@@ -178,8 +182,8 @@
 			this.pointer_mj.visible = true;
 			var idname = mjid+'-1';
 			var throwmj = new game.MjScene({mjid:idname}).addTo(this.throwlayer);
-			this.throwmjInitx =  (this.throwNum % 17) * throwmj.swidth + this.width/8;
-			this.throwmjInity =  -Math.floor(this.throwNum / 17) *  throwmj.sheight + this.height - 150;
+			this.throwmjInitx =  (this.throwNum % 12) * throwmj.swidth + this.width/8;
+			this.throwmjInity =  -Math.floor(this.throwNum / 12) *  throwmj.sheight + this.height - 150;
 			throwmj.x = this.throwmjInitx;
 			throwmj.y = this.throwmjInity;
 			this.throwNum ++;
@@ -196,23 +200,23 @@
 			throwmj.pointerEnabled = false;
 			this.pointer_mj.x = throwmj.x ;
 			this.pointer_mj.y = throwmj.y -25;
-			//this.swapChildren(this.pointer_mj,throwmj);
-			var d = Math.floor(Math.random()*4);
-			var dir =['up','down','right','left'];
-			this.pointer_user.setDirect(dir[d]);
 			
-			this._throwmjup();
+			//var d = Math.floor(Math.random()*4);
+			//var dir =['up','down','right','left'];
+			this.pointer_user.setDirect('up');
+			
+			
+			game.sendMsg(this,game.networker,game.mjdata.msg.THROWMJ,mjid);
 		},
 		
 		_throwmjup:function(){
 			var mjid = this.createRandomMjid();
 			var idname = mjid+'-1';
 			var throwmj = new game.MjScene({mjid:idname}).addTo(this.throwuplayer);
-			debugger;
-			var  x =  (this.throwupNum % 17) * throwmj.swidth + this.width/8;
-			var  y =  Math.floor(this.throwupNum / 17) *  throwmj.sheight + this.height + 70;
+			var  x =  (this.throwupNum % 12) * throwmj.swidth + this.width/8;
+			var  y =  Math.floor(this.throwupNum / 12) *  throwmj.sheight + 70;// + this.height + 70;
 			throwmj.x = x;
-			throwmj.y = x;
+			throwmj.y = y;
 			this.throwupNum ++;
 
 			
