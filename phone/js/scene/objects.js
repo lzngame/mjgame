@@ -835,6 +835,7 @@
 		},
 		backQueue: function() {
 			this.y = this.inity;
+			this.x = this.initx;
 			this.isSelected = false;
 		},
 		setState: function(state) {

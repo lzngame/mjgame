@@ -387,7 +387,7 @@ game.networker = new function() {
 			alpha:1
 		},{
 			duration:10,
-			delay:2500,
+			delay:1500,
 			onComplete:function(){
 				game.sendMsg(this, playscene, game.mjdata.msg.THROWMJ, 'b_8');
 			}

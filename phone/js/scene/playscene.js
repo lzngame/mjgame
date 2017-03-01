@@ -85,6 +85,8 @@
 		mjlayer:null,
 		currentmj:null,
 		
+		isTurn:true,
+		
 		
 		throwmjInitx:0,
 		throwmjInity:0,
@@ -124,16 +126,22 @@
 					console.log(self.mjlayer.getNumChildren());
 					break;
 				case game.mjdata.msg.THROW:
-					sendobj.removeFromParent();
-					self._throwmj(sendobj.mjid);
+					if(self.isTurn){
+						sendobj.removeFromParent();
+						self._throwmj(sendobj.mjid);
+						console.log(self.mjlayer.getNumChildren());
+						self.sortMj();
+					}else{
+						sendobj.backQueue();
+					}
 					self.currentmj = null;
 					self.isThrow = false;
-					console.log(self.mjlayer.getNumChildren());
-					self.sortMj();
 					break;
 				case game.mjdata.msg.THROWMJ:
+					self.isTurn = true;
 					self.pointer_user.setDirect('down');
 					self._throwmjup();
+					self.takemj();
 					break;
 			}
 		},
@@ -154,13 +162,13 @@
 			this.deal();
 			this._dealUp();
 			var self = this;
-			this.takemjbtn = game.configdata.createButton('ui','login_bg49','login_bg50',10,140).addTo(this);
+			/*this.takemjbtn = game.configdata.createButton('ui','login_bg49','login_bg50',10,140).addTo(this);
 			this.takemjbtn.on(Hilo.event.POINTER_END,function(e){
 				if(!self.isThrow){
 					self.takemj();
 					self.isThrow = true;
 				}
-			});
+			});*/
 			
 			this.pointer_mj = new game.Pointermj({imgsource:'ui',rectname:'tbattle_21',scaleX:game.scalefact,scaleY:game.scalefact,visible:false}).addTo(this);
 			this.pointer_user = new game.Pointeruser({imgsource:'ui',rectname:'battle_10',x:this.width/2,y:this.height/2,scaleX:game.scalefact,scaleY:game.scalefact}).addTo(this.bglayer);
@@ -176,6 +184,8 @@
 			var goldmj = new game.Goldmj({mjid:'b_3',imgsource:'ui',bgrectname:'15'}).addTo(this.bglayer);
 			goldmj.scaleX = game.scalefact;
 			goldmj.scaleY = game.scalefact;
+			
+			this.takemj();
 		},
 		
 		_throwmj:function(mjid){
@@ -204,7 +214,7 @@
 			//var d = Math.floor(Math.random()*4);
 			//var dir =['up','down','right','left'];
 			this.pointer_user.setDirect('up');
-			
+			this.isTurn = false;
 			
 			game.sendMsg(this,game.networker,game.mjdata.msg.THROWMJ,mjid);
 		},
@@ -236,6 +246,7 @@
 			mj.y = y;
 			mj.initx = mj.x;
 			mj.inity = mj.y;
+			this.isThrow = true;
 		},
 		
 		sortMj:function(){
