@@ -924,12 +924,76 @@
 			if(this.sumtime > 10){
 				this.sumtime = 0;
 				this.ischange = !this.ischange;
+				this.imgbody.y = 0;
 			}
 			if(this.ischange){
 				this.imgbody.y -= this.speed;
 			}else{
 				this.imgbody.y += this.speed;
 			}
+		},
+	});
+	
+	//Pointeruser--- 出牌的玩家的指示
+	var Pointeruser = ns.Pointeruser = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name: 'Pointeruser',
+		imgsource:null,
+		rectname: null,
+		imgbody:null,
+		speed:0.3,
+		ischange:false,
+		sumtime:0,
+
+		constructor: function(properties) {
+			Pointeruser.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		init: function(properties) {
+			var bodyrect = game.configdata.getPngRect(this.rectname,this.imgsource);
+			this.width = bodyrect[2];
+			this.imgbody = game.configdata.createRectImg(this.imgsource, this.rectname, 0, 0, 1).addTo(this);
+			this.imgbody.pivotX = 24;
+			this.imgbody.pivotY = 24;
+		},
+		
+		setDirect:function(direct){
+			var d = 0;
+			console.log(direct);
+			switch(direct){
+				case 'left':
+					d = 90;
+					break;
+				case 'dwon':
+					d = 0;
+					break;
+				case 'up':
+					d = 180;
+					break;
+				case 'right':
+					d = 270;
+					break;
+			}
+			new Hilo.Tween.to(this.imgbody,{
+				rotation:d
+			},{
+				duration:200,
+			});
+		},
+
+		onUpdate: function() {
+			//this.imgbody.rotation += 2;
+			/*this.sumtime++;
+			if(this.sumtime > 10){
+				this.sumtime = 0;
+				this.ischange = !this.ischange;
+				this.imgbody.y = 0;
+			}
+			if(this.ischange){
+				this.imgbody.y -= this.speed;
+			}else{
+				this.imgbody.y += this.speed;
+			}*/
 		},
 	});
 })(window.game);

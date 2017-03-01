@@ -84,11 +84,22 @@
 		mjlayer:null,
 		currentmj:null,
 		
+		
 		throwmjInitx:0,
+		throwmjInity:0,
+		throwNum:0,
 		
 		takmjbtn:null,
 		isThrow:false,
-		pointer:null,
+		pointer_mj:null,
+		pointer_user:null,
+		
+		
+		
+		selfmjsize:[46,68],
+		scenemjsize:[24,32],
+		
+		currentThrow:null,
 		
 		constructor: function(properties) {
 			PlayMainscene.superclass.constructor.call(this, properties);
@@ -125,13 +136,14 @@
 			this.addTo(game.stage);
 			this.initBg('bg','battlebg');
 			
+			this.throwlayer = new Hilo.Container().addTo(this);
 			this.mjlayer = new Hilo.Container().addTo(this);
 			
 			
 			
 			this.deal();
 			var self = this;
-			this.takemjbtn = game.configdata.createButton('ui','login_10','login_11',10,140).addTo(this);
+			this.takemjbtn = game.configdata.createButton('ui','login_bg49','login_bg50',10,140).addTo(this);
 			this.takemjbtn.on(Hilo.event.POINTER_END,function(e){
 				if(!self.isThrow){
 					self.takemj();
@@ -139,16 +151,42 @@
 				}
 			});
 			
-			this.pointer = new game.Pointermj({imgsource:'ui',rectname:'tbattle_21',scaleX:game.scalefact,scaleY:game.scalefact}).addTo(this);
+			this.pointer_mj = new game.Pointermj({imgsource:'ui',rectname:'tbattle_21',scaleX:game.scalefact,scaleY:game.scalefact,visible:false}).addTo(this);
+			this.pointer_user = new game.Pointeruser({imgsource:'ui',rectname:'battle_10',x:this.width/2,y:this.height/2,scaleX:game.scalefact,scaleY:game.scalefact}).addTo(this);
+			var txt = game.configdata.createBgTitletext('剩余73张','12px 黑体','yellow','ui','login_bg9').addTo(this);
+			txt.x = this.width/2 - txt.width - 50;
+			txt.y = this.height/2 - txt.height/2;
+			var txt2 = game.configdata.createBgTitletext('剩余3局','12px 黑体','yellow','ui','login_bg9').addTo(this);
+			txt2.x = this.width/2 + 50;
+			txt2.y = this.height/2 - txt.height/2;
 		},
 		
 		_throwmj:function(mjid){
+			this.pointer_mj.visible = true;
 			var idname = mjid+'-1';
-			this.throwmjInitx += 24;
-			var throwmj = new game.MjScene({mjid:idname,x:this.throwmjInitx,y:50}).addTo(this);
-			this.pointer.x = throwmj.x ;
-			this.pointer.y = throwmj.y -25;
-			this.swapChildren(this.pointer,throwmj);
+			var throwmj = new game.MjScene({mjid:idname}).addTo(this.throwlayer);
+			this.throwmjInitx =  (this.throwNum % 17) * throwmj.swidth + this.width/8;
+			this.throwmjInity =  -Math.floor(this.throwNum / 17) *  throwmj.sheight + this.height - 150;
+			throwmj.x = this.throwmjInitx;
+			throwmj.y = this.throwmjInity;
+			this.throwNum ++;
+
+			this.throwlayer.sortChildren(function(a,b){
+				if(a.y > b.y){
+					return 1;
+				}else if(a.y < b.y){
+					return -1;
+				}else{
+					return 0;
+				}
+			});
+			throwmj.pointerEnabled = false;
+			this.pointer_mj.x = throwmj.x ;
+			this.pointer_mj.y = throwmj.y -25;
+			//this.swapChildren(this.pointer_mj,throwmj);
+			var d = Math.floor(Math.random()*4);
+			var dir =['up','down','right','left'];
+			this.pointer_user.setDirect(dir[d]);
 		},
 		
 		takemj:function(){
