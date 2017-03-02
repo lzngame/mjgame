@@ -118,31 +118,10 @@ game.configdata = new function() {
 	}
 
 	self.createRectImg = function(imgType, pngname, x, y, scalefact) {
-		var rect_data = null;
-		var imgsource = null;
-		switch(imgType) {
-			case 'ui':
-				rect_data = game.loaddata.IMAGEDATA_1[pngname];
-				imgsource = game.getImg('ui');
-				break;
-			case 'mj':
-				rect_data = game.loaddata.IMAGEDATA_2[pngname];
-				imgsource = game.getImg('mj');
-				break;
-			case 'bg':
-				rect_data = game.loaddata.IMAGEDATA_3[pngname];
-				imgsource = game.getImg('bgs');
-				break;
-			default:
-				rect_data = game.loaddata.IMAGEDATA_1[pngname];
-				imgsource = game.getImg('ui');
-				break;
-		}
+		var obj = this._getRectInfo(imgType, pngname);
+		var rect_data = obj.rectinfo;
+		var imgsource = obj.imagesource;
 
-		if(rect_data == null) {
-			console.log('ErrorMj 1:-------------------------------- %s is not exist', pngname);
-			rect_data = [0, 0, 0, 0];
-		}
 		var xp = 0;
 		var yp = 0;
 		var w_size = rect_data[2];
@@ -164,6 +143,48 @@ game.configdata = new function() {
 			height: h_size
 		});
 	}
+	
+	self.createRectImg2 = function(imgType, pngname, w,h) {
+		var obj = this._getRectInfo(imgType, pngname);
+		var rect_data = obj.rectinfo;
+		var imgsource = obj.imagesource;
+		
+		return new Hilo.Bitmap({
+			image: imgsource,
+			rect: rect_data,
+			width: w,
+			height: h
+		});
+	}
+	
+	self._getRectInfo = function(imgType, pngname){
+		var rect_data = null;
+		var imgsource = null;
+		switch(imgType) {
+			case 'ui':
+				rect_data = game.loaddata.IMAGEDATA_1[pngname];
+				imgsource = game.getImg('ui');
+				break;
+			case 'mj':
+				rect_data = game.loaddata.IMAGEDATA_2[pngname];
+				imgsource = game.getImg('mj');
+				break;
+			case 'bg':
+				rect_data = game.loaddata.IMAGEDATA_3[pngname];
+				imgsource = game.getImg('bgs');
+				break;
+			default:
+				rect_data = game.loaddata.IMAGEDATA_1[pngname];
+				imgsource = game.getImg('ui');
+				break;
+		}
+		if(rect_data == null) {
+			console.log('ErrorMj 1:-------------------------------- %s is not exist', pngname);
+			rect_data = [0, 0, 0, 0];
+		}
+		return {rectinfo:rect_data,imagesource:imgsource};
+	}
+	
 
 	self.creatDoubleImg = function(imgType, bgname, pngname, x, y, scalefact) {
 		return new game.DoubleIcon({
@@ -311,9 +332,9 @@ game.configdata = new function() {
 
 		self.createLoadpanel = function() {
 			var panel = new Hilo.Container();
-			var w = game.screenWidth;
-			var h = game.screenHeight;
-			var bg = game.configdata.createRectImg('bg', 'battlebg', 0, 0, game.scalefact).addTo(panel);
+			var w = game.stage.width;
+			var h = game.stage.height;
+			var bg = game.configdata.createRectImg2('bg', 'battlebg', w,h).addTo(panel);
 			bg.alpha = 0.5;
 			var loadgif = game.configdata.createLoadgif().addTo(panel);
 			loadgif.x = w / 2 - loadgif.width / 2;
@@ -387,7 +408,7 @@ game.networker = new function() {
 			alpha:1
 		},{
 			duration:10,
-			delay:1500,
+			delay:2000,
 			onComplete:function(){
 				game.sendMsg(this, playscene, game.mjdata.msg.THROWMJ, 'b_8');
 			}
@@ -641,6 +662,9 @@ game.clock = new function() {
 	self.getFrame = function() {
 		return self.framecount;
 	};
+	self.getTick = function(){
+		return self.fpstick;
+	}
 }
 
 game.drawdata = new function() {
@@ -686,35 +710,35 @@ game.mjdata = new function() {
 
 		},
 		self.mj = {
-			w_1: ['一万', 'selfmj_32'],
-			w_2: ['两万', 'selfmj_33'],
-			w_3: ['三万', 'selfmj_34'],
-			w_4: ['四万', 'selfmj_35'],
-			w_5: ['五万', 'selfmj_36'],
-			w_6: ['六万', 'selfmj_37'],
-			w_7: ['七万', 'selfmj_38'],
-			w_8: ['八万', 'selfmj_39'],
-			w_9: ['九万', 'selfmj_40'],
+			w_1: ['一万', 'self_32'],
+			w_2: ['两万', 'self_33'],
+			w_3: ['三万', 'self_34'],
+			w_4: ['四万', 'self_35'],
+			w_5: ['五万', 'self_36'],
+			w_6: ['六万', 'self_37'],
+			w_7: ['七万', 'self_38'],
+			w_8: ['八万', 'self_39'],
+			w_9: ['九万', 'self_40'],
 
-			t_1: ['一条', 'selfmj_41'],
-			t_2: ['两条', 'selfmj_42'],
-			t_3: ['三条', 'selfmj_43'],
-			t_4: ['四条', 'selfmj_44'],
-			t_5: ['五条', 'selfmj_45'],
-			t_6: ['六条', 'selfmj_46'],
-			t_7: ['七条', 'selfmj_47'],
-			t_8: ['八条', 'selfmj_48'],
-			t_9: ['九条', 'selfmj_49'],
+			t_1: ['一条', 'self_41'],
+			t_2: ['两条', 'self_42'],
+			t_3: ['三条', 'self_43'],
+			t_4: ['四条', 'self_44'],
+			t_5: ['五条', 'self_45'],
+			t_6: ['六条', 'self_46'],
+			t_7: ['七条', 'self_47'],
+			t_8: ['八条', 'self_48'],
+			t_9: ['九条', 'self_49'],
 
-			b_1: ['一饼', 'selfmj_50'],
-			b_2: ['两饼', 'selfmj_51'],
-			b_3: ['三饼', 'selfmj_52'],
-			b_4: ['四饼', 'selfmj_53'],
-			b_5: ['五饼', 'selfmj_54'],
-			b_6: ['六饼', 'selfmj_55'],
-			b_7: ['七饼', 'selfmj_56'],
-			b_8: ['八饼', 'selfmj_57'],
-			b_9: ['九饼', 'selfmj_58'],
+			b_1: ['一饼', 'self_50'],
+			b_2: ['两饼', 'self_51'],
+			b_3: ['三饼', 'self_52'],
+			b_4: ['四饼', 'self_53'],
+			b_5: ['五饼', 'self_54'],
+			b_6: ['六饼', 'self_55'],
+			b_7: ['七饼', 'self_56'],
+			b_8: ['八饼', 'self_57'],
+			b_9: ['九饼', 'self_58'],
 
 		};
 

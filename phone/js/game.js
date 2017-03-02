@@ -8,6 +8,7 @@
 	window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", function() {
         if (window.orientation === 180 || window.orientation === 0) { 
             alert('竖屏状态！');
+            alert(window.devicePixelRatio);
         } 
         if (window.orientation === 90 || window.orientation === -90 ){ 
             //alert('横屏状态！');
@@ -36,6 +37,8 @@
 		winHeight:0,
 		scalefact:1,
 		
+		dpr:1,
+		
 		
 		init: function() {
 			var browserInfo = Hilo.browser;
@@ -43,10 +46,11 @@
 			var winHeight = window.innerHeight || document.documentElement.clientHeight;
 			this.screenWidth = winWidth;
 			this.screenHeight = winHeight;
-			if (this.screenWidth > game.configdata.MAXSIZE.maxWidth)
-				this.screenWidth = game.configdata.MAXSIZE.maxWidth;
-			if (this.screenHeight > game.configdata.MAXSIZE.maxHeight)
-				this.screenHeight = game.configdata.MAXSIZE.maxHeight;
+			this.dpr = window.devicePixelRatio;
+			//if (this.screenWidth > game.configdata.MAXSIZE.maxWidth)
+			//	this.screenWidth = game.configdata.MAXSIZE.maxWidth;
+			//if (this.screenHeight > game.configdata.MAXSIZE.maxHeight)
+			//	this.screenHeight = game.configdata.MAXSIZE.maxHeight;
 			var scalex = this.screenWidth/game.configdata.MAXSIZE.maxWidth;
 			var scaley = this.screenHeight/game.configdata.MAXSIZE.maxHeight;
 			this.scalefact = scalex;
@@ -55,7 +59,8 @@
 			
 			this.refresh();
 			this.switchScene(game.configdata.SCENE_NAMES.load);
-			console.log('The screen orientation:%ss',window.orientation);
+			console.log('The screen orientation:%s',window.orientation);
+			console.log('device pixel raido:%d',this.dpr);
 		},
 		refresh: function() {
 			console.log('game init :window had loaded');
@@ -79,9 +84,11 @@
 				renderType: 'canvas',
 				container: gameContainer,
 				canvas: this.canvas,
-				width: this.screenWidth,
-				height: this.screenHeight,
+				width: this.screenWidth*2,
+				height: this.screenHeight*2,
 				background: game.configdata.BGCOLOR,
+				scaleX:0.5,
+				scaleY:0.5,
 			});
 			game.configdata.mainStageSize.width = this.stage.width;
 			game.configdata.mainStageSize.height = this.stage.height;

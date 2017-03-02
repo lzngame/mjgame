@@ -30,11 +30,11 @@
 			console.log('%s active:', this.name);
 			this.addTo(game.stage);
 			this.initBg('bg','battlebg');
-			this.y = game.screenHeight/2 - this.height/2;
-			this.x = game.screenWidth/2 - this.width/2;
+			this.y = 0;
+			this.x = 0;
 			
 
-			game.layoutUi.layoutPanelData(game.sceneuidata.playscene_uidata[0],game.screenWidth,game.screenHeight,1,this);
+			game.layoutUi.layoutPanelData(game.sceneuidata.playscene_uidata[0],this.width,this.height,1,this);
 			
 			this.initBtnHandle();
 		},
@@ -171,7 +171,7 @@
 			});*/
 			
 			this.pointer_mj = new game.Pointermj({imgsource:'ui',rectname:'tbattle_21',scaleX:game.scalefact,scaleY:game.scalefact,visible:false}).addTo(this);
-			this.pointer_user = new game.Pointeruser({imgsource:'ui',rectname:'battle_10',x:this.width/2,y:this.height/2,scaleX:game.scalefact,scaleY:game.scalefact}).addTo(this.bglayer);
+			this.pointer_user = new game.Pointeruser({imgsource:'ui',rectname:'battle_10',pivotx:40,pivoty:40,x:this.width/2,y:this.height/2,scaleX:game.scalefact,scaleY:game.scalefact}).addTo(this.bglayer);
 			var txt = game.configdata.createBgTitletext('剩余73张','12px 黑体','yellow','ui','login_bg9').addTo(this.bglayer);
 			txt.x = this.width/2 - txt.width - 50;
 			txt.y = this.height/2 - txt.height/2;
@@ -311,6 +311,7 @@
 			var mj_tmp1 = new game.MjSelf({mjid:mjid,scaleX:game.scalefact,scaleY:game.scalefact}).addTo(this.mjlayer);
 			this.sortMj();
 		},
+		
 		printmj:function(){
 			var l = this.mjlayer.children;
 			var st ='';

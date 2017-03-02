@@ -28,20 +28,21 @@
 
 			new Hilo.Bitmap({
 				image: 'img/bg01.png',
-				width: game.screenWidth,
-				height: game.screenHeight
+				width:game.stage.width,
+				height:game.stage.height,
 			}).addTo(this);
 			this.loadtxt = new Hilo.Text({
+				font:'20px 黑体',
 				text: 'loading...',
 				color: '#FFFFFF',
-				x: game.screenWidth / 2 - 40,
-				y: game.screenHeight / 2 + 5,
+				x: game.stage.width / 2 - 40,
+				y: game.stage.height / 2 + 5,
 			}).addTo(this);
 			this.loadingline = new Hilo.Container({
 				height:18,
 				width:180,
-				y: game.screenHeight / 2 + 10 + 14,
-				x: game.screenWidth / 2 - 47,
+				y: game.stage.height / 2 + 10 + 14,
+				x: game.stage.width / 2 - 47,
 			}).addTo(this);
 			new Hilo.Bitmap({
 				image: 'img/pipcoin.png',
@@ -52,8 +53,8 @@
 			var sumtime = 0;
 			this.startTxtBtn = new Hilo.Bitmap({
 				image: 'img/txt_start.png',
-				y: game.screenHeight / 2 + 10,
-				x: game.screenWidth / 2 - 210 / 2 + 40,
+				y: game.stage.height / 2 + 10,
+				x: game.stage.width / 2 - 210 / 2 + 40,
 				visible:false,
 				onUpdate: function(e) {
 					if (!obj.isflash)
@@ -72,8 +73,8 @@
 			new Hilo.Text({
 				text: '福州麻将.2017~2019',
 				color: '#FFF200',
-				x: game.screenWidth - 200,
-				y: game.screenHeight - 22,
+				x: game.stage.width - 200,
+				y: game.stage.height - 22,
 			}).addTo(this);
 			var atlas = new Hilo.TextureAtlas({
 				image: 'img/fire7.png',
@@ -94,8 +95,8 @@
 
 			var fire = new Hilo.Sprite({
 				frames: atlas.getSprite('fish'),
-				x: game.screenWidth / 2 - 100,
-				y: game.screenHeight / 2 - 32 + 10,
+				x: game.stage.width / 2 - 100,
+				y: game.stage.height / 2 - 32 + 10,
 				interval: 6,
 				timeBased: false,
 				loop: true,
@@ -180,7 +181,7 @@
 			this.width = game.configdata.mainStageSize.width;
 			this.height = game.configdata.mainStageSize.height;
 			this.y = -this.height;
-			this.x = game.screenWidth/2 - this.width/2;
+			this.x = game.stage.width/2 - this.width/2;
 			this.items = {};
 		},
 		
@@ -191,7 +192,7 @@
 			this.initBg('loginbg');
 			
 			Hilo.Tween.to(this, {
-				y: game.screenHeight/2 - this.height/2
+				y: game.stage.height/2 - this.height/2
 			}, {
 				duration: 800,
 				ease: Hilo.Ease.Bounce.EaseOut,
@@ -200,13 +201,13 @@
 				}
 			});
 			
-			game.layoutUi.layoutPanelData(game.sceneuidata.weixinlogin_uidata[0],game.screenWidth,game.screenHeight,1,this);
-			game.layoutUi.layoutPanelData(game.sceneuidata.weixinlogin_uidata[1],game.screenWidth,game.screenHeight,1,this);
+			game.layoutUi.layoutPanelData(game.sceneuidata.weixinlogin_uidata[0],game.stage.width,game.stage.height,1,this);
+			game.layoutUi.layoutPanelData(game.sceneuidata.weixinlogin_uidata[1],game.stage.width,game.stage.height,1,this);
 			
 			var self = this;
 			this.items['id_weixinlogin_btn'].on(Hilo.event.POINTER_END, function(e) {
 				console.log('switch main scene');
-				game.switchScene(game.configdata.SCENE_NAMES.play);
+				game.switchScene(game.configdata.SCENE_NAMES.main);
 			});
 
 		},
@@ -251,7 +252,7 @@
 			this.width = game.configdata.mainStageSize.width;
 			this.height = game.configdata.mainStageSize.height;
 			this.y = -this.height;
-			this.x = game.screenWidth/2 - this.width/2;
+			this.x = game.stage.width/2 - this.width/2;
 			this.items = {};
 		},
 		executeMsg:function(sendobj,msgtype,msgdata){
@@ -298,7 +299,7 @@
 			
 			
 			Hilo.Tween.to(this, {
-				y: game.screenHeight/2 - this.height/2
+				y: game.stage.height/2 - this.height/2
 			}, {
 				duration: 800,
 				ease: Hilo.Ease.Bounce.EaseOut,
@@ -307,14 +308,14 @@
 				}
 			});
 			
-			game.layoutUi.layoutPanelData(game.sceneuidata.main_uidata[1],game.screenWidth,game.screenHeight,1,this);
+			game.layoutUi.layoutPanelData(game.sceneuidata.main_uidata[1],game.stage.width,game.stage.height,1,this);
 			var sl = new game.ScrollBmpwindow({
-				x:10,
-				y:game.screenHeight/2 - (260*game.scalefact)/2,
-				width:180,
-				height:260,
+				x:30,
+				y:game.stage.height/2 - (410*game.scalefact)/2,
+				width:272,
+				height:415,
 			}).addTo(this);
-			sl.addImgs(['img/loadbanner/activity1.png','img/loadbanner/activity2.png','img/loadbanner/activity3.png','img/loadbanner/activity4.png'],163,249);
+			sl.addImgs(['img/loadbanner/activity1.png','img/loadbanner/activity2.png','img/loadbanner/activity3.png','img/loadbanner/activity4.png'],270,410);
 			sl.scaleX = game.scalefact;
 			sl.scaleY = game.scalefact;
 			

@@ -17,7 +17,7 @@ game.sceneuidata = new function(){
 					layouttype_x:'txt',
 					alignx:'center',
 					layouttype_y:'pct',
-					aligny:'top_5'
+					aligny:'top_25'
 				},
 	        ],
 			[
@@ -287,7 +287,7 @@ game.sceneuidata = new function(){
 		];
 		
 	self.playscene_uidata = [
-	       //-------------- 0 邀请好友
+	       //-------------- 0 邀请好友 场景
 			[
 				{
 					itemid:'id_palyscene_invite_btn',

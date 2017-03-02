@@ -49,7 +49,7 @@
 			}
 			this.bg.width = this.width;
 			this.bg.height = this.height;
-			game.layoutUi.drawStepLine(game.screenWidth,game.screenHeight,this);
+			game.layoutUi.drawStepLine(game.stage.width,game.stage.height,this);
 		},
 		
 		initSlideEvent: function() {

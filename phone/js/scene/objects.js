@@ -227,7 +227,7 @@
 		itemwidth: 0,
 		pointlayer: null,
 		pointimg: null,
-		pointspace: 20,
+		pointspace: 40,
 
 		autoSumtime: 0,
 		autoInterval: 0,
@@ -275,7 +275,7 @@
 		init: function(properties) {
 			console.log('scroll init');
 			var bg = game.drawdata.drawItemRoundrect(1, 'red', 'rgba(0,0,0,0)', 0, 0, this.width, this.height, 5, this);
-			this.roundmask = game.drawdata.drawItemRoundrect(1, 'rgba(0,0,0,0)', 'rgba(0,0,0,0)', (this.width - 150) / 2, (this.height - 250) / 2, 150, 250, 5, this);
+			this.roundmask = game.drawdata.drawItemRoundrect(1, 'rgba(0,0,0,0)', 'rgba(0,0,0,0)', (this.width - 272) / 2, (this.height - 414) / 2, 272, 424, 5, this);
 			this.imgpanel = new Hilo.Container().addTo(this);
 			//this.imgpanel.pointerEnabled = false;
 			this.imgpanel.mask = this.roundmask;
@@ -949,6 +949,8 @@
 		currentNum:0,
 		reTime:false,
 		startTime:0,
+		pivotx:24,
+		pivoty:24,
 
 		constructor: function(properties) {
 			Pointeruser.superclass.constructor.call(this, properties);
@@ -958,9 +960,9 @@
 			var bodyrect = game.configdata.getPngRect(this.rectname,this.imgsource);
 			this.width = bodyrect[2];
 			this.imgbody = game.configdata.createRectImg(this.imgsource, this.rectname, 0, 0, 1).addTo(this);
-			this.imgbody.pivotX = 24;
-			this.imgbody.pivotY = 24;
-			this.numlabel = game.configdata.createTitletext('0','16px 黑体','yellow','rgba(0,0,0,0)',-20,0,40).addTo(this);
+			this.imgbody.pivotX = this.pivotx;
+			this.imgbody.pivotY = this.pivoty;
+			this.numlabel = game.configdata.createTitletext('0','24px 黑体','yellow','rgba(0,0,0,0)',-20,0,40).addTo(this);
 			this.numlabel.y = -this.numlabel._fontHeight/2;
 		},
 		
