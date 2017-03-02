@@ -1,0 +1,14 @@
+<TextureAtlas imagePath="sprites.png">
+	<SubTexture name="2.png" x="0" y="0" width="1280" height="720"/>
+	<SubTexture name="battle_bg.png" x="0" y="1450" width="1280" height="720"/>
+	<SubTexture name="login_6.png" x="1285" y="1061" width="608" height="711"/>
+	<SubTexture name="login_7.png" x="1897" y="2012" width="369" height="276"/>
+	<SubTexture name="login_8.png" x="1898" y="1061" width="352" height="275"/>
+	<SubTexture name="login_bg.png" x="1285" y="494" width="763" height="562"/>
+	<SubTexture name="login_bg100.png" x="287" y="2175" width="232" height="200"/>
+	<SubTexture name="login_bg2.png" x="0" y="725" width="1280" height="720"/>
+	<SubTexture name="login_bg35.png" x="1285" y="1777" width="607" height="624"/>
+	<SubTexture name="login_bg36.png" x="1285" y="0" width="925" height="489"/>
+	<SubTexture name="login_bg46.png" x="1897" y="1777" width="439" height="230"/>
+	<SubTexture name="login_bg96.png" x="0" y="2175" width="282" height="154"/>
+</TextureAtlas>

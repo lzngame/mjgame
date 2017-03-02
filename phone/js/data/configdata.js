@@ -171,7 +171,7 @@ game.configdata = new function() {
 				break;
 			case 'bg':
 				rect_data = game.loaddata.IMAGEDATA_3[pngname];
-				imgsource = game.getImg('bgs');
+				imgsource = game.getImg('bg');
 				break;
 			default:
 				rect_data = game.loaddata.IMAGEDATA_1[pngname];

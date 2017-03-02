@@ -17,7 +17,7 @@ game.sceneuidata = new function(){
 					layouttype_x:'txt',
 					alignx:'center',
 					layouttype_y:'pct',
-					aligny:'top_25'
+					aligny:'top_5'
 				},
 	        ],
 			[
