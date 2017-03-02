@@ -334,7 +334,7 @@ game.configdata = new function() {
 			var panel = new Hilo.Container();
 			var w = game.stage.width;
 			var h = game.stage.height;
-			var bg = game.configdata.createRectImg2('bg', 'battlebg', w,h).addTo(panel);
+			var bg = game.configdata.createRectImg2('bg', 'battle_bg', w,h).addTo(panel);
 			bg.alpha = 0.5;
 			var loadgif = game.configdata.createLoadgif().addTo(panel);
 			loadgif.x = w / 2 - loadgif.width / 2;
@@ -379,6 +379,14 @@ game.configdata = new function() {
 			rect = self.getPngSize2(names[i]);
 			list.push(rect);
 		}
+	}
+	
+	self.createRandomMjid = function(){
+			var s = ['t','b','w'];
+			var sn = Math.floor(Math.random() * 3);
+			var n = Math.floor(Math.random() * 9)+1;
+			var mjid = s[sn]+'_'+n.toString();
+			return mjid;
 	}
 
 };

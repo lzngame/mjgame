@@ -48,7 +48,7 @@
 		numcount:6,
 		currentindex:-1,
 		nums:null,
-		hspace:5,
+		hspace:30,
 		imgsource:null,
 		bgimg:null,
 		numsimglist:null,
@@ -115,7 +115,7 @@
 		name:'InputNumpanel',
 		numpanel:null,
 		inputpanel:null,
-		vspace:5,
+		vspace:25,
 		numcount:6,
 		inceptHandle:null,
 		constructor: function(properties) {

@@ -372,7 +372,6 @@
 			var self = this;
 			var customw = this.width * 0.8;
 			var customh = this.height * 0.8;
-			debugger;
 			var txt = game.configdata.createTitletext(text,'18px 黑体','black','yellow',0,0,300);
 			var panel = game.configdata.createBgPanel(data,'login_bg35',true,true,self,'login_13','login_14','ui',55,'login_bg111',title,customw,customh);
 			txt.x = panel.width * game.scalefact /2 -150;

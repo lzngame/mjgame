@@ -46,7 +46,7 @@ game.sceneuidata = new function(){
 					itemtype:'bmp',
 					itemurlvalue:'login_5',
 					layouttype_x:'follow',
-					alignx:'id_agreeweixinlogin_selectbox&45',
+					alignx:'id_agreeweixinlogin_selectbox&115',
 					layouttype_y:'follow',
 					aligny:'id_agreeweixinlogin_selectbox&15'
 				}

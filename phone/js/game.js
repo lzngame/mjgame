@@ -39,7 +39,6 @@
 		
 		dpr:1,
 		
-		
 		init: function() {
 			var browserInfo = Hilo.browser;
 			var winWidth = window.innerWidth || document.documentElement.clientWidth;

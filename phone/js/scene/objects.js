@@ -24,13 +24,10 @@
 				self.imgcheck.visible = self.isSelected;
 			});
 		},
-
 		onUpdate: function() {
 
 		},
 	});
-	
-	
 
 	//radiobox ---- 单选按钮
 	var MjRadioBox = ns.MjRadioBox = Hilo.Class.create({
@@ -59,7 +56,7 @@
 			this.imgcheck = game.configdata.createRectImg('ui', this.imgcheck, bgrect[2] / 2 - checkrect[2] / 2, bgrect[3] / 2 - checkrect[3] / 2, 1).addTo(this);
 			this.imgcheck.visible = this.isSelected;
 			var self = this;
-			var font = "15px arial";
+			var font = "28px 黑体";
 			this.txtlabel = new Hilo.Text({
 				font: font,
 				text: this.textlabel,
@@ -100,9 +97,9 @@
 		},
 		setLabelColor: function() {
 			if(this.isSelected) {
-				this.txtlabel.color = this.defaultLabelClr;
-			} else {
 				this.txtlabel.color = this.selectLabelClr;
+			} else {
+				this.txtlabel.color = this.defaultLabelClr;
 			}
 		},
 		onUpdate: function() {
@@ -180,6 +177,7 @@
 		itemurlvalue: null,
 		txt: null,
 		speed: 3,
+		font:"20px 黑体",
 		constructor: function(properties) {
 			Merrygoround.superclass.constructor.call(this, properties);
 			this.init(properties);
@@ -188,9 +186,9 @@
 			var head = game.configdata.createRectImg('ui', this.headimg, 0, 0, 1).addTo(this);
 			var bg = game.configdata.createRectImg('ui', this.itemurlvalue, head.width, 0, 1).addTo(this);
 			var mask = game.drawdata.drawItemRect(1, 'rgba(0,0,0,0)', 'rgba(0,0,0,0)', bg.x, bg.y, bg.width, bg.height, this);
-			var font = "14px arial";
+			//var font = "18px arial";
 			this.txt = new Hilo.Text({
-				font: font,
+				font: this.font,
 				text: '欢迎来到靠谱云办公室,福州麻将欢迎您！',
 				color: '#FFF200',
 				x: 300,
@@ -718,7 +716,6 @@
 		state: 0, //0 正常 1放下（吃/碰/明杠）2暗杠
 		swidth: 0,
 		sheight: 0,
-		isgold: false,
 		putdownOffsety: 7,
 
 		currentposy: 0,
@@ -736,7 +733,8 @@
 		initx: 0,
 		inity: 0,
 
-		isSelected: false,
+		isSelected:false,
+		isGold:false,
 
 		constructor: function(properties) {
 			MjSelf.superclass.constructor.call(this, properties);
@@ -770,6 +768,13 @@
 			this.initx = this.x;
 			this.inity = this.y;
 			this.initTouch();
+		},
+		setGold:function(){
+			this.isGold = true;
+			var rect = game.configdata.getPngRect('18','ui');
+			var gold = new Hilo.Bitmap({image:game.getImg('ui'),rect:rect}).addTo(this);
+			gold.x = this.width - rect[2];
+			gold.y = this.height - rect[3];
 		},
 		initTouch: function() {
 			this.on(Hilo.event.POINTER_START, function(e) {
@@ -851,18 +856,7 @@
 			this.bgrect = game.configdata.getPngRect(this.bgrects[this.state], this.imgsource);
 			this.bgimg.setImage(game.getImg(this.imgsource), this.bgrect);
 		},
-		setGold: function(isgold) {
-			var goldrect = game.configdata.getPngRect('18', 'ui');
-			var x = this.width - goldrect[2];
-			var y = this.height - goldrect[3];
-			this.isgold = true;
-			this.goldimg = new Hilo.Bitmap({
-				image: game.getImg('ui'),
-				x: x,
-				y: y,
-				rect: goldrect
-			}).addTo(this);
-		}
+		
 	});
 
 	//麻将牌 --- 其他
@@ -962,7 +956,7 @@
 			this.imgbody = game.configdata.createRectImg(this.imgsource, this.rectname, 0, 0, 1).addTo(this);
 			this.imgbody.pivotX = this.pivotx;
 			this.imgbody.pivotY = this.pivoty;
-			this.numlabel = game.configdata.createTitletext('0','24px 黑体','yellow','rgba(0,0,0,0)',-20,0,40).addTo(this);
+			this.numlabel = game.configdata.createTitletext('0','24px 黑体','white','rgba(0,0,0,0)',-20,0,40).addTo(this);
 			this.numlabel.y = -this.numlabel._fontHeight/2;
 		},
 		
@@ -994,9 +988,8 @@
 			this.currentNum = 0;
 			this.sumtime = 0;
 			this.numlabel.text = this.currentNum.toString();
-			console.log('window.devicePixelRatio:%s',window.devicePixelRatio);
-
 		},
+		
 		onUpdate:function(){
 			this.sumtime += game.clock.getTick();
 			if(this.sumtime > 1000){
