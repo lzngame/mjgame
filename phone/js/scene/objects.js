@@ -713,7 +713,7 @@
 		frontimg: null,
 		goldimg: null,
 		rectfront: null,
-		bgrects: ['selfmj_30', 'selfmj_23', 'selfmj_22'],
+		bgrects: ['self_30', 'self_22', 'selfmj_23'],
 		bgrect: 0,
 		state: 0, //0 正常 1放下（吃/碰/明杠）2暗杠
 		swidth: 0,
@@ -945,6 +945,10 @@
 		speed:0.3,
 		ischange:false,
 		sumtime:0,
+		numlabel:null,
+		currentNum:0,
+		reTime:false,
+		startTime:0,
 
 		constructor: function(properties) {
 			Pointeruser.superclass.constructor.call(this, properties);
@@ -956,11 +960,14 @@
 			this.imgbody = game.configdata.createRectImg(this.imgsource, this.rectname, 0, 0, 1).addTo(this);
 			this.imgbody.pivotX = 24;
 			this.imgbody.pivotY = 24;
+			this.numlabel = game.configdata.createTitletext('0','16px 黑体','yellow','rgba(0,0,0,0)',-20,0,40).addTo(this);
+			this.numlabel.y = -this.numlabel._fontHeight/2;
 		},
 		
 		setDirect:function(direct){
 			var d = 0;
 			console.log(direct);
+			this.resetTime();
 			switch(direct){
 				case 'left':
 					d = 90;
@@ -981,6 +988,21 @@
 				duration:200,
 			});
 		},
+		resetTime:function(){
+			this.currentNum = 0;
+			this.sumtime = 0;
+			this.numlabel.text = this.currentNum.toString();
+			console.log('window.devicePixelRatio:%s',window.devicePixelRatio);
+
+		},
+		onUpdate:function(){
+			this.sumtime += game.clock.getTick();
+			if(this.sumtime > 1000){
+				this.sumtime = 0;  
+				this.currentNum += 1;
+				this.numlabel.text = this.currentNum.toString();
+			}
+		}
 	});
 	
 	//Goldmj--- 金牌
