@@ -71,9 +71,6 @@
 			    }).addTo(this);
 			    this.nums.push(num);
 			}
-			console.log('----------------------');
-			console.log(this.nums.length);
-			console.log('----------------------');
 		},
 		clearAll:function(){
 			for(var i=0;i<this.nums.length;i++){

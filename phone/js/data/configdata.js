@@ -405,20 +405,21 @@ game.networker = new function() {
 				}
 				game.sendMsg(this, sendobj, 'hide', isright);
 				break;
-			case game.mjdata.msg.THROWMJ:
-				var mjid = msgdata;
-				self.nextuserHandle(sendobj);
+			case game.mjdata.msg.THROWMJ:   //某玩家扔掉手牌
+				self.nextuserHandle(sendobj,msgdata);
 				break;
 		}
 	};
-	this.nextuserHandle = function(playscene){
+	this.nextuserHandle = function(playscene,msgdata){
 		new Hilo.Tween.to(this,{
 			alpha:1
 		},{
 			duration:10,
-			delay:2000,
+			delay:800,
 			onComplete:function(){
-				game.sendMsg(this, playscene, game.mjdata.msg.THROWMJ, 'b_8');
+				var tmp1 = ['up','left','down'];
+				var index = Math.floor(Math.random()*3);
+				game.sendMsg(this, playscene, game.mjdata.msg.NEXTUSER_HANDLE, tmp1[index]);
 			}
 		});
 	};
@@ -712,12 +713,12 @@ game.drawdata = new function() {
 game.mjdata = new function() {
 	var self = this;
 	self.msg = {
-			THROW: 'throw_mj_msg_100',
-			SELECT: 'select_mj_msg_101',
-			THROWMJ: 'throw_mj_mjid_102',
-
+			BETHROW: 'bethrow_mj_msg_100',
+			BESELECT: 'beselect_mj_msg_101',
+			NEXTUSER_HANDLE:'nextuser_mjhandle_102',
+			THROWMJ: 'throw_mj_mjid_103',
 		},
-		self.mj = {
+	self.mj = {
 			w_1: ['一万', 'self_32'],
 			w_2: ['两万', 'self_33'],
 			w_3: ['三万', 'self_34'],
@@ -747,39 +748,38 @@ game.mjdata = new function() {
 			b_7: ['七饼', 'self_56'],
 			b_8: ['八饼', 'self_57'],
 			b_9: ['九饼', 'self_58'],
-
 		};
 
 	self.smallmj = {
-		w_1: ['一万', 'battle_32'],
-		w_2: ['两万', 'battle_33'],
-		w_3: ['三万', 'battle_34'],
-		w_4: ['四万', 'battle_35'],
-		w_5: ['五万', 'battle_36'],
-		w_6: ['六万', 'battle_37'],
-		w_7: ['七万', 'battle_38'],
-		w_8: ['八万', 'battle_39'],
-		w_9: ['九万', 'battle_40'],
+		w_1: ['一万', 'battle_32','battle_hg_32','battle_hgR_32'],
+		w_2: ['两万', 'battle_33','battle_hg_33','battle_hgR_33'],
+		w_3: ['三万', 'battle_34','battle_hg_34','battle_hgR_34'],
+		w_4: ['四万', 'battle_35','battle_hg_35','battle_hgR_35'],
+		w_5: ['五万', 'battle_36','battle_hg_36','battle_hgR_36'],
+		w_6: ['六万', 'battle_37','battle_hg_37','battle_hgR_37'],
+		w_7: ['七万', 'battle_38','battle_hg_38','battle_hgR_38'],
+		w_8: ['八万', 'battle_39','battle_hg_39','battle_hgR_39'],
+		w_9: ['九万', 'battle_40','battle_hg_40','battle_hgR_40'],
 
-		t_1: ['一条', 'battle_41'],
-		t_2: ['两条', 'battle_42'],
-		t_3: ['三条', 'battle_43'],
-		t_4: ['四条', 'battle_44'],
-		t_5: ['五条', 'battle_45'],
-		t_6: ['六条', 'battle_46'],
-		t_7: ['七条', 'battle_47'],
-		t_8: ['八条', 'battle_48'],
-		t_9: ['九条', 'battle_49'],
+		t_1: ['一条', 'battle_41','battle_hg_41','battle_hgR_41'],
+		t_2: ['两条', 'battle_42','battle_hg_42','battle_hgR_42'],
+		t_3: ['三条', 'battle_43','battle_hg_43','battle_hgR_43'],
+		t_4: ['四条', 'battle_44','battle_hg_44','battle_hgR_44'],
+		t_5: ['五条', 'battle_45','battle_hg_45','battle_hgR_45'],
+		t_6: ['六条', 'battle_46','battle_hg_46','battle_hgR_46'],
+		t_7: ['七条', 'battle_47','battle_hg_47','battle_hgR_47'],
+		t_8: ['八条', 'battle_48','battle_hg_48','battle_hgR_48'],
+		t_9: ['九条', 'battle_49','battle_hg_49','battle_hgR_49'],
 
-		b_1: ['一饼', 'battle_50'],
-		b_2: ['两饼', 'battle_51'],
-		b_3: ['三饼', 'battle_52'],
-		b_4: ['四饼', 'battle_53'],
-		b_5: ['五饼', 'battle_54'],
-		b_6: ['六饼', 'battle_55'],
-		b_7: ['七饼', 'battle_56'],
-		b_8: ['八饼', 'battle_57'],
-		b_9: ['九饼', 'battle_58'],
+		b_1: ['一饼', 'battle_50','battle_hg_50','battle_hgR_50'],
+		b_2: ['两饼', 'battle_51','battle_hg_51','battle_hgR_51'],
+		b_3: ['三饼', 'battle_52','battle_hg_52','battle_hgR_52'],
+		b_4: ['四饼', 'battle_53','battle_hg_53','battle_hgR_53'],
+		b_5: ['五饼', 'battle_54','battle_hg_54','battle_hgR_54'],
+		b_6: ['六饼', 'battle_55','battle_hg_55','battle_hgR_55'],
+		b_7: ['七饼', 'battle_56','battle_hg_56','battle_hgR_56'],
+		b_8: ['八饼', 'battle_57','battle_hg_57','battle_hgR_57'],
+		b_9: ['九饼', 'battle_58','battle_hg_58','battle_hgR_58'],
 
 	};
 

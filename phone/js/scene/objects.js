@@ -794,49 +794,42 @@
 					this.x = x;
 					this.y = y;
 					this.hadmove = true;
-
-					console.log(this.hadmove);
 				}
 			});
 			this.on(Hilo.event.POINTER_END, this._endTouchHandle);
 			this.on('touchout', this._endTouchHandle);
 		},
 		_endTouchHandle: function(e) {
-			console.log('_endTouchHandle');
 			this.tapstart = false;
 
 			if(!this.hadmove) {
 				if(this.isSelected) {
-					console.log('type--1----mj---throw');
-					game.sendMsg(this, game.scenes[game.configdata.SCENE_NAMES.play], game.mjdata.msg.THROW, this.mjid);
+					this.bethrow();
 				} else {
-					console.log('type--1----mj---choice');
-					this.y = this.inity - 20;
-					this.x = this.initx;
-					this.isSelected = true;
-					game.sendMsg(this, game.scenes[game.configdata.SCENE_NAMES.play], game.mjdata.msg.SELECT, this.mjid);
+					this.beselected();
 				}
 			} else {
-				console.log('move mj');
 				var dis = this.inity - this.y;
 				if(dis < 40) {
 					if(this.isSelected) {
-						console.log('type--2----mj---throw');
-						game.sendMsg(this, game.scenes[game.configdata.SCENE_NAMES.play], game.mjdata.msg.THROW, this.mjid);
+						this.bethrow();
 					} else {
-						console.log('type--2----mj---choice');
-						this.y = this.inity - 20;
-						this.x = this.initx;
-						this.isSelected = true;
-						game.sendMsg(this, game.scenes[game.configdata.SCENE_NAMES.play], game.mjdata.msg.SELECT, this.mjid);
+						this.beselected();
 					}
 				} else {
-					console.log('type--3----mj---throw');
-					game.sendMsg(this, game.scenes[game.configdata.SCENE_NAMES.play], game.mjdata.msg.THROW, this.mjid);
+					this.bethrow();
 				}
-				console.log(dis);
 			}
 			this.hadmove = false;
+		},
+		bethrow:function(){
+			game.sendMsg(this, game.scenes[game.configdata.SCENE_NAMES.play], game.mjdata.msg.BETHROW, this.mjid);
+		},
+		beselected:function(){
+			this.y = this.inity - 20;
+			this.x = this.initx;
+			this.isSelected = true;
+			game.sendMsg(this, game.scenes[game.configdata.SCENE_NAMES.play], game.mjdata.msg.BESELECT, this.mjid);
 		},
 		backQueue: function() {
 			this.y = this.inity;
