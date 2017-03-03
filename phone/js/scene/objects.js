@@ -333,12 +333,12 @@
 			});
 		},
 		//如果使用自己创建的全局方法,在Basescene 里面注册启用,这是一个滑出事件 ,等同于 touchout
-		onSlideOut(x1, y1, x2, y2) {
+		onSlideOut:function(x1, y1, x2, y2) {
 			if(this.parent) {
 				console.log('out x:%s y:%s  --- x:%s y:%s', x1, y1, x2, y2);
 			}
 		},
-		onSlide(directx, directy) {
+		onSlide:function(directx, directy) {
 			if(this.parent) {
 				console.log('slide-h:%s v:%s', directx, directy);
 			}
@@ -457,12 +457,12 @@
 			});
 		},
 		//如果使用自己创建的全局方法,在Basescene 里面注册启用,这是一个滑出事件 ,等同于 touchout
-		onSlideOut(x1, y1, x2, y2) {
+		onSlideOut:function(x1, y1, x2, y2) {
 			if(this.parent) {
 				console.log('out x:%s y:%s  --- x:%s y:%s', x1, y1, x2, y2);
 			}
 		},
-		onSlide(directx, directy) {
+		onSlide:function(directx, directy) {
 			if(this.parent) {
 				console.log('slide-h:%s v:%s', directx, directy);
 			}
