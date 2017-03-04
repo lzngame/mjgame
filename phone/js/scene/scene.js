@@ -389,6 +389,48 @@
 			}).addTo(panel);
 			btn.x = (panel.width - btn.width) *game.scalefact/2;
 			btn.y = panel.height * game.scalefact - btn.height * game.scalefact + 20;
+			
+			
+			var setvalue = [0,0,0,0];
+			for(var itemid in panel.items) {
+				var radiobox = panel.items[itemid];
+				if(radiobox.groupid){
+					console.log(radiobox.textlabel);
+					if(radiobox.isSelected){
+						if(radiobox.groupid == 'groupid001'){
+							setvalue[0] = radiobox.value;
+						}
+						if(radiobox.groupid == 'groupid002'){
+							setvalue[1] = radiobox.value;
+						}
+						if(radiobox.groupid == 'groupid003'){
+							setvalue[2] = radiobox.value;
+						}
+						if(radiobox.groupid == 'groupid004'){
+							setvalue[3] = radiobox.value;
+						}
+					}
+					radiobox.onhandle = function(txt){
+						console.log(this);
+						if(this.groupid == 'groupid001'){
+							setvalue[0] = this.value;
+						}
+						if(this.groupid == 'groupid002'){
+							setvalue[1] = this.value;
+						}
+						if(this.groupid == 'groupid003'){
+							setvalue[2] = this.value;
+						}
+						if(this.groupid == 'groupid004'){
+							setvalue[3] = this.value;
+						}
+						console.log(setvalue);
+					}
+				}
+			}
+			btn.on(Hilo.event.POINTER_END,function(e){
+					console.log(setvalue);
+				});
 			return panel;
 		},
 		

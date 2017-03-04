@@ -63,13 +63,14 @@ game.configdata = new function() {
 		return result;
 	}
 
-	self.createRadiotbox = function(itemurlvalue, imgcheck, x, y, lbtext, groupid, ischeck, items) {
+	self.createRadiotbox = function(itemurlvalue,imgcheck, x, y, lbtext, groupid, ischeck, selectvalue, items) {
 		var result = new game.MjRadioBox({
 			itemurlvalue: itemurlvalue,
 			imgcheck: imgcheck,
 			textlabel: lbtext,
 			groupid: groupid,
 			isSelected: ischeck,
+			value:selectvalue,
 			x: x,
 			y: y,
 			items: items,
@@ -518,7 +519,7 @@ game.layoutUi = new function() {
 				theparent.items[itemdata.itemid] = game.configdata.createSelectbox(itemdata.itemurlvalue, itemdata.selectvalue, x, y).addTo(theparent);
 			}
 			if(itemdata.itemtype === 'radiobox') {
-				theparent.items[itemdata.itemid] = game.configdata.createRadiotbox(itemdata.itemurlvalue, itemdata.selectvalue, x, y, itemdata.lbtext, itemdata.groupid, itemdata.ischeck, theparent.items).addTo(theparent);
+				theparent.items[itemdata.itemid] = game.configdata.createRadiotbox(itemdata.itemurlvalue, itemdata.selectvalue, x, y, itemdata.lbtext, itemdata.groupid, itemdata.ischeck, itemdata.value,theparent.items).addTo(theparent);
 			}
 			if(itemdata.itemtype == 'merrygoround') {
 				theparent.items[itemdata.itemid] = game.configdata.createMerrygoround(itemdata.headimg, itemdata.itemurlvalue, x, y).addTo(theparent);

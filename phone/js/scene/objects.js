@@ -44,6 +44,7 @@
 		selectLabelClr: 'green',
 		items: null,
 		iscurrent: false,
+		onhandle:null,
 
 		constructor: function(properties) {
 			MjRadioBox.superclass.constructor.call(this, properties);
@@ -74,7 +75,9 @@
 					self.imgcheck.visible = self.isSelected;
 					self.setLabelColor();
 					self.groupExe();
-
+				}
+				if(this.onhandle){
+					this.onhandle(this.textlabel);
 				}
 			});
 
@@ -135,19 +138,20 @@
 			}).addTo(this);
 
 			this.caricon = game.configdata.createRectImg(this.imgsource, this.caricon, 23, 0, 1).addTo(this);
-			this.caricon.y = (uprect[3] - this.caricon.height) / 2;
-			this.sureicon = game.configdata.createRectImg(this.imgsource, this.sureicon, this.caricon.x + this.caricon.width + 15, 0, 1).addTo(this);
+			this.caricon.x = 20;
+			this.caricon.y = (uprect[3] - this.caricon.height) / 2-4;
+			this.sureicon = game.configdata.createRectImg(this.imgsource, this.sureicon, this.caricon.x + this.caricon.width + 45, 0, 1).addTo(this);
 			this.sureicon.y = (uprect[3] - this.caricon.height) / 2;
 
 			var self = this;
-			var font = "15px arial";
+			var font = "28px 黑体";
 			this.numlabel = new Hilo.Text({
 				font: font,
-				text: this.defaultNum.toString(),
-				color: '#FFF200',
-				x: this.caricon.x + 28,
+				text: '5',//this.defaultNum.toString(),
+				color: 'yellow',
+				x: this.caricon.x + 48,
 			}).addTo(this);
-			var y = uprect[3] / 2 - this.numlabel._fontHeight / 2 + 2;
+			var y = uprect[3] / 2 - this.numlabel._fontHeight / 2 + 4;
 			this.numlabel.y = y;
 			this.caricon.pointerEnabled = false;
 			this.sureicon.pointerEnabled = false;
@@ -157,7 +161,7 @@
 			this.height = uprect[3];
 			this.btnbody.on(Hilo.event.POINTER_START, function(e) {
 				console.log('car num btn');
-				self.setLabelNum(Math.floor(Math.random() * 10));
+				//self.setLabelNum(Math.floor(Math.random() * 10));
 			});
 		},
 		setLabelNum: function(num) {
