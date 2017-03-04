@@ -118,10 +118,19 @@
 		
 		throwSelfInitx:0,
 		throwSelfInity:0,
+		
+		upDealInitx:0,
+		upDealInity:0,
 		throwUpInitx:0,
 		throwUpInity:0,
+		
+		leftDealInitx:0,
+		leftDealInity:0,
 		throwLeftInitx:0,
 		throwLeftInity:0,
+		
+		rightDealInitx:0,
+		rightDealInity:0,
 		throwRightInitx:0,
 		throwRightInity:0,
 
@@ -234,24 +243,23 @@
 				}
 			}
 			this.sortMj();
-
 			this.takemj();
 		},
 		_setThrowPostion:function(){
 			this.throwSelfInitx = this.width * 0.25;
 			this.throwSelfInity = this.height - (2*this.upMjH + this.selfMjH) -10;
-			//debugger;
+			this.upDealInitx = this.width *3/8;
 			this.throwUpInitx = 0;
-			this.throwUpInity=0;
+			this.throwUpInity = 0;
 			this.throwLeftInitx=0;
 			this.throwLeftInity=0;
+			this.rightDealInitx = this.width *7/8;
 			this.throwRightInitx=0;
 			this.throwRightInity=0;
 		},
 
 		_throwmjSelf: function(mjid) {
 			var throwmj = this._getThrowMj(mjid,1);
-			
 			var offsetW = throwmj.width*game.scalefact;
 			if(game.scalefact <= 0.771){
 				offsetW += 4;
@@ -329,6 +337,7 @@
 		},
 		
 		_getThrowMj:function(mjid,typemj){
+			game.sounds.playMj(mjid);
 			var idname = mjid + "-"+ typemj.toString();
 			var throwmj = new game.MjScene({ mjid: idname }).addTo(this.throwlayer);
 			throwmj.pointerEnabled = false;
@@ -385,12 +394,12 @@
 				//self -down
 				this.addRandMj();
 				//up
-				game.configdata.createRectImg('mj', 'self_80', i * 32 + 600, 70, 1).addTo(this);
+				game.configdata.createRectImg('mj', 'self_80', i * 32 + this.upDealInitx, 70, 1).addTo(this);
 				//lfet
 				var offsetx = 21 * game.scalefact;
 				game.configdata.createRectImg('mj', 'self_73', 70, i*offsetx + 150, 1).addTo(this);
 				//right
-				game.configdata.createRectImg('mj', 'self_73', 1170, i*offsetx + 150, 1).addTo(this);
+				game.configdata.createRectImg('mj', 'self_73', this.rightDealInitx, i*offsetx + 150, 1).addTo(this);
 			}
 		},
 

@@ -133,7 +133,7 @@
 				game.loadqueue.off('complete');
 				game.loadqueue.off('load');
 				
-				game.switchScene(game.configdata.SCENE_NAMES.play);
+				game.switchScene(game.configdata.SCENE_NAMES.weixinlogin);
 			});
 			game.loadqueue.start();
 		},
@@ -339,12 +339,6 @@
 			this.items['id_mainscene_expandable_btn'].on(Hilo.event.POINTER_END, function(e) {
 				var prompt = self.createPromptpanel3(game.sceneuidata.main_uidata[2],'login_bg35',true,true,self);
 				prompt.addTo(self);
-				//self.showLoadgif(true);
-				//game.sendMsg(self,game.networker,'testmsg',1000);
-				
-				
-				
-				
 			});
 			
 			this.items['id_mainscene_score_btn'].on(Hilo.event.POINTER_END, function(e) {
@@ -394,7 +388,7 @@
 				scaleY:game.scalefact,
 			}).addTo(panel);
 			btn.x = (panel.width - btn.width) *game.scalefact/2;
-			btn.y = panel.height * game.scalefact - btn.height * game.scalefact - 20;
+			btn.y = panel.height * game.scalefact - btn.height * game.scalefact + 20;
 			return panel;
 		},
 		
