@@ -376,6 +376,7 @@
 		},
 		
 		createPromptpanel:function(bgname,ishalf,ismodal,theparent){
+			var self = this;
 			var panel = game.configdata.createBgPanel(game.sceneuidata.main_uidata[3],bgname,ishalf,ismodal,theparent,'login_13','login_14','ui',55,'login_bg111','login_bg42');
 			var btn = new game.RoomSurebtn({
 				itemurlvalue:'login_10',
@@ -424,21 +425,39 @@
 						if(this.groupid == 'groupid004'){
 							setvalue[3] = this.value;
 						}
+						var carnums = self.calculatePaycard(setvalue);
+						btn.setLabelNum(carnums);
 						console.log(setvalue);
 					}
 				}
 			}
+			var carnums = this.calculatePaycard(setvalue);
+			btn.setLabelNum(carnums);
 			btn.on(Hilo.event.POINTER_END,function(e){
 					console.log(setvalue);
 				});
 			return panel;
 		},
 		
+		calculatePaycard:function(datalist){
+			var base = 1;
+			var factcount = 1;
+			var factman = 1;
+			factcount = datalist[0]/4;
+			if(datalist[2] == 4){
+				factman = 2;
+			}
+			return base * factcount * factman;
+		},
+		
+		
+		
 		createPromptpanel2:function(data,bgname,ishalf,ismodal,theparent){
 			var panel = game.configdata.createBgPanel(data,bgname,ishalf,ismodal,theparent,'login_13','login_14','ui',55,'login_bg111','login_bg43');
+			var titletxt = game.configdata.createTitletext('输入房间号','24px 黑体','white','rgba(0,0,0,0)',panel.width*game.scalefact/2 - 200,panel.height*game.scalefact/8,400).addTo(panel);
 			var numpanel = new game.InputNumpanel({numcount:6,x:350,y:10,scaleX:game.scalefact,scaleY:game.scalefact}).addTo(panel);
 			numpanel.x = (panel.width - numpanel.width)*game.scalefact/2;
-			numpanel.y = panel.height * game.scalefact -numpanel.height * game.scalefact - panel.height * game.scalefact * 0.05;
+			numpanel.y = panel.height * game.scalefact -numpanel.height * game.scalefact - panel.height * game.scalefact * 0.05+30;
 			numpanel.inceptHandle = this.inceptNum;
 			panel.numpanel = numpanel;
 			return panel;
@@ -458,7 +477,7 @@
 			}).addTo(panel);
 			var txt = new Hilo.Text({
 				text:"",
-				font:'14px  黑体',
+				font:'24px  黑体',
 				color:'black',
 				background:'rgba(0,0,0,0)',
 				width:scrollwin.width,

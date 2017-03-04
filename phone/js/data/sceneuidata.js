@@ -97,7 +97,7 @@ game.sceneuidata = new function(){
 				{
 					itemid:'id_mainscene_help_btn',
 					itemtype:'scalebtn',
-					itemurlvalue:'login_bg14',
+					itemurlvalue:'lsbattle_5',
 					layouttype_x:'pct',
 					alignx:'right_10',
 					layouttype_y:'pct',
@@ -106,7 +106,7 @@ game.sceneuidata = new function(){
 				{
 					itemid:'id_mainscene_setting_btn',
 					itemtype:'scalebtn',
-					itemurlvalue:'login_bg14',
+					itemurlvalue:'lsbattle_2',
 					layouttype_x:'pct',
 					alignx:'right_2',
 					layouttype_y:'pct',
@@ -169,12 +169,12 @@ game.sceneuidata = new function(){
 					itemurlvalue:'fenxiang2',
 					textvalue:'微信',
 					color:'#333333',
-					font:'16px 黑体',
+					font:'30px 黑体',
 					bg:'rgba(0,0,0,0)',
 					layouttype_x:'pct',
 					alignx:'left_25',
 					layouttype_y:'pct',
-					aligny:'bottom_55'
+					aligny:'bottom_40'
 				},
 				{
 					itemid:'id_sharepenyouquan_btn',
@@ -192,12 +192,12 @@ game.sceneuidata = new function(){
 					itemurlvalue:'fenxiang2',
 					textvalue:'朋友圈',
 					color:'#333333',
-					font:'16px 黑体',
+					font:'30px 黑体',
 					bg:'rgba(0,0,0,0)',
 					layouttype_x:'pct',
 					alignx:'right_25',
 					layouttype_y:'pct',
-					aligny:'bottom_55'
+					aligny:'bottom_40'
 				},
 			],
 			// -------- 3 创建房间窗口数据
@@ -443,22 +443,7 @@ game.sceneuidata = new function(){
 					aligny:'bottom_20'
 				},
 			],
-			//---------- 4：提示弹出窗口  朋友圈分享按钮  微信分享按钮
-			[
-				{
-					itemid:'id_shareweixin_text',
-					itemtype:'texttitle',
-					itemurlvalue:'zeng',
-					textvalue:'不存在此房间',
-					color:'#333333',
-					font:'16px 黑体',
-					bg:'rgba(0,0,0,0)',
-					layouttype_x:'txt',
-					alignx:'center',
-					layouttype_y:'txt',
-					aligny:'center'
-				},
-			],
+			
 		];
 		
 	self.playscene_uidata = [
@@ -510,9 +495,9 @@ game.sceneuidata = new function(){
 					itemid:'id_palyscene_wintype_txt',
 					itemtype:'texttitle',
 					itemurlvalue:'login_bg17',
-					textvalue:'放胡单赔',
+					textvalue:'放胡怎么赔',
 					color:'white',
-					font:'12px 黑体',
+					font:'24px 黑体',
 					bg:'rgba(0,0,0,0)',
 					layouttype_x:'txt',
 					alignx:'center',
@@ -730,22 +715,7 @@ game.sceneuidata = new function(){
 					ischeck:false,
 				}
 			],
-			//---------- 4：提示弹出窗口  朋友圈分享按钮  微信分享按钮
-			[
-				{
-					itemid:'id_shareweixin_text',
-					itemtype:'texttitle',
-					itemurlvalue:'zeng',
-					textvalue:'不存在此房间',
-					color:'#333333',
-					font:'16px 黑体',
-					bg:'rgba(0,0,0,0)',
-					layouttype_x:'txt',
-					alignx:'center',
-					layouttype_y:'txt',
-					aligny:'center'
-				},
-			],
+			
 		];
 	
 	self.createAtlas = function(data){
