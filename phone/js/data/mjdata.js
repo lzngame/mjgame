@@ -73,5 +73,37 @@ game.mjdata = new function() {
 		b_9: ['九饼', 'battle_58','battle_hg_58','battle_hgR_58','tong9.mp3'],
 
 	};
+	
+	self.mjindex = {0: 't_1', 1: 't_2', 2: 't_3', 3: 't_4', 4: 't_5', 5: 't_6', 6: 't_7', 7: 't_8', 8: 't_9', 9: 'b_1', 10: 'b_2', 11: 'b_3', 12: 'b_4', 13: 'b_5', 14: 'b_6', 15: 'b_7', 16: 'b_8', 17: 'b_9', 18: 'w_1', 19: 'w_2', 20: 'w_3', 21: 'w_4', 22: 'w_5', 23: 'w_6', 24: 'w_7', 25: 'w_8', 26: 'w_9', 27: 't_1', 28: 't_2', 29: 't_3', 30: 't_4', 31: 't_5', 32: 't_6', 33: 't_7', 34: 't_8', 35: 't_9', 36: 'b_1', 37: 'b_2', 38: 'b_3', 39: 'b_4', 40: 'b_5', 41: 'b_6', 42: 'b_7', 43: 'b_8', 44: 'b_9', 45: 'w_1', 46: 'w_2', 47: 'w_3', 48: 'w_4', 49: 'w_5', 50: 'w_6', 51: 'w_7', 52: 'w_8', 53: 'w_9', 54: 't_1', 55: 't_2', 56: 't_3', 57: 't_4', 58: 't_5', 59: 't_6', 60: 't_7', 61: 't_8', 62: 't_9', 63: 'b_1', 64: 'b_2', 65: 'b_3', 66: 'b_4', 67: 'b_5', 68: 'b_6', 69: 'b_7', 70: 'b_8', 71: 'b_9', 72: 'w_1', 73: 'w_2', 74: 'w_3', 75: 'w_4', 76: 'w_5', 77: 'w_6', 78: 'w_7', 79: 'w_8', 80: 'w_9', 81: 't_1', 82: 't_2', 83: 't_3', 84: 't_4', 85: 't_5', 86: 't_6', 87: 't_7', 88: 't_8', 89: 't_9', 90: 'b_1', 91: 'b_2', 92: 'b_3', 93: 'b_4', 94: 'b_5', 95: 'b_6', 96: 'b_7', 97: 'b_8', 98: 'b_9', 99: 'w_1', 100: 'w_2', 101: 'w_3', 102: 'w_4', 103: 'w_5', 104: 'w_6', 105: 'w_7', 106: 'w_8', 107: 'w_9'};
+	
+	self.randmj = [];
+	self.initMjQueue = function(){
+		var tm = [];
+		self.randmj = [];
+		for(var i=0;i<108;i++){
+			tm.push(i);
+		}
+		var a = [];
+		var mj = [];
+		console.log('----------------------------------');
+		for(var i=tm.length;i>0;i--){
+			var rIndex = Math.floor(Math.random() * i);
+			var mjid = self.mjindex[tm[rIndex]];
+			var mjname = self.mj[mjid][0];
+			this.randmj.push(mjid);
+			mj.push(mjname);
+			tm.splice(rIndex,1);
+		}
+	};
+	
+	self.getResidueMj = function(){
+		return self.randmj.length;
+	};
+	
+	self.dealOne = function(){
+		var mjid = self.randmj.shift();
+		return mjid;
+	};
+
 
 };

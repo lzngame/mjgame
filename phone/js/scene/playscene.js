@@ -133,6 +133,8 @@
 		rightDealInity:0,
 		throwRightInitx:0,
 		throwRightInity:0,
+		
+		residueMjLabel:null,
 
 		constructor: function(properties) {
 			PlayMainscene.superclass.constructor.call(this, properties);
@@ -174,10 +176,12 @@
 					
 					var user = self.mjDirect[self.currentThrowIndex];
 					self.pointer_user.setDirect(user);
-					var mjid = game.configdata.createRandomMjid();
+					
 					if(user == 'down'){
 						self.selfThrow();
 					}else{
+						var mjid = game.mjdata.dealOne();
+						self.residueMjLabel.txt.text = '剩余'+game.mjdata.getResidueMj().toString()+'张';
 						switch(user){
 							case 'up':
 								self._throwmjup(mjid);
@@ -214,17 +218,21 @@
 			this.selfMjInitx = this.width / 50;
 			this.selfMjTakeInitx = this.maxMjHandle * 74 * game.scalefact + this.selfMjInitx + 50;
 
+			game.mjdata.initMjQueue();
+			
 			this.deal();
 			var self = this;
 
 			this.pointer_mj = new game.Pointermj({ imgsource: 'ui', rectname: 'lsbattle_21', scaleX: game.scalefact, scaleY: game.scalefact, visible: false }).addTo(this);
 			this.pointer_user = new game.Pointeruser({ imgsource: 'ui', rectname: 'battle_10', pivotx: 40, pivoty: 40, x: this.width / 2, y: this.height / 2, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.bglayer);
-			var txt = game.configdata.createBgTitletext('剩余73张', '18px 黑体', 'yellow', 'ui', 'login_bg9').addTo(this.bglayer);
-			txt.x = this.width / 2 - txt.width - 50;
-			txt.y = this.height / 2 - txt.height / 2;
+			this.residueMjLabel = game.configdata.createBgTitletext('剩余'+game.mjdata.getResidueMj().toString()+'张', '18px 黑体', 'yellow', 'ui', 'login_bg9').addTo(this.bglayer);
+			this.residueMjLabel.x = this.width / 2 - this.residueMjLabel.width - 50;
+			this.residueMjLabel.y = this.height / 2 - this.residueMjLabel.height / 2;
+			this.residueMjLabel.txt.text = '剩余'+game.mjdata.getResidueMj().toString()+'张';
+			
 			var txt2 = game.configdata.createBgTitletext('剩余3局', '18px 黑体', 'yellow', 'ui', 'login_bg9').addTo(this.bglayer);
 			txt2.x = this.width / 2 + 50;
-			txt2.y = this.height / 2 - txt.height / 2;
+			txt2.y = this.height / 2 - this.residueMjLabel.height / 2;
 			var txt3 = game.configdata.createBgTitletext('房间号:123980', '20px 黑体', 'white', 'ui', 'login_bg17').addTo(this.bglayer);
 			txt3.x = this.width / 2 - txt3.width / 2;
 			txt3.y = 0;
@@ -334,6 +342,7 @@
 			this.pointer_mj.y = throwmj.y - 50;
 			
 			game.sendMsg(this, game.networker, game.mjdata.msg.THROWMJ, [mjid,1]);
+			
 		},
 		
 		_getThrowMj:function(mjid,typemj){
@@ -355,7 +364,10 @@
 		},
 
 		takemj: function() {
-			var id = game.configdata.createRandomMjid();
+			//var id = game.configdata.createRandomMjid();
+			var id = game.mjdata.dealOne();
+			this.residueMjLabel.txt.text = '剩余'+game.mjdata.getResidueMj().toString()+'张';
+			
 			/*var t = game.clock.getSystemtime();
 			if(t % 3 == 0)
 				id = this.goldmj.mjid;
@@ -394,17 +406,20 @@
 				//self -down
 				this.addRandMj();
 				//up
+				game.mjdata.dealOne();
 				game.configdata.createRectImg('mj', 'self_80', i * 32 + this.upDealInitx, 70, 1).addTo(this);
 				//lfet
+				game.mjdata.dealOne();
 				var offsetx = 21 * game.scalefact;
 				game.configdata.createRectImg('mj', 'self_73', 70, i*offsetx + 150, 1).addTo(this);
 				//right
+				game.mjdata.dealOne();
 				game.configdata.createRectImg('mj', 'self_73', this.rightDealInitx, i*offsetx + 150, 1).addTo(this);
 			}
 		},
 
 		addRandMj: function() {
-			var id = game.configdata.createRandomMjid();
+			var id = game.mjdata.dealOne();
 			this.addMj(id);
 		},
 

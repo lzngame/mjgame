@@ -133,7 +133,7 @@
 				game.loadqueue.off('complete');
 				game.loadqueue.off('load');
 				
-				game.switchScene(game.configdata.SCENE_NAMES.weixinlogin);
+				game.switchScene(game.configdata.SCENE_NAMES.play);
 			});
 			game.loadqueue.start();
 		},
