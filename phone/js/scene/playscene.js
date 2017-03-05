@@ -34,7 +34,10 @@
 			this.x = 0;
 
 			game.layoutUi.layoutPanelData(game.sceneuidata.playscene_uidata[0], this.width, this.height, 1, this);
-			this.items['id_invitescene_wintype_txt'].text = data[2];
+			if(data){
+				this.items['id_invitescene_wintype_txt'].text = data[2];
+			}
+
 
 			this.initBtnHandle();
 		},
