@@ -50,11 +50,9 @@ game.networker = new function() {
 		var tmp = ['放胡单赔','放胡双倍单赔','放胡全赔'];
 		game.sendMsg(self, sendobj, self.msg.CREATEROOM, [isEnoughcards,msgdata[1][2], tmp[msgdata[1][3]]]);
 	};
-	this.nextuserHandle = function(playscene,msgdata){
-		var self = this;
+	this.nextuserHandle = function(playscene,msgdata,self){
 		var tmp1 = ['up','left','down'];
 		var index = Math.floor(Math.random()*3);
-		debugger;
 		game.sendMsg(this, playscene, self.msg.NEXTUSER_HANDLE, tmp1[index]);
 	};
 
