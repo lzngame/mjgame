@@ -31,8 +31,8 @@
 			for(var idname in this.funcs){
 				this.items[idname].idname = idname;
 				this.target = self;
-				this.items[idname].off();
-				this.items[idname].on(Hilo.event.POINTER_END, function(e) {
+				this.items[idname].on(Hilo.event.POINTER_END, function(e){
+					console.log('注意这里不要出现重复调用');
 					self.funcs[this.idname](self);
 				});
 			}

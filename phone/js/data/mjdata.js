@@ -1,14 +1,7 @@
-//麻将配置数据 和 消息定义
+//麻将配置数据
 game.mjdata = new function() {
 	var self = this;
-	self.msg = {
-			BETHROW: 'bethrow_mj_msg_100',
-			BESELECT: 'beselect_mj_msg_101',
-			NEXTUSER_HANDLE:'nextuser_mjhandle_102',
-			THROWMJ: 'throw_mj_mjid_103',
-			CREATEROOM:'create_mj_room_104',
-			JOINROOM:'join_mj_room_105',
-		},
+	
 	self.mj = {
 			w_1: ['一万', 'self_32'],
 			w_2: ['两万', 'self_33'],
@@ -104,6 +97,17 @@ game.mjdata = new function() {
 		var mjid = self.randmj.shift();
 		return mjid;
 	};
-
-
 };
+
+
+
+//玩家配置数据
+game.userdata = new function() {
+	var self = this;
+	
+	self.name = '维维豆奶';
+	self.roomcards = 6;
+	
+	
+};
+

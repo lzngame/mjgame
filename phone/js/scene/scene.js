@@ -133,7 +133,7 @@
 				game.loadqueue.off('complete');
 				game.loadqueue.off('load');
 				
-				game.switchScene(game.configdata.SCENE_NAMES.play);
+				game.switchScene(game.configdata.SCENE_NAMES.weixinlogin);
 			});
 			game.loadqueue.start();
 		},
@@ -269,6 +269,9 @@
 						}
 					});
 					break;
+				case game.networker.msg.CREATEROOM:
+					self.switchCreateRoom(msgdata);
+					break;
 				case 'hide':
 					new Hilo.Tween.to(this,{
 						alpha:1,
@@ -366,9 +369,9 @@
 			var self = this;
 			var customw = this.width * 0.8;
 			var customh = this.height * 0.8;
-			var txt = game.configdata.createTitletext(text,'18px 黑体','black','yellow',0,0,300);
+			var txt = game.configdata.createTitletext(text,'28px 黑体','black','rgba(0,0,0,0)',0,0,600);
 			var panel = game.configdata.createBgPanel(data,'login_bg35',true,true,self,'login_13','login_14','ui',55,'login_bg111',title,customw,customh);
-			txt.x = panel.width * game.scalefact /2 -150;
+			txt.x = panel.width * game.scalefact /2 -300;
 			txt.y = panel.height * game.scalefact /2 - txt._fontHeight/2;
 			
 			txt.addTo(panel);
@@ -431,12 +434,32 @@
 					}
 				}
 			}
-			var carnums = this.calculatePaycard(setvalue);
-			btn.setLabelNum(carnums);
+			btn.setLabelNum(self.calculatePaycard(setvalue));
 			btn.on(Hilo.event.POINTER_END,function(e){
 					console.log(setvalue);
-				});
+					var carnums = self.calculatePaycard(setvalue);
+					self.showLoadgif(true);
+					game.sendMsg(self,game.networker,game.networker.msg.CREATEROOM,[carnums,setvalue]);
+			});
 			return panel;
+		},
+		
+		switchCreateRoom:function(msgdata){
+			this.showLoadgif(false);
+			if(msgdata[0]){
+				game.switchScene(game.configdata.SCENE_NAMES.invite,msgdata);
+			}else{
+				var tmpdata = [{
+					itemid:'id_tmp_bmp',
+					itemtype:'bmp',
+					itemurlvalue:'login_bg92',
+					layouttype_x:'txt',
+					alignx:'center',
+					layouttype_y:'txt',
+					aligny:'center'
+				}];
+				this.createPointoutWindow(tmpdata,'login_9','对不起，您的房卡不够').addTo(this);
+			}
 		},
 		
 		calculatePaycard:function(datalist){

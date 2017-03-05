@@ -450,7 +450,7 @@ game.sceneuidata = new function(){
 	       //-------------- 0 邀请好友 场景
 			[
 				{
-					itemid:'id_palyscene_invite_btn',
+					itemid:'id_invitescene_invite_btn',
 					itemtype:'btn',
 					itemurlvalue:'battle_77',
 					btnup:'battle_78',
@@ -460,7 +460,7 @@ game.sceneuidata = new function(){
 					aligny:'center'
 				},
 				{
-					itemid:'id_palyscene_disband_btn',
+					itemid:'id_invitescene_disband_btn',
 					itemtype:'btn',
 					itemurlvalue:'battle_75',
 					btnup:'battle_76',
@@ -470,7 +470,7 @@ game.sceneuidata = new function(){
 					aligny:'center'
 				},
 				{
-					itemid:'id_palyscene_titlebg_bmp',
+					itemid:'id_invitescene_titlebg_bmp',
 					itemtype:'bmp',
 					itemurlvalue:'login_bg17',
 					layouttype_x:'txt',
@@ -479,7 +479,7 @@ game.sceneuidata = new function(){
 					aligny:'top'
 				},
 				{
-					itemid:'id_palyscene_title_txt',
+					itemid:'id_invitescene_title_txt',
 					itemtype:'texttitle',
 					itemurlvalue:'login_bg17',
 					textvalue:'房间号：123456',
@@ -492,7 +492,7 @@ game.sceneuidata = new function(){
 					aligny:'top'
 				},
 				{
-					itemid:'id_palyscene_wintype_txt',
+					itemid:'id_invitescene_wintype_txt',
 					itemtype:'texttitle',
 					itemurlvalue:'login_bg17',
 					textvalue:'放胡怎么赔',
@@ -505,7 +505,7 @@ game.sceneuidata = new function(){
 					aligny:'top_60'
 				},
 				{
-					itemid:'id_palyscene_playerup_bmp',
+					itemid:'id_invitescene_playerup_bmp',
 					itemtype:'bmp',
 					itemurlvalue:'battle_100',
 					layouttype_x:'txt',
@@ -514,7 +514,7 @@ game.sceneuidata = new function(){
 					aligny:'top_10'
 				},
 				{
-					itemid:'id_palyscene_playerdown_bmp',
+					itemid:'id_invitescene_playerdown_bmp',
 					itemtype:'bmp',
 					itemurlvalue:'battle_100',
 					layouttype_x:'txt',
@@ -523,7 +523,7 @@ game.sceneuidata = new function(){
 					aligny:'bottom_5'
 				},
 				{
-					itemid:'id_palyscene_playerleft_bmp',
+					itemid:'id_invitescene_playerleft_bmp',
 					itemtype:'bmp',
 					itemurlvalue:'battle_100',
 					layouttype_x:'pct',
@@ -532,7 +532,7 @@ game.sceneuidata = new function(){
 					aligny:'center'
 				},
 				{
-					itemid:'id_palyscene_playerright_bmp',
+					itemid:'id_invitescene_playerright_bmp',
 					itemtype:'bmp',
 					itemurlvalue:'battle_100',
 					layouttype_x:'pct',
@@ -541,14 +541,31 @@ game.sceneuidata = new function(){
 					aligny:'center'
 				},
 				{
-					itemid:'id_palyscene_back_btn',
+					itemid:'id_invitescene_back_btn',
 					itemtype:'scalebtn',
-					itemurlvalue:'huifang2',
-					btnup:'huifang2',
+					itemurlvalue:'lsbattle_74',
 					layouttype_x:'pct',
-					alignx:'left_1',
+					alignx:'left_2',
 					layouttype_y:'pct',
-					aligny:'top_1'
+					aligny:'top_2'
+				},
+				{
+					itemid:'id_invitescene_setting_btn',
+					itemtype:'scalebtn',
+					itemurlvalue:'lsbattle_2',
+					layouttype_x:'pct',
+					alignx:'right_2',
+					layouttype_y:'pct',
+					aligny:'top_2'
+				},
+				{
+					itemid:'id_invitescene_talk_btn',
+					itemtype:'scalebtn',
+					itemurlvalue:'lsbattle_3',
+					layouttype_x:'pct',
+					alignx:'right_2',
+					layouttype_y:'pct',
+					aligny:'bottom_15'
 				},
 				/*{
 					itemid:'id_mainscene_setting_btn',

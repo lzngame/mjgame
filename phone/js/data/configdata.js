@@ -423,7 +423,7 @@ game.networker = new function() {
 				}
 				game.sendMsg(this, sendobj, 'hide', isright);
 				break;
-			case game.mjdata.msg.THROWMJ:   //某玩家扔掉手牌
+			case game.networker.msg.THROWMJ:   //某玩家扔掉手牌
 				self.nextuserHandle(sendobj,msgdata);
 				break;
 		}
@@ -437,7 +437,7 @@ game.networker = new function() {
 			onComplete:function(){
 				var tmp1 = ['up','left','down'];
 				var index = Math.floor(Math.random()*3);
-				game.sendMsg(this, playscene, game.mjdata.msg.NEXTUSER_HANDLE, tmp1[index]);
+				game.sendMsg(this, playscene, game.networker.msg.NEXTUSER_HANDLE, tmp1[index]);
 			}
 		});
 	};

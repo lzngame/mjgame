@@ -827,13 +827,13 @@
 			this.hadmove = false;
 		},
 		bethrow:function(){
-			game.sendMsg(this, game.scenes[game.configdata.SCENE_NAMES.play], game.mjdata.msg.BETHROW, this.mjid);
+			game.sendMsg(this, game.scenes[game.configdata.SCENE_NAMES.play], game.networker.msg.BETHROW, this.mjid);
 		},
 		beselected:function(){
 			this.y = this.inity - 20;
 			this.x = this.initx;
 			this.isSelected = true;
-			game.sendMsg(this, game.scenes[game.configdata.SCENE_NAMES.play], game.mjdata.msg.BESELECT, this.mjid);
+			game.sendMsg(this, game.scenes[game.configdata.SCENE_NAMES.play], game.networker.msg.BESELECT, this.mjid);
 		},
 		backQueue: function() {
 			this.y = this.inity;

@@ -14,9 +14,9 @@
 			this.height = game.configdata.mainStageSize.height;
 			this.items = {};
 			this.funcs = {
-				id_palyscene_disband_btn: this.temp1,
-				id_palyscene_invite_btn: this.temp2,
-				id_palyscene_back_btn: this.temp3
+				id_invitescene_disband_btn: this.disbandRoom,
+				id_invitescene_invite_btn: this.inviteFriend,
+				id_invitescene_back_btn: this.gobackScene
 			};
 		},
 		executeMsg: function(sendobj, msgtype, msgdata) {
@@ -34,19 +34,20 @@
 			this.x = 0;
 
 			game.layoutUi.layoutPanelData(game.sceneuidata.playscene_uidata[0], this.width, this.height, 1, this);
+			this.items['id_invitescene_wintype_txt'].text = data[2];
 
 			this.initBtnHandle();
 		},
 
-		temp1: function(btnself) {
-			console.log('temp1');
+		disbandRoom: function(btnself) {
+			console.log('disbandRoom');
 		},
-		temp2: function(btnself) {
-			console.log('temp2');
+		inviteFriend: function(btnself) {
+			console.log('inviteFriend');
 			game.switchScene(game.configdata.SCENE_NAMES.play);
 		},
-		temp3: function(btnself) {
-			console.log('temp3');
+		gobackScene: function(btnself) {
+			console.log('gobackScene');
 			game.switchScene(game.configdata.SCENE_NAMES.main);
 		},
 
@@ -149,13 +150,13 @@
 		executeMsg: function(sendobj, msgtype, msgdata) {
 			var self = this;
 			switch(msgtype) {
-				case game.mjdata.msg.BESELECT:
+				case game.networker.msg.BESELECT:
 					if(self.currentmj)
 						self.currentmj.backQueue();
 					self.currentmj = sendobj;
 					console.log('点选手牌:%s',game.mjdata.mj[sendobj.mjid][0]);
 					break;
-				case game.mjdata.msg.BETHROW:
+				case game.networker.msg.BETHROW:
 					if(self.isTurn) {
 						sendobj.removeFromParent();
 						self._throwmjSelf(sendobj.mjid);
@@ -168,7 +169,7 @@
 					self.currentmj = null;
 					self.isThrow = false;
 					break;
-				case game.mjdata.msg.NEXTUSER_HANDLE:
+				case game.networker.msg.NEXTUSER_HANDLE:
 					self.currentThrowIndex++;
 					if(self.currentThrowIndex >= 4){
 						self.currentThrowIndex = 0;
@@ -261,8 +262,9 @@
 			this.throwUpInity = 0;
 			this.throwLeftInitx=0;
 			this.throwLeftInity=0;
+			
 			this.rightDealInitx = this.width *7/8;
-			this.throwRightInitx=0;
+			this.throwRightInitx = this.width *7/8 - 100;
 			this.throwRightInity=0;
 		},
 
@@ -288,7 +290,7 @@
 			this.pointer_mj.y = throwmj.y - 50;
 			
 			this.isTurn = false;
-			game.sendMsg(this, game.networker, game.mjdata.msg.THROWMJ, [mjid,0]);
+			game.sendMsg(this, game.networker, game.networker.msg.THROWMJ, [mjid,0]);
 		},
 
 		_throwmjup: function(mjid) {
@@ -310,7 +312,7 @@
 			this.pointer_mj.x = throwmj.x;
 			this.pointer_mj.y = throwmj.y - 50;
 			
-			game.sendMsg(this, game.networker, game.mjdata.msg.THROWMJ, [mjid,1]);
+			game.sendMsg(this, game.networker, game.networker.msg.THROWMJ, [mjid,1]);
 		},
 		
 		_throwmjleft: function(mjid) {
@@ -325,7 +327,7 @@
 			this.pointer_mj.x = throwmj.x;
 			this.pointer_mj.y = throwmj.y - 50;
 			
-			game.sendMsg(this, game.networker, game.mjdata.msg.THROWMJ, [mjid,1]);
+			game.sendMsg(this, game.networker, game.networker.msg.THROWMJ, [mjid,1]);
 
 		},
 		
@@ -333,7 +335,7 @@
 			var throwmj = this._getThrowMj(mjid,2);
 			var y = (this.throwrightNum % this.maxMjStack) * (throwmj.height-15) ;//+ this.width / 8 * 7;
 			var x = -Math.floor(this.throwrightNum / this.maxMjStack) * throwmj.width;// + 170;
-			throwmj.x = x + 1100;
+			throwmj.x = x + this.throwRightInitx;
 			throwmj.y = y + 250;
 			this.throwrightNum++;
 
@@ -341,7 +343,7 @@
 			this.pointer_mj.x = throwmj.x;
 			this.pointer_mj.y = throwmj.y - 50;
 			
-			game.sendMsg(this, game.networker, game.mjdata.msg.THROWMJ, [mjid,1]);
+			game.sendMsg(this, game.networker, game.networker.msg.THROWMJ, [mjid,1]);
 			
 		},
 		
@@ -364,7 +366,6 @@
 		},
 
 		takemj: function() {
-			//var id = game.configdata.createRandomMjid();
 			var id = game.mjdata.dealOne();
 			this.residueMjLabel.txt.text = '剩余'+game.mjdata.getResidueMj().toString()+'张';
 			
@@ -404,7 +405,7 @@
 		deal: function() {
 			for(var i = 0; i < this.maxMjHandle; i++) {
 				//self -down
-				this.addRandMj();
+				this.addMj(game.mjdata.dealOne());
 				//up
 				game.mjdata.dealOne();
 				game.configdata.createRectImg('mj', 'self_80', i * 32 + this.upDealInitx, 70, 1).addTo(this);
@@ -416,11 +417,6 @@
 				game.mjdata.dealOne();
 				game.configdata.createRectImg('mj', 'self_73', this.rightDealInitx, i*offsetx + 150, 1).addTo(this);
 			}
-		},
-
-		addRandMj: function() {
-			var id = game.mjdata.dealOne();
-			this.addMj(id);
 		},
 
 		_sortmj: function(mj1, mj2) {
