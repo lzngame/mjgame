@@ -9,10 +9,9 @@
 		startTxtBtn: null,
 		loadtxt: null,
 		isflash: false,
-		loadingline:null,
-		inputtxt:null,
+		loadingline: null,
+		inputtxt: null,
 
-		
 		constructor: function(properties) {
 			LoadScene.superclass.constructor.call(this, properties);
 			this.init(properties);
@@ -20,7 +19,7 @@
 		init: function(properties) {
 			console.log('%s init', this.name);
 		},
-		active: function(data){
+		active: function(data) {
 			console.log('%s active:', this.name);
 			var obj = this;
 			this.addTo(game.stage);
@@ -28,44 +27,44 @@
 
 			new Hilo.Bitmap({
 				image: 'img/bg01.png',
-				width:game.stage.width,
-				height:game.stage.height,
+				width: game.stage.width,
+				height: game.stage.height,
 			}).addTo(this);
 			this.loadtxt = new Hilo.Text({
-				font:'20px 黑体',
+				font: '20px 黑体',
 				text: 'loading...',
 				color: '#FFFFFF',
 				x: game.stage.width / 2 - 40,
 				y: game.stage.height / 2 + 5,
 			}).addTo(this);
 			this.loadingline = new Hilo.Container({
-				height:18,
-				width:180,
+				height: 18,
+				width: 180,
 				y: game.stage.height / 2 + 10 + 14,
 				x: game.stage.width / 2 - 47,
 			}).addTo(this);
 			new Hilo.Bitmap({
 				image: 'img/pipcoin.png',
-				y:5,
-				x:this.loadingline.width/2 - 218/2-2,
+				y: 5,
+				x: this.loadingline.width / 2 - 218 / 2 - 2,
 			}).addTo(this.loadingline);
-			
+
 			var sumtime = 0;
 			this.startTxtBtn = new Hilo.Bitmap({
 				image: 'img/txt_start.png',
 				y: game.stage.height / 2 + 10,
 				x: game.stage.width / 2 - 210 / 2 + 40,
-				visible:false,
+				visible: false,
 				onUpdate: function(e) {
-					if (!obj.isflash)
+					if(!obj.isflash)
 						return;
-					if (sumtime < 600) {
+					if(sumtime < 600) {
 						this.alpha = 0.8;
 					} else {
 						this.alpha = 0.1;
 					}
 					sumtime += game.clock.fpstick;
-					if (sumtime >= 600 * 2) {
+					if(sumtime >= 600 * 2) {
 						sumtime = 0;
 					}
 				},
@@ -119,7 +118,7 @@
 			game.loadqueue.add(list);
 			game.loadqueue.on('load', function(e) {
 				self.loadtxt.text = 'Loading... %' + (Math.floor(this._loaded / total * 100)).toString();
-				if (this._loaded % m == 0) {
+				if(this._loaded % m == 0) {
 					self.addLoadCoin();
 				}
 			});
@@ -129,10 +128,10 @@
 				self.loadtxt.removeFromParent();
 				self.startTxtBtn.visible = true;
 				self.isflash = true;
-				
+
 				game.loadqueue.off('complete');
 				game.loadqueue.off('load');
-				
+
 				game.switchScene(game.configdata.SCENE_NAMES.weixinlogin);
 			});
 			game.loadqueue.start();
@@ -147,11 +146,11 @@
 		},
 		addLoadCoinbg: function(e) {
 			var self = this;
-			for(var i=0;i<10;i++){
+			for(var i = 0; i < 10; i++) {
 				new Hilo.Bitmap({
 					image: 'img/coin_01.png',
-					x: i*18,
-					alpha:0.2
+					x: i * 18,
+					alpha: 0.2
 				}).addTo(this.loadingline);
 			}
 		},
@@ -159,19 +158,17 @@
 			var self = this;
 			new Hilo.Bitmap({
 				image: 'img/coin_01.png',
-				x:18*this.coinInitXpos,
+				x: 18 * this.coinInitXpos,
 			}).addTo(this.loadingline);
 			this.coinInitXpos++;
 		},
 	});
-	
-	
-	
+
 	var WeixinLoginScene = ns.WeixinLoginScene = Hilo.Class.create({
 		Extends: game.BaseScene,
 		name: game.configdata.SCENE_NAMES.weixinlogin,
-		items:null,
-		
+		items: null,
+
 		constructor: function(properties) {
 			WeixinLoginScene.superclass.constructor.call(this, properties);
 			this.init(properties);
@@ -181,29 +178,29 @@
 			this.width = game.configdata.mainStageSize.width;
 			this.height = game.configdata.mainStageSize.height;
 			this.y = -this.height;
-			this.x = game.stage.width/2 - this.width/2;
+			this.x = game.stage.width / 2 - this.width / 2;
 			this.items = {};
 		},
-		
-		active:function(data) {
+
+		active: function(data) {
 			console.log('%s active:', this.name);
 			this.addTo(game.stage);
 			this.alpha = 1;
 			this.initBg('loginbg');
-			
+
 			Hilo.Tween.to(this, {
-				y: game.stage.height/2 - this.height/2
+				y: game.stage.height / 2 - this.height / 2
 			}, {
 				duration: 800,
 				ease: Hilo.Ease.Bounce.EaseOut,
 				onComplete: function() {
-					
+
 				}
 			});
-			
-			game.layoutUi.layoutPanelData(game.sceneuidata.weixinlogin_uidata[0],game.stage.width,game.stage.height,1,this);
-			game.layoutUi.layoutPanelData(game.sceneuidata.weixinlogin_uidata[1],game.stage.width,game.stage.height,1,this);
-			
+
+			game.layoutUi.layoutPanelData(game.sceneuidata.weixinlogin_uidata[0], game.stage.width, game.stage.height, 1, this);
+			game.layoutUi.layoutPanelData(game.sceneuidata.weixinlogin_uidata[1], game.stage.width, game.stage.height, 1, this);
+
 			var self = this;
 			this.items['id_weixinlogin_btn'].on(Hilo.event.POINTER_END, function(e) {
 				console.log('switch main scene');
@@ -211,38 +208,36 @@
 			});
 
 		},
-		
-		
+
 		deactive: function() {
 			var scene = this;
 			game.sounds.stop(20);
 			Hilo.Tween.to(this, {
-					y: -this.height,
-				}, {
-					duration: 500,
-					ease: Hilo.Ease.Back.EaseIn,
-					onComplete: function() {
-						console.log('scenename:%s tween destory',scene.name);
-						scene.destory();
-					}
-				});
+				y: -this.height,
+			}, {
+				duration: 500,
+				ease: Hilo.Ease.Back.EaseIn,
+				onComplete: function() {
+					console.log('scenename:%s tween destory', scene.name);
+					scene.destory();
+				}
+			});
 		},
 		destory: function() {
 			console.log('%s destory', this.name);
 			this.removeAllChildren();
 			this.removeFromParent();
 		},
-		onUpdate:function(){
-			
+		onUpdate: function() {
+
 		},
 	});
-	
-	
+
 	var MainScene = ns.MainScene = Hilo.Class.create({
 		Extends: game.BaseScene,
 		name: game.configdata.SCENE_NAMES.main,
-		items:null,
-		
+		items: null,
+
 		constructor: function(properties) {
 			MainScene.superclass.constructor.call(this, properties);
 			this.init(properties);
@@ -252,180 +247,156 @@
 			this.width = game.configdata.mainStageSize.width;
 			this.height = game.configdata.mainStageSize.height;
 			this.y = -this.height;
-			this.x = game.stage.width/2 - this.width/2;
+			this.x = game.stage.width / 2 - this.width / 2;
 			this.items = {};
 		},
-		executeMsg:function(sendobj,msgtype,msgdata){
+		executeMsg: function(sendobj, msgtype, msgdata) {
 			var self = this;
-			switch(msgtype){
-				case 'test_1':
-					new Hilo.Tween.to(this,{
-						alpha:1,
-					},{
-						duration:10,
-						delay:2000,
-						onComplete:function(){
-							self.showLoadgif(false);
-						}
-					});
-					break;
+			switch(msgtype) {
 				case game.networker.msg.CREATEROOM:
 					self.switchCreateRoom(msgdata);
 					break;
-				case 'hide':
-					new Hilo.Tween.to(this,{
-						alpha:1,
-					},{
-						duration:10,
-						delay:2000,
-						onComplete:function(){
-							self.showLoadgif(false);
-							if(self.currentpanel){
-								self.currentpanel.hide();
-								if(msgdata){
-									game.switchScene(game.configdata.SCENE_NAMES.invite);
-								}else{
-									self.createPointoutWindow([],'login_9','对不起，没有此房间').addTo(self);
-								}
-							}
+				case game.networker.msg.JOINROOM:
+					self.showLoadgif(false);
+					if(self.currentpanel) {
+						self.currentpanel.hide();
+						if(msgdata) {
+							game.switchScene(game.configdata.SCENE_NAMES.invite);
+						} else {
+							self.createPointoutWindow([], 'login_9', '对不起，没有此房间').addTo(self);
 						}
-					});
+					}
 					break;
 			}
 		},
-		active:function(data) {
+		active: function(data) {
 			console.log('%s active:', this.name);
 			this.addTo(game.stage);
 			this.alpha = 1;
-			
+
 			this.initBg('loginbg');
-			
-			
+
 			Hilo.Tween.to(this, {
-				y: game.stage.height/2 - this.height/2
+				y: game.stage.height / 2 - this.height / 2
 			}, {
 				duration: 800,
 				ease: Hilo.Ease.Bounce.EaseOut,
 				onComplete: function() {
-					
+
 				}
 			});
-			
-			game.layoutUi.layoutPanelData(game.sceneuidata.main_uidata[1],game.stage.width,game.stage.height,1,this);
+
+			game.layoutUi.layoutPanelData(game.sceneuidata.main_uidata[1], game.stage.width, game.stage.height, 1, this);
 			var sl = new game.ScrollBmpwindow({
-				x:30,
-				y:game.stage.height/2 - (410*game.scalefact)/2,
-				width:272,
-				height:415,
+				x: 30,
+				y: game.stage.height / 2 - (410 * game.scalefact) / 2,
+				width: 272,
+				height: 415,
 			}).addTo(this);
-			sl.addImgs(['img/loadbanner/activity1.png','img/loadbanner/activity2.png','img/loadbanner/activity3.png','img/loadbanner/activity4.png'],270,410);
+			sl.addImgs(['img/loadbanner/activity1.png', 'img/loadbanner/activity2.png', 'img/loadbanner/activity3.png', 'img/loadbanner/activity4.png'], 270, 410);
 			sl.scaleX = game.scalefact;
 			sl.scaleY = game.scalefact;
-			
-			
+
 			var self = this;
 			this.items['id_mainscene_createroom_btn'].on(Hilo.event.POINTER_END, function(e) {
 				console.log('create a room');
-				var prompt = self.createPromptpanel('login_bg35',true,true,self);
+				var prompt = self.createPromptpanel('login_bg35', true, true, self);
 				prompt.addTo(self);
 				console.log(self.getNumChildren());
 			});
-			
+
 			this.items['id_mainscene_enterroom_btn'].on(Hilo.event.POINTER_END, function(e) {
 				console.log('create a room');
-				var prompt = self.createPromptpanel2([],'login_bg35',true,true,self);
+				var prompt = self.createPromptpanel2([], 'login_bg35', true, true, self);
 				prompt.addTo(self);
 				prompt.iscurrent = true;
 				self.currentpanel = prompt;
 			});
-			
+
 			this.items['id_mainscene_expandable_btn'].on(Hilo.event.POINTER_END, function(e) {
-				var prompt = self.createPromptpanel3(game.sceneuidata.main_uidata[2],'login_bg35',true,true,self);
+				var prompt = self.createPromptpanel3(game.sceneuidata.main_uidata[2], 'login_bg35', true, true, self);
 				prompt.addTo(self);
 			});
-			
+
 			this.items['id_mainscene_score_btn'].on(Hilo.event.POINTER_END, function(e) {
-				var prompt = self.createPromptpanel4(game.sceneuidata.main_uidata[2],'login_bg35',true,true,self);
+				var prompt = self.createPromptpanel4(game.sceneuidata.main_uidata[2], 'login_bg35', true, true, self);
 				prompt.addTo(self);
 			});
-			
+
 			this.items['id_mainscene_help_btn'].on(Hilo.event.POINTER_END, function(e) {
-				self.createPointoutWindow([],'login_9','测试一下添加输入').addTo(self);
+				self.createPointoutWindow([], 'login_9', '测试一下添加输入').addTo(self);
 				var t = $('#game-container');
 				t.after("<input id='testp' style='position:absolute;top:200px;left:100px'></input>");
 				$('#testp').focus();
 			});
-			
+
 			this.items['id_mainscene_setting_btn'].on(Hilo.event.POINTER_END, function(e) {
 				$('#testp').remove();
 			});
-			
 
-			
 			this.initSlideEvent();
 		},
-		
-		createPointoutWindow:function(data,title,text){
+
+		createPointoutWindow: function(data, title, text) {
 			var self = this;
 			var customw = this.width * 0.8;
 			var customh = this.height * 0.8;
-			var txt = game.configdata.createTitletext(text,'28px 黑体','black','rgba(0,0,0,0)',0,0,600);
-			var panel = game.configdata.createBgPanel(data,'login_bg35',true,true,self,'login_13','login_14','ui',55,'login_bg111',title,customw,customh);
-			txt.x = panel.width * game.scalefact /2 -300;
-			txt.y = panel.height * game.scalefact /2 - txt._fontHeight/2;
-			
+			var txt = game.configdata.createTitletext(text, '28px 黑体', 'black', 'rgba(0,0,0,0)', 0, 0, 600);
+			var panel = game.configdata.createBgPanel(data, 'login_bg35', true, true, self, 'login_13', 'login_14', 'ui', 55, 'login_bg111', title, customw, customh);
+			txt.x = panel.width * game.scalefact / 2 - 300;
+			txt.y = panel.height * game.scalefact / 2 - txt._fontHeight / 2;
+
 			txt.addTo(panel);
 			return panel;
 		},
-		
-		createPromptpanel:function(bgname,ishalf,ismodal,theparent){
+
+		createPromptpanel: function(bgname, ishalf, ismodal, theparent) {
 			var self = this;
-			var panel = game.configdata.createBgPanel(game.sceneuidata.main_uidata[3],bgname,ishalf,ismodal,theparent,'login_13','login_14','ui',55,'login_bg111','login_bg42');
+			var panel = game.configdata.createBgPanel(game.sceneuidata.main_uidata[3], bgname, ishalf, ismodal, theparent, 'login_13', 'login_14', 'ui', 55, 'login_bg111', 'login_bg42');
 			var btn = new game.RoomSurebtn({
-				itemurlvalue:'login_10',
-				defaultNum:5,
-				caricon:'chuangqian',
-				sureicon:'login_bg72',
-				btndown:'login_11',
-				imgsource:'ui',
-				scaleX:game.scalefact,
-				scaleY:game.scalefact,
+				itemurlvalue: 'login_10',
+				defaultNum: 5,
+				caricon: 'chuangqian',
+				sureicon: 'login_bg72',
+				btndown: 'login_11',
+				imgsource: 'ui',
+				scaleX: game.scalefact,
+				scaleY: game.scalefact,
 			}).addTo(panel);
-			btn.x = (panel.width - btn.width) *game.scalefact/2;
+			btn.x = (panel.width - btn.width) * game.scalefact / 2;
 			btn.y = panel.height * game.scalefact - btn.height * game.scalefact + 20;
-			
-			
-			var setvalue = [0,0,0,0];
+
+			var setvalue = [0, 0, 0, 0];
 			for(var itemid in panel.items) {
 				var radiobox = panel.items[itemid];
-				if(radiobox.groupid){
+				if(radiobox.groupid) {
 					console.log(radiobox.textlabel);
-					if(radiobox.isSelected){
-						if(radiobox.groupid == 'groupid001'){
+					if(radiobox.isSelected) {
+						if(radiobox.groupid == 'groupid001') {
 							setvalue[0] = radiobox.value;
 						}
-						if(radiobox.groupid == 'groupid002'){
+						if(radiobox.groupid == 'groupid002') {
 							setvalue[1] = radiobox.value;
 						}
-						if(radiobox.groupid == 'groupid003'){
+						if(radiobox.groupid == 'groupid003') {
 							setvalue[2] = radiobox.value;
 						}
-						if(radiobox.groupid == 'groupid004'){
+						if(radiobox.groupid == 'groupid004') {
 							setvalue[3] = radiobox.value;
 						}
 					}
-					radiobox.onhandle = function(txt){
+					radiobox.onhandle = function(txt) {
 						console.log(this);
-						if(this.groupid == 'groupid001'){
+						if(this.groupid == 'groupid001') {
 							setvalue[0] = this.value;
 						}
-						if(this.groupid == 'groupid002'){
+						if(this.groupid == 'groupid002') {
 							setvalue[1] = this.value;
 						}
-						if(this.groupid == 'groupid003'){
+						if(this.groupid == 'groupid003') {
 							setvalue[2] = this.value;
 						}
-						if(this.groupid == 'groupid004'){
+						if(this.groupid == 'groupid004') {
 							setvalue[3] = this.value;
 						}
 						var carnums = self.calculatePaycard(setvalue);
@@ -435,132 +406,129 @@
 				}
 			}
 			btn.setLabelNum(self.calculatePaycard(setvalue));
-			btn.on(Hilo.event.POINTER_END,function(e){
-					console.log(setvalue);
-					var carnums = self.calculatePaycard(setvalue);
-					self.showLoadgif(true);
-					game.sendMsg(self,game.networker,game.networker.msg.CREATEROOM,[carnums,setvalue]);
+			btn.on(Hilo.event.POINTER_END, function(e) {
+				console.log(setvalue);
+				var carnums = self.calculatePaycard(setvalue);
+				self.showLoadgif(true);
+				game.sendMsg(self, game.networker, game.networker.msg.CREATEROOM, [carnums, setvalue]);
 			});
 			return panel;
 		},
-		
-		switchCreateRoom:function(msgdata){
+
+		switchCreateRoom: function(msgdata) {
 			this.showLoadgif(false);
-			if(msgdata[0]){
-				game.switchScene(game.configdata.SCENE_NAMES.invite,msgdata);
-			}else{
+			if(msgdata[0]) {
+				game.switchScene(game.configdata.SCENE_NAMES.invite, msgdata);
+			} else {
 				var tmpdata = [{
-					itemid:'id_tmp_bmp',
-					itemtype:'bmp',
-					itemurlvalue:'login_bg92',
-					layouttype_x:'txt',
-					alignx:'center',
-					layouttype_y:'txt',
-					aligny:'center'
+					itemid: 'id_tmp_bmp',
+					itemtype: 'bmp',
+					itemurlvalue: 'login_bg92',
+					layouttype_x: 'txt',
+					alignx: 'center',
+					layouttype_y: 'txt',
+					aligny: 'center'
 				}];
-				this.createPointoutWindow(tmpdata,'login_9','对不起，您的房卡不够').addTo(this);
+				this.createPointoutWindow(tmpdata, 'login_9', '对不起，您的房卡不够').addTo(this);
 			}
 		},
-		
-		calculatePaycard:function(datalist){
+
+		calculatePaycard: function(datalist) {
 			var base = 1;
 			var factcount = 1;
 			var factman = 1;
-			factcount = datalist[0]/4;
-			if(datalist[2] == 4){
+			factcount = datalist[0] / 4;
+			if(datalist[2] == 4) {
 				factman = 2;
 			}
 			return base * factcount * factman;
 		},
-		
-		
-		
-		createPromptpanel2:function(data,bgname,ishalf,ismodal,theparent){
-			var panel = game.configdata.createBgPanel(data,bgname,ishalf,ismodal,theparent,'login_13','login_14','ui',55,'login_bg111','login_bg43');
-			var titletxt = game.configdata.createTitletext('输入房间号','24px 黑体','white','rgba(0,0,0,0)',panel.width*game.scalefact/2 - 200,panel.height*game.scalefact/8,400).addTo(panel);
-			var numpanel = new game.InputNumpanel({numcount:6,x:350,y:10,scaleX:game.scalefact,scaleY:game.scalefact}).addTo(panel);
-			numpanel.x = (panel.width - numpanel.width)*game.scalefact/2;
-			numpanel.y = panel.height * game.scalefact -numpanel.height * game.scalefact - panel.height * game.scalefact * 0.05+30;
+
+		createPromptpanel2: function(data, bgname, ishalf, ismodal, theparent) {
+			var panel = game.configdata.createBgPanel(data, bgname, ishalf, ismodal, theparent, 'login_13', 'login_14', 'ui', 55, 'login_bg111', 'login_bg43');
+			var titletxt = game.configdata.createTitletext('输入房间号', '24px 黑体', 'white', 'rgba(0,0,0,0)', panel.width * game.scalefact / 2 - 200, panel.height * game.scalefact / 8, 400).addTo(panel);
+			var numpanel = new game.InputNumpanel({ numcount: 6, x: 350, y: 10, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(panel);
+			numpanel.x = (panel.width - numpanel.width) * game.scalefact / 2;
+			numpanel.y = panel.height * game.scalefact - numpanel.height * game.scalefact - panel.height * game.scalefact * 0.05 + 30;
 			numpanel.inceptHandle = this.inceptNum;
 			panel.numpanel = numpanel;
 			return panel;
 		},
-		
-		createPromptpanel3:function(data,bgname,ishalf,ismodal,theparent){
-			var panel = game.configdata.createBgPanel(data,bgname,ishalf,ismodal,theparent,'login_13','login_14','ui',55,'login_bg111','fenxiang');
+
+		createPromptpanel3: function(data, bgname, ishalf, ismodal, theparent) {
+			var panel = game.configdata.createBgPanel(data, bgname, ishalf, ismodal, theparent, 'login_13', 'login_14', 'ui', 55, 'login_bg111', 'fenxiang');
 			return panel;
 		},
-		createPromptpanel4:function(data,bgname,ishalf,ismodal,theparent){
-			var panel = game.configdata.createBgPanel([],bgname,ishalf,ismodal,theparent,'login_13','login_14','ui',55,'login_bg111','login_bg63');
+		createPromptpanel4: function(data, bgname, ishalf, ismodal, theparent) {
+			var panel = game.configdata.createBgPanel([], bgname, ishalf, ismodal, theparent, 'login_13', 'login_14', 'ui', 55, 'login_bg111', 'login_bg63');
 			var scrollwin = new game.Scrollwindow({
-				width:panel.width * game.scalefact * 6/8,
-				height:panel.height * game.scalefact * 6/8,
-				x:panel.width* game.scalefact/8,
-				y:panel.height* game.scalefact/8,
+				width: panel.width * game.scalefact * 6 / 8,
+				height: panel.height * game.scalefact * 6 / 8,
+				x: panel.width * game.scalefact / 8,
+				y: panel.height * game.scalefact / 8,
 			}).addTo(panel);
 			var txt = new Hilo.Text({
-				text:"",
-				font:'24px  黑体',
-				color:'black',
-				background:'rgba(0,0,0,0)',
-				width:scrollwin.width,
-				maxWidth:scrollwin.width-60,
-				textAlign:'left',
-				height:1850,
-				lineSpacing:5,
-				x:30,
-				y:10,
-				textVAlign:'top',
+				text: "",
+				font: '24px  黑体',
+				color: 'black',
+				background: 'rgba(0,0,0,0)',
+				width: scrollwin.width,
+				maxWidth: scrollwin.width - 60,
+				textAlign: 'left',
+				height: 1850,
+				lineSpacing: 5,
+				x: 30,
+				y: 10,
+				textVAlign: 'top',
 			});
-			scrollwin.addContent(txt,1850);
+			scrollwin.addContent(txt, 1850);
 			this.slideList.push(scrollwin);
-			
-			
+
 			$.ajax({
-				type:'GET',
-				url:'../phone/txtdata/test.txt',
-				timeout:100,
-				success:function(data){
+				type: 'GET',
+				url: '../phone/txtdata/test.txt',
+				timeout: 100,
+				success: function(data) {
 					console.log(data);
 					txt.text = data;
 				},
-				error:function(xhr,type){
+				error: function(xhr, type) {
 					console.log(type);
 					console.log(xhr);
 				}
 			})
-			
+
 			return panel;
 		},
-		inceptNum:function(numst){
-			if(numst.length >= 6 && !isNaN(numst)){
+		inceptNum: function(numst) {
+			if(numst.length == 6 && !isNaN(numst)) {
 				var scene = this.parent.parent;
 				scene.showLoadgif(true);
-				game.sendMsg(scene,game.networker,'testmsg_num',numst);
+				game.sendMsg(scene, game.networker, game.networker.msg.JOINROOM, numst);
 			}
 		},
-		
+
 		deactive: function() {
 			var scene = this;
 			this.off();
 			Hilo.Tween.to(this, {
-					y: -this.height,
-				}, {
-					duration: 500,
-					ease: Hilo.Ease.Back.EaseIn,
-					onComplete: function() {
-						console.log('main scene destory');
-						scene.destory();
-					}
-				});
+				y: -this.height,
+			}, {
+				duration: 500,
+				ease: Hilo.Ease.Back.EaseIn,
+				onComplete: function() {
+					console.log('main scene destory');
+					scene.destory();
+				}
+			});
 		},
 		destory: function() {
 			console.log('%s destory', this.name);
 			this.removeAllChildren();
 			this.removeFromParent();
 		},
-		onUpdate:function(){
-			
+		onUpdate: function() {
+
 		},
 	});
 })(window.game);
