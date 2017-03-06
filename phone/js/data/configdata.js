@@ -432,6 +432,9 @@ game.sounds = new function() {
 			return;
 		var	loop = false;
 		var basedir = 'sound/putonghua/woman/';
+		if(game.mjdata.smallmj[mjid] == null){
+				debugger;
+			}
 		var audioSrc = game.mjdata.smallmj[mjid][4];
 		var tmp = game.mjdata.smallmj[mjid];
 		audio = Hilo.WebSound.getAudio({

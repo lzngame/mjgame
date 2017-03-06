@@ -266,7 +266,6 @@
 			this.pointer_mj.y = throwmj.y - 50;
 			
 			game.sendMsg(this, game.networker, game.networker.msg.THROWMJ, [mjid,1]);
-
 		},
 		
 		_throwmjRight: function(mjid) {
@@ -311,7 +310,6 @@
 			console.log(t);*/
 			
 			var mj = new game.MjSelf({ mjid: id, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.mjlayer);
-			console.log('麻将尺寸 (%d,%d)   (%d,%d)',mj.width,mj.height,mj.swidth,mj.sheight);
 			var x = this.selfMjTakeInitx;
 			var y = this.height - mj.sheight - 10;
 			mj.x = x;

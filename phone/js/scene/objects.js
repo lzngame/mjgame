@@ -752,6 +752,9 @@
 			if(this.state != 0) {
 				offsety = 0;
 			}
+			if(game.mjdata.mj[this.mjid] == null){
+				debugger;
+			}
 			var frontname = game.mjdata.mj[this.mjid][1];
 			this.rectfront = game.configdata.getPngRect(frontname, this.imgsource);
 			this.width = this.bgrect[2];
