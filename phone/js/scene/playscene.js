@@ -351,6 +351,25 @@
 				game.mjdata.dealOne();
 				game.configdata.createRectImg('mj', 'self_73', this.rightDealInitx, i*offsetx + 150, 1).addTo(this);
 			}
+			this.buhua();
+		},
+		
+		buhua:function(){
+			var l = this.mjlayer.children;
+			for(var i = 0; i < l.length; i++) {
+				var sendobj = l[i];
+				console.log(sendobj.name);
+				if(sendobj.mjid.indexOf('f') != -1 || sendobj.mjid.indexOf('h') != -1){
+					sendobj.removeFromParent();
+					//this._throwmjSelf(sendobj.mjid);
+					//this.sortMj();
+					console.log('-------%s',sendobj.name);
+					sendobj.alpha = 0.5;
+					//sendobj.removeFromParent();
+				}
+				
+				
+			}
 		},
 
 		_sortmj: function(mj1, mj2) {

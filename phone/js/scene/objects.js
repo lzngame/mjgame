@@ -775,6 +775,7 @@
 			this.initx = this.x;
 			this.inity = this.y;
 			this.initTouch();
+			this.name = game.mjdata.smallmj[this.mjid][0];
 		},
 		setGold:function(){
 			this.isGold = true;
