@@ -1,84 +1,4 @@
 (function(ns) {
-	var InviteMainscene = ns.InviteMainscene = Hilo.Class.create({
-		Extends: game.BaseScene,
-		name: game.configdata.SCENE_NAMES.invite,
-		items: null,
-
-		constructor: function(properties) {
-			InviteMainscene.superclass.constructor.call(this, properties);
-			this.init(properties);
-		},
-		init: function(properties) {
-			console.log('%s init', this.name);
-			this.width = game.configdata.mainStageSize.width;
-			this.height = game.configdata.mainStageSize.height;
-			this.items = {};
-			this.funcs = {
-				id_invitescene_disband_btn: this.disbandRoom,
-				id_invitescene_invite_btn: this.inviteFriend,
-				id_invitescene_back_btn: this.gobackScene
-			};
-		},
-		executeMsg: function(sendobj, msgtype, msgdata) {
-			var self = this;
-			switch(msgtype) {
-				case '':
-					break;
-			}
-		},
-		active: function(data) {
-			console.log('%s active:', this.name);
-			this.addTo(game.stage);
-			this.initBg('bg', 'battle_bg');
-			this.y = 0;
-			this.x = 0;
-
-			game.layoutUi.layoutPanelData(game.sceneuidata.playscene_uidata[0], this.width, this.height, 1, this);
-			if(data){
-				this.items['id_invitescene_wintype_txt'].text = data[2];
-			}
-
-
-			this.initBtnHandle();
-		},
-
-		disbandRoom: function(btnself) {
-			console.log('disbandRoom');
-		},
-		inviteFriend: function(btnself) {
-			console.log('inviteFriend');
-			game.switchScene(game.configdata.SCENE_NAMES.play);
-		},
-		gobackScene: function(btnself) {
-			console.log('gobackScene');
-			game.switchScene(game.configdata.SCENE_NAMES.main);
-		},
-
-		deactive: function() {
-			var scene = this;
-			this.disBtnHandle();
-			this.off();
-			Hilo.Tween.to(this, {
-				y: -this.height,
-			}, {
-				duration: 500,
-				ease: Hilo.Ease.Back.EaseIn,
-				onComplete: function() {
-					console.log('main scene destory');
-					scene.destory();
-				}
-			});
-		},
-		destory: function() {
-			console.log('%s destory', this.name);
-			this.removeAllChildren();
-			this.removeFromParent();
-		},
-		onUpdate: function() {
-
-		},
-	});
-
 	var PlayMainscene = ns.PlayMainscene = Hilo.Class.create({
 		Extends: game.BaseScene,
 		name: game.configdata.SCENE_NAMES.play,
@@ -138,7 +58,9 @@
 		throwRightInitx:0,
 		throwRightInity:0,
 		
-		residueMjLabel:null,
+		residueMjLabel:null,	  //剩余牌数
+		residueGamenumLabel:null, //剩余局数
+		roomIdLabel:null,         //房间ID号
 
 		constructor: function(properties) {
 			PlayMainscene.superclass.constructor.call(this, properties);
@@ -214,8 +136,15 @@
 
 			this.bglayer = new Hilo.Container().addTo(this);
 			this.bglayer.pointerChildren = false;
+			
 			this.throwlayer = new Hilo.Container().addTo(this);
+			this.throwlayer.pointerChildren = false;
+			
 			this.throwuplayer = new Hilo.Container().addTo(this);
+			this.throwuplayer.pointerChildren = false;
+			
+			this.hualayer = new Hilo.Container().addTo(this);
+			this.hualayer.pointerChildren = false;
 
 			this.mjlayer = new Hilo.Container().addTo(this);
 			
@@ -226,20 +155,21 @@
 			
 			this.deal();
 			var self = this;
-
-			this.pointer_mj = new game.Pointermj({ imgsource: 'ui', rectname: 'lsbattle_21', scaleX: game.scalefact, scaleY: game.scalefact, visible: false }).addTo(this);
-			this.pointer_user = new game.Pointeruser({ imgsource: 'ui', rectname: 'battle_10', pivotx: 40, pivoty: 40, x: this.width / 2, y: this.height / 2, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.bglayer);
+			
 			this.residueMjLabel = game.configdata.createBgTitletext('剩余'+game.mjdata.getResidueMj().toString()+'张', '18px 黑体', 'yellow', 'ui', 'login_bg9').addTo(this.bglayer);
 			this.residueMjLabel.x = this.width / 2 - this.residueMjLabel.width - 50;
 			this.residueMjLabel.y = this.height / 2 - this.residueMjLabel.height / 2;
 			this.residueMjLabel.txt.text = '剩余'+game.mjdata.getResidueMj().toString()+'张';
+			this.residueGamenumLabel = game.configdata.createBgTitletext('剩余3局', '18px 黑体', 'yellow', 'ui', 'login_bg9').addTo(this.bglayer);
+			this.residueGamenumLabel.x = this.width / 2 + 50;
+			this.residueGamenumLabel.y = this.height / 2 - this.residueMjLabel.height / 2;
+			this.roomIdLabel = game.configdata.createBgTitletext('房间号:123980', '20px 黑体', 'white', 'ui', 'login_bg17').addTo(this.bglayer);
+			this.roomIdLabel.x = this.width / 2 - this.roomIdLabel.width / 2;
+			this.roomIdLabel.y = 0;
+			this.pointer_mj = new game.Pointermj({ imgsource: 'ui', rectname: 'lsbattle_21', scaleX: game.scalefact, scaleY: game.scalefact, visible: false }).addTo(this);
+			this.pointer_user = new game.Pointeruser({ imgsource: 'ui', rectname: 'battle_10', pivotx: 40, pivoty: 40, x: this.width / 2, y: this.height / 2, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.bglayer);
+			this.setRoomInfo();
 			
-			var txt2 = game.configdata.createBgTitletext('剩余3局', '18px 黑体', 'yellow', 'ui', 'login_bg9').addTo(this.bglayer);
-			txt2.x = this.width / 2 + 50;
-			txt2.y = this.height / 2 - this.residueMjLabel.height / 2;
-			var txt3 = game.configdata.createBgTitletext('房间号:123980', '20px 黑体', 'white', 'ui', 'login_bg17').addTo(this.bglayer);
-			txt3.x = this.width / 2 - txt3.width / 2;
-			txt3.y = 0;
 			
 			var btn01 = game.configdata.createScalebutton('ui','lsbattle_2',0,10).addTo(this);
 			btn01.x = this.width - btn01.width * game.scalefact * 0.5 - 10;
@@ -269,6 +199,11 @@
 			this.rightDealInitx = this.width *7/8;
 			this.throwRightInitx = this.width *7/8 - 100;
 			this.throwRightInity=0;
+		},
+		
+		setRoomInfo:function(){
+			var info = game.roominfo.getData();
+			this.roomIdLabel.txt.text = '房间号：'+info.roomid;
 		},
 
 		_throwmjSelf: function(mjid) {
@@ -347,7 +282,6 @@
 			this.pointer_mj.y = throwmj.y - 50;
 			
 			game.sendMsg(this, game.networker, game.networker.msg.THROWMJ, [mjid,1]);
-			
 		},
 		
 		_getThrowMj:function(mjid,typemj){
@@ -371,7 +305,6 @@
 		takemj: function() {
 			var id = game.mjdata.dealOne();
 			this.residueMjLabel.txt.text = '剩余'+game.mjdata.getResidueMj().toString()+'张';
-			
 			/*var t = game.clock.getSystemtime();
 			if(t % 3 == 0)
 				id = this.goldmj.mjid;
@@ -389,7 +322,7 @@
 			this.selfmj_h = mj.sheight;
 			this.isThrow = true;
 			if(mj.mjid == this.goldmj.mjid) {
-					mj.setGold();
+				mj.setGold();
 			}
 		},
 

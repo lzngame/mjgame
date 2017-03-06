@@ -484,12 +484,12 @@ game.sceneuidata = new function(){
 					itemurlvalue:'login_bg17',
 					textvalue:'房间号：123456',
 					color:'white',
-					font:'14px 黑体',
+					font:'20px 黑体',
 					bg:'rgba(0,0,0,0)',
 					layouttype_x:'txt',
 					alignx:'center',
-					layouttype_y:'txt',
-					aligny:'top'
+					layouttype_y:'pct',
+					aligny:'top_1'
 				},
 				{
 					itemid:'id_invitescene_wintype_txt',

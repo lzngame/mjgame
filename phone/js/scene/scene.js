@@ -370,7 +370,6 @@
 			for(var itemid in panel.items) {
 				var radiobox = panel.items[itemid];
 				if(radiobox.groupid) {
-					console.log(radiobox.textlabel);
 					if(radiobox.isSelected) {
 						if(radiobox.groupid == 'groupid001') {
 							setvalue[0] = radiobox.value;
@@ -386,7 +385,6 @@
 						}
 					}
 					radiobox.onhandle = function(txt) {
-						console.log(this);
 						if(this.groupid == 'groupid001') {
 							setvalue[0] = this.value;
 						}
@@ -401,13 +399,11 @@
 						}
 						var carnums = self.calculatePaycard(setvalue);
 						btn.setLabelNum(carnums);
-						console.log(setvalue);
 					}
 				}
 			}
 			btn.setLabelNum(self.calculatePaycard(setvalue));
 			btn.on(Hilo.event.POINTER_END, function(e) {
-				console.log(setvalue);
 				var carnums = self.calculatePaycard(setvalue);
 				self.showLoadgif(true);
 				game.sendMsg(self, game.networker, game.networker.msg.CREATEROOM, [carnums, setvalue]);
@@ -417,8 +413,8 @@
 
 		switchCreateRoom: function(msgdata) {
 			this.showLoadgif(false);
-			if(msgdata[0]) {
-				game.switchScene(game.configdata.SCENE_NAMES.invite, msgdata);
+			if(msgdata) {
+				game.switchScene(game.configdata.SCENE_NAMES.invite);
 			} else {
 				var tmpdata = [{
 					itemid: 'id_tmp_bmp',

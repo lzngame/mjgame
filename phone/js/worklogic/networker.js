@@ -38,6 +38,7 @@ game.networker = new function() {
 	this.joinRoom  = function(sendobj, msgdata, self) {
 		var isright = false;
 		if(msgdata == '112233') {
+			game.roominfo.id = '112233';
 			isright = true;
 		}
 		game.sendMsg(self, sendobj, self.msg.JOINROOM, isright);
@@ -47,13 +48,26 @@ game.networker = new function() {
 		if(msgdata[0] > game.userdata.roomcards) {
 			isEnoughcards = false;
 		}
-		var tmp = ['放胡单赔', '放胡双倍单赔', '放胡全赔'];
-		game.sendMsg(self, sendobj, self.msg.CREATEROOM, [isEnoughcards, msgdata[1][2], tmp[msgdata[1][3]]]);
+		
+		var id = self._createRoomId();
+		var man = msgdata[1][2];
+		var paytype = msgdata[1][3];
+		
+		game.roominfo.setData(id,paytype,man);
+		game.sendMsg(self, sendobj, self.msg.CREATEROOM, isEnoughcards);
 	};
 	this.nextuserHandle = function(playscene, msgdata, self) {
 		var tmp1 = ['up', 'left', 'down'];
 		var index = Math.floor(Math.random() * 3);
 		game.sendMsg(this, playscene, self.msg.NEXTUSER_HANDLE, tmp1[index]);
+	};
+	this._createRoomId = function(){
+		var roomid  = (Math.floor(Math.random()*9)+1).toString();
+		for(var i=0;i<5;i++){
+			var n = Math.floor(Math.random() * 10);
+			roomid += n.toString();
+		}
+		return roomid;
 	};
 
 };
