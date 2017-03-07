@@ -1026,4 +1026,24 @@
 			mj.pointerEnabled = false;
 		},
 	});
+	
+	
+	//玩家信息 PlayerInfo
+	var PlayerInfo = ns.PlayerInfo = Hilo.Class.create({
+		direct: '', 
+		name: 'PlayerInfo',
+		score:0,
+		userid:'0000000',
+		flowernums:0,
+
+		constructor: function(properties) {
+			PlayerInfo.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+
+		init: function(properties) {
+			
+		},
+	});
+	
 })(window.game);

@@ -334,6 +334,7 @@ game.roominfo = new function() {
 	self.paytype = 0;
 	self.paytypeSt = '';
 	self.roomman = 0;
+	
 
 	self.setData = function(roomid, paytype, roomman) {
 		self.id = roomid;
@@ -351,3 +352,4 @@ game.roominfo = new function() {
 	}
 
 };
+

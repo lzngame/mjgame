@@ -60,6 +60,8 @@
 		residueMjLabel:null,	  //剩余牌数
 		residueGamenumLabel:null, //剩余局数
 		roomIdLabel:null,         //房间ID号
+		
+		bankerDir:'down',         //庄家位置
 
 		constructor: function(properties) {
 			PlayMainscene.superclass.constructor.call(this, properties);
@@ -85,9 +87,9 @@
 			this.deal();
 			
 			this.setTurnGold();
-			this.takemj();
-			this.buhua();
-			this.isTurn = true;
+			//this.takemj();
+			this.buhua(this.mjlayer);
+			//this.isTurn = true;
 		},
 		
 		executeMsg: function(sendobj, msgtype, msgdata) {
@@ -165,6 +167,13 @@
 			this.selfMjInitx = this.width / 50;
 			this.selfMjTakeInitx = this.maxMjHandle * 74 * game.scalefact + this.selfMjInitx + 50;
 			
+			this.flowerInit = {
+				down:[this.width*0.25,this.height*0.75,0],
+				up:[this.width*0.25,this.height*0.75,0],
+				left:[this.width*0.25,this.height*0.75,0],
+				right:[this.width*0.25,this.height*0.75,0],
+			};
+			
 			this.bglayer = new Hilo.Container().addTo(this);
 			this.bglayer.pointerChildren = false;
 			this.throwlayer = new Hilo.Container().addTo(this);
@@ -174,10 +183,6 @@
 			this.hualayer = new Hilo.Container().addTo(this);
 			this.hualayer.pointerChildren = false;
 			this.mjlayer = new Hilo.Container().addTo(this);
-			
-			this.flowerInit = {
-				down:[this.width*0.25,this.height*0.75,0],
-			};
 		},
 		
 		setRoomInfo:function(){
@@ -262,9 +267,9 @@
 			}
 		},
 		
-		buhua:function(){
+		buhua:function(theMjlayer){
 			console.log('--------------------------补花---------------------');
-			var l = this.mjlayer.children;
+			var l = theMjlayer.children;
 			var beThrowMjList = [];
 			for(var i = l.length-1; i >0; i--) {
 				var sendobj = l[i];
@@ -274,7 +279,6 @@
 					sendobj.removeFromParent();
 				}
 			}
-			//debugger;
 			for(var i=0;i<beThrowMjList.length;i++){
 				this.throwFlower(beThrowMjList[i],'down');
 				var id = game.mjdata.dealOne();
