@@ -24,9 +24,7 @@
 
 		selfmj_h: 0,
 		selfmj_w: 0,
-		
 		goldmj:null,
-		
 		
 		mjDirect:['down','left','up','right'],
 		currentThrowIndex: null,
@@ -67,12 +65,31 @@
 			PlayMainscene.superclass.constructor.call(this, properties);
 			this.init(properties);
 		},
+		
 		init: function(properties) {
 			console.log('%s init', this.name);
 			this.width = game.configdata.mainStageSize.width;
 			this.height = game.configdata.mainStageSize.height;
 			this.items = {};
 		},
+		
+		active: function(data) {
+			console.log('%s active:', this.name);
+			var self = this;
+			this.addTo(game.stage);
+			this.initBg('bg', 'battle_bg');
+			this.initLayerAndPositions();
+			this.setRoomInfo();
+
+			game.mjdata.initMjQueue();
+			this.deal();
+			
+			this.setTurnGold();
+			this.takemj();
+			this.buhua();
+			this.isTurn = true;
+		},
+		
 		executeMsg: function(sendobj, msgtype, msgdata) {
 			var self = this;
 			switch(msgtype) {
@@ -85,7 +102,7 @@
 				case game.networker.msg.BETHROW:
 					if(self.isTurn) {
 						sendobj.removeFromParent();
-						self._throwmjSelf(sendobj.mjid);
+						self._throwmjSelf(sendobj.mjid,true);
 						self.sortMj();
 						console.log('扔掉手牌：%s',game.mjdata.mj[sendobj.mjid][0]);
 					} else {
@@ -105,7 +122,7 @@
 					self.pointer_user.setDirect(user);
 					
 					if(user == 'down'){
-						self.selfThrow();
+						self.turnYouself();
 					}else{
 						var mjid = game.mjdata.dealOne();
 						self.residueMjLabel.txt.text = '剩余'+game.mjdata.getResidueMj().toString()+'张';
@@ -124,39 +141,46 @@
 					break;
 			}
 		},
-		selfThrow:function(){
+		
+		turnYouself:function(){
 			var self = this;
 			self.isTurn = true;
 			self.takemj();
 		},
-		active: function(data) {
-			console.log('%s active:', this.name);
-			this.addTo(game.stage);
-			this.initBg('bg', 'battle_bg');
-			this._setThrowPostion();
-
-			this.bglayer = new Hilo.Container().addTo(this);
-			this.bglayer.pointerChildren = false;
+		
+		initLayerAndPositions:function(){
+			this.throwSelfInitx = this.width * 0.25;
+			this.throwSelfInity = this.height  * 0.62;
+			//this.throwSelfInity = this.height * 0.74;
+			this.upDealInitx = this.width *3/8;
+			this.throwUpInitx = 0;
+			this.throwUpInity = 0;
+			this.throwLeftInitx=0;
+			this.throwLeftInity=0;
 			
-			this.throwlayer = new Hilo.Container().addTo(this);
-			this.throwlayer.pointerChildren = false;
-			
-			this.throwuplayer = new Hilo.Container().addTo(this);
-			this.throwuplayer.pointerChildren = false;
-			
-			this.hualayer = new Hilo.Container().addTo(this);
-			this.hualayer.pointerChildren = false;
-
-			this.mjlayer = new Hilo.Container().addTo(this);
+			this.rightDealInitx = this.width *7/8;
+			this.throwRightInitx = this.width *7/8 - 100;
+			this.throwRightInity=0;
 			
 			this.selfMjInitx = this.width / 50;
 			this.selfMjTakeInitx = this.maxMjHandle * 74 * game.scalefact + this.selfMjInitx + 50;
-
-			game.mjdata.initMjQueue();
 			
-			this.deal();
-			var self = this;
+			this.bglayer = new Hilo.Container().addTo(this);
+			this.bglayer.pointerChildren = false;
+			this.throwlayer = new Hilo.Container().addTo(this);
+			this.throwlayer.pointerChildren = false;
+			this.throwuplayer = new Hilo.Container().addTo(this);
+			this.throwuplayer.pointerChildren = false;
+			this.hualayer = new Hilo.Container().addTo(this);
+			this.hualayer.pointerChildren = false;
+			this.mjlayer = new Hilo.Container().addTo(this);
 			
+			this.flowerInit = {
+				down:[this.width*0.25,this.height*0.75,0],
+			};
+		},
+		
+		setRoomInfo:function(){
 			this.residueMjLabel = game.configdata.createBgTitletext('剩余'+game.mjdata.getResidueMj().toString()+'张', '18px 黑体', 'yellow', 'ui', 'login_bg9').addTo(this.bglayer);
 			this.residueMjLabel.x = this.width / 2 - this.residueMjLabel.width - 50;
 			this.residueMjLabel.y = this.height / 2 - this.residueMjLabel.height / 2;
@@ -169,49 +193,13 @@
 			this.roomIdLabel.y = 0;
 			this.pointer_mj = new game.Pointermj({ imgsource: 'ui', rectname: 'lsbattle_21', scaleX: game.scalefact, scaleY: game.scalefact, visible: false }).addTo(this);
 			this.pointer_user = new game.Pointeruser({ imgsource: 'ui', rectname: 'battle_10', pivotx: 40, pivoty: 40, x: this.width / 2, y: this.height / 2, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.bglayer);
-			this.setRoomInfo();
-			
-			
+			var info = game.roominfo.getData();
+			this.roomIdLabel.txt.text = '房间号：'+info.roomid;
 			var btn01 = game.configdata.createScalebutton('ui','lsbattle_2',0,10).addTo(this);
 			btn01.x = this.width - btn01.width * game.scalefact * 0.5 - 10;
 			btn01.y = btn01.height * game.scalefact * 0.5 + 10;
 			var btn02 = game.configdata.createScalebutton('ui','lsbattle_3',btn01.x,btn01.height * (game.scalefact+1)).addTo(this);
-
-			this.goldmj = new game.Goldmj({ mjid: game.configdata.createRandomMjid(), imgsource: 'ui', bgrectname: '15' }).addTo(this.bglayer);
-			var list = this.mjlayer.children;
-			for(var item in list) {
-				var mj = list[item];
-				if(mj.mjid == this.goldmj.mjid) {
-					mj.setGold();
-				}
-			}
-			this.sortMj();
-			this.takemj();
-			this.buhua();
-			this.isTurn = true;
 		},
-		_setThrowPostion:function(){
-			this.throwSelfInitx = this.width * 0.25;
-			this.throwSelfInity = this.height - (2*this.upMjH + this.selfMjH) -10;
-			this.upDealInitx = this.width *3/8;
-			this.throwUpInitx = 0;
-			this.throwUpInity = 0;
-			this.throwLeftInitx=0;
-			this.throwLeftInity=0;
-			
-			this.rightDealInitx = this.width *7/8;
-			this.throwRightInitx = this.width *7/8 - 100;
-			this.throwRightInity=0;
-		},
-		
-		setRoomInfo:function(){
-			var info = game.roominfo.getData();
-			this.roomIdLabel.txt.text = '房间号：'+info.roomid;
-		},
-
-		
-		
-		
 
 		takemj: function() {
 			var id = game.mjdata.dealOne();
@@ -277,24 +265,36 @@
 		buhua:function(){
 			console.log('--------------------------补花---------------------');
 			var l = this.mjlayer.children;
-			var n = 0;
+			var beThrowMjList = [];
 			for(var i = l.length-1; i >0; i--) {
 				var sendobj = l[i];
 				if(sendobj.mjid.indexOf('f') != -1 || sendobj.mjid.indexOf('h') != -1){
 					console.log('-------(%d):%s',i,sendobj.name);
+					beThrowMjList.push(sendobj.mjid);
 					sendobj.removeFromParent();
-					n++;
 				}
 			}
-			for(var i=0;i<n;i++){
+			//debugger;
+			for(var i=0;i<beThrowMjList.length;i++){
+				this.throwFlower(beThrowMjList[i],'down');
 				var id = game.mjdata.dealOne();
 				var mj = new game.MjSelf({ mjid: id, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.mjlayer);
 			}
 			this.sortMj();
-			//if(this._checkFlower(l)){
-			//	this.buhua();
-			//}
+			game.mjdata.createEffect('buhua',100,200).addTo(this);
 		},
+		
+		setTurnGold:function(){
+			this.goldmj = new game.Goldmj({ mjid: game.configdata.createRandomMjid(), imgsource: 'ui', bgrectname: '15' }).addTo(this.bglayer);
+			var list = this.mjlayer.children;
+			for(var item in list) {
+				var mj = list[item];
+				if(mj.mjid == this.goldmj.mjid) {
+					mj.setGold();
+				}
+			}
+		},
+		
 		_checkFlower:function(mjList){
 			var hasFlower = false;
 			for(var i=mjList.length -1;i>0;i--){
@@ -312,7 +312,39 @@
 			this.sortMj();
 		},
 		
-		_throwmjSelf: function(mjid) {
+		throwOneMj:function(userdir,mjid){
+			switch(userdir){
+				case 'down':
+					break;
+				case 'up':
+					break;
+				case 'left':
+					break;
+				case 'right':
+					break;
+			}
+		},
+		
+		throwFlower:function(mjid,userdir){
+			var t = {
+				up:1,down:1,left:2,right:2
+			};
+			var throwmj = this._getThrowMj(mjid,t[userdir]);
+			var offsetW = throwmj.width*game.scalefact;
+			if(game.scalefact <= 0.771){
+				offsetW += 4;
+			}
+			if(game.scalefact == 1){
+				offsetW -= 4;
+			}
+			var x = this.flowerInit[userdir][2] * offsetW + this.flowerInit[userdir][0];
+			var y = this.flowerInit[userdir][1];
+			throwmj.x = x;
+			throwmj.y = y;
+			this.flowerInit[userdir][2]++;
+		},
+		
+		_throwmjSelf: function(mjid,isMsg) {
 			var throwmj = this._getThrowMj(mjid,1);
 			var offsetW = throwmj.width*game.scalefact;
 			if(game.scalefact <= 0.771){
@@ -334,7 +366,9 @@
 			this.pointer_mj.y = throwmj.y - 50;
 			
 			this.isTurn = false;
-			game.sendMsg(this, game.networker, game.networker.msg.THROWMJ, [mjid,0]);
+			if(isMsg){
+				game.sendMsg(this, game.networker, game.networker.msg.THROWMJ, [mjid,0]);
+			}
 		},
 
 		_throwmjup: function(mjid) {

@@ -131,6 +131,8 @@
 
 				game.loadqueue.off('complete');
 				game.loadqueue.off('load');
+				
+				game.mjdata.init();
 
 				game.switchScene(game.configdata.SCENE_NAMES.play);
 			});
