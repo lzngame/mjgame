@@ -7,7 +7,8 @@
 		mjlayer: null,
 		currentmj: null,
 
-		isTurn: true,
+		isTurn: false,
+		isAllready:false,
 
 		throwmjInitx: 0,
 		throwmjInity: 0,
@@ -186,6 +187,8 @@
 			}
 			this.sortMj();
 			this.takemj();
+			this.buhua();
+			this.isTurn = true;
 		},
 		_setThrowPostion:function(){
 			this.throwSelfInitx = this.width * 0.25;
@@ -206,6 +209,109 @@
 			this.roomIdLabel.txt.text = '房间号：'+info.roomid;
 		},
 
+		
+		
+		
+
+		takemj: function() {
+			var id = game.mjdata.dealOne();
+			this.residueMjLabel.txt.text = '剩余'+game.mjdata.getResidueMj().toString()+'张';
+			
+			var mj = new game.MjSelf({ mjid: id, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.mjlayer);
+			var x = this.selfMjTakeInitx;
+			var y = this.height - mj.sheight - 10;
+			mj.x = x;
+			mj.y = y;
+			mj.initx = mj.x;
+			mj.inity = mj.y;
+			this.selfmj_w = mj.swidth;
+			this.selfmj_h = mj.sheight;
+			this.isThrow = true;
+			if(mj.mjid == this.goldmj.mjid) {
+				mj.setGold();
+			}
+		},
+
+		sortMj: function() {
+			var l = this.mjlayer.children;
+			this.mjlayer.sortChildren(this._sortmj);
+			for(var i = 0; i < l.length; i++) {
+				var mj = l[i];
+				mj.x = (mj.swidth) * i + this.selfMjInitx;
+				mj.y = this.height - 10 - mj.sheight;
+				mj.initx = mj.x;
+				mj.inity = mj.y;
+			}
+		},
+
+		deal: function() {
+			for(var i = 0; i < this.maxMjHandle; i++) {
+				//self -down
+				this.addMj(game.mjdata.dealOne());
+				//up
+				var mjid = game.mjdata.dealOne();
+				var x = i * 32 + this.upDealInitx;
+				var y = 70;
+				var throwmj = this._getThrowMj(mjid,1).addTo(this);
+				throwmj.x = x;
+				throwmj.y = y;
+				//lfet
+				var offsetx = 30 * game.scalefact;
+				mjid = game.mjdata.dealOne();
+				x = 70;
+				y = i*offsetx + 150;
+				throwmj = this._getThrowMj(mjid,2).addTo(this);
+				throwmj.x = x;
+				throwmj.y = y;
+				
+				//right
+				mjid = game.mjdata.dealOne();
+				x = this.rightDealInitx;
+				y = i*offsetx + 150;
+				throwmj = this._getThrowMj(mjid,3).addTo(this);
+				throwmj.x = x;
+				throwmj.y = y;
+			}
+		},
+		
+		buhua:function(){
+			console.log('--------------------------补花---------------------');
+			var l = this.mjlayer.children;
+			var n = 0;
+			for(var i = l.length-1; i >0; i--) {
+				var sendobj = l[i];
+				if(sendobj.mjid.indexOf('f') != -1 || sendobj.mjid.indexOf('h') != -1){
+					console.log('-------(%d):%s',i,sendobj.name);
+					sendobj.removeFromParent();
+					n++;
+				}
+			}
+			for(var i=0;i<n;i++){
+				var id = game.mjdata.dealOne();
+				var mj = new game.MjSelf({ mjid: id, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.mjlayer);
+			}
+			this.sortMj();
+			//if(this._checkFlower(l)){
+			//	this.buhua();
+			//}
+		},
+		_checkFlower:function(mjList){
+			var hasFlower = false;
+			for(var i=mjList.length -1;i>0;i--){
+				var mjobj = mjList[i];
+				if(mjobj.mjid.indexOf('f') != -1 || mjobj.mjid.indexOf('h') != -1){
+					hasFlower = true;
+					break;
+				}
+			}
+			return hasFlower;
+		},
+
+		addMj: function(mjid) {
+			var mj_tmp1 = new game.MjSelf({ mjid: mjid, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.mjlayer);
+			this.sortMj();
+		},
+		
 		_throwmjSelf: function(mjid) {
 			var throwmj = this._getThrowMj(mjid,1);
 			var offsetW = throwmj.width*game.scalefact;
@@ -269,7 +375,7 @@
 		},
 		
 		_throwmjRight: function(mjid) {
-			var throwmj = this._getThrowMj(mjid,2);
+			var throwmj = this._getThrowMj(mjid,3);
 			var y = (this.throwrightNum % this.maxMjStack) * (throwmj.height-15) ;//+ this.width / 8 * 7;
 			var x = -Math.floor(this.throwrightNum / this.maxMjStack) * throwmj.width;// + 170;
 			throwmj.x = x + this.throwRightInitx;
@@ -284,94 +390,13 @@
 		},
 		
 		_getThrowMj:function(mjid,typemj){
-			game.sounds.playMj(mjid);
+			//game.sounds.playMj(mjid);
 			var idname = mjid + "-"+ typemj.toString();
 			var throwmj = new game.MjScene({ mjid: idname }).addTo(this.throwlayer);
 			throwmj.pointerEnabled = false;
 			return throwmj;
 		},
 		
-		_sortByY:function(a,b){
-			if(a.y > b.y) {
-				return 1;
-			}else if(a.y < b.y) {
-				return -1;
-			}else{
-				return 0;
-			}
-		},
-
-		takemj: function() {
-			var id = game.mjdata.dealOne();
-			this.residueMjLabel.txt.text = '剩余'+game.mjdata.getResidueMj().toString()+'张';
-			/*var t = game.clock.getSystemtime();
-			if(t % 3 == 0)
-				id = this.goldmj.mjid;
-			console.log(t);*/
-			
-			var mj = new game.MjSelf({ mjid: id, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.mjlayer);
-			var x = this.selfMjTakeInitx;
-			var y = this.height - mj.sheight - 10;
-			mj.x = x;
-			mj.y = y;
-			mj.initx = mj.x;
-			mj.inity = mj.y;
-			this.selfmj_w = mj.swidth;
-			this.selfmj_h = mj.sheight;
-			this.isThrow = true;
-			if(mj.mjid == this.goldmj.mjid) {
-				mj.setGold();
-			}
-		},
-
-		sortMj: function() {
-			var l = this.mjlayer.children;
-			this.mjlayer.sortChildren(this._sortmj);
-			for(var i = 0; i < l.length; i++) {
-				var mj = l[i];
-				mj.x = (mj.swidth) * i + this.selfMjInitx;
-				mj.y = this.height - 10 - mj.sheight;
-				mj.initx = mj.x;
-				mj.inity = mj.y;
-			}
-		},
-
-		deal: function() {
-			for(var i = 0; i < this.maxMjHandle; i++) {
-				//self -down
-				this.addMj(game.mjdata.dealOne());
-				//up
-				game.mjdata.dealOne();
-				game.configdata.createRectImg('mj', 'self_80', i * 32 + this.upDealInitx, 70, 1).addTo(this);
-				//lfet
-				game.mjdata.dealOne();
-				var offsetx = 21 * game.scalefact;
-				game.configdata.createRectImg('mj', 'self_73', 70, i*offsetx + 150, 1).addTo(this);
-				//right
-				game.mjdata.dealOne();
-				game.configdata.createRectImg('mj', 'self_73', this.rightDealInitx, i*offsetx + 150, 1).addTo(this);
-			}
-			this.buhua();
-		},
-		
-		buhua:function(){
-			var l = this.mjlayer.children;
-			for(var i = 0; i < l.length; i++) {
-				var sendobj = l[i];
-				console.log(sendobj.name);
-				if(sendobj.mjid.indexOf('f') != -1 || sendobj.mjid.indexOf('h') != -1){
-					sendobj.removeFromParent();
-					//this._throwmjSelf(sendobj.mjid);
-					//this.sortMj();
-					console.log('-------%s',sendobj.name);
-					sendobj.alpha = 0.5;
-					//sendobj.removeFromParent();
-				}
-				
-				
-			}
-		},
-
 		_sortmj: function(mj1, mj2) {
 			var mjid1 = mj1.mjid;
 			var mjid2 = mj2.mjid;
@@ -399,20 +424,15 @@
 				}
 			}
 		},
-
-		addMj: function(mjid) {
-			var mj_tmp1 = new game.MjSelf({ mjid: mjid, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.mjlayer);
-			this.sortMj();
-		},
-
-		printmj: function() {
-			var l = this.mjlayer.children;
-			var st = '';
-			for(var i = 0; i < l.length; i++) {
-				var mj = l[i];
-				st += (mj.mjid + ',');
+		
+		_sortByY:function(a,b){
+			if(a.y > b.y) {
+				return 1;
+			}else if(a.y < b.y) {
+				return -1;
+			}else{
+				return 0;
 			}
-			console.log(st);
 		},
 
 		deactive: function() {
