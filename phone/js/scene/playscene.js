@@ -4,7 +4,7 @@
 		name: game.configdata.SCENE_NAMES.play,
 		items: null,
 		bglayer: null,
-		mjlayer: null,
+		
 		currentmj: null,
 
 		isTurn: false,
@@ -38,6 +38,20 @@
 		sideMjH:52,
 		upMjW:35,
 		upMjH:50,
+		
+		dealDownMjLayer: null,
+		dealDownInitx:0,
+		delaDownInity:0,
+		dealUpMjLayer: null,
+		dealUpInitx:0,
+		delaUpInity:0,
+		dealLeftMjLayer: null,
+		dealLeftInitx:0,
+		delaLeftInity:0,
+		dealRightMjLayer: null,
+		dealRightInitx:0,
+		delaRightInity:0,
+		
 		
 		throwSelfInitx:0,
 		throwSelfInity:0,
@@ -87,9 +101,35 @@
 			this.deal();
 			
 			this.setTurnGold();
-			//this.takemj();
-			this.buhua(this.mjlayer);
-			//this.isTurn = true;
+			this.takemj();
+			this.buhuaself();
+			this.isTurn = true;
+		},
+		
+		deal: function() {
+			for(var i = 0; i < this.maxMjHandle; i++) {
+				//self -down
+				var mj_down = new game.MjSelf({ mjid: game.mjdata.dealOne(), scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.dealDownMjLayer);
+				mj_down.x = mj_down.swidth * i + this.dealDownInitx;
+				mj_down.y = this.dealDownInity;
+				//up
+				var mj_up = this.createDealMj(game.mjdata.dealOne(),1).addTo(this.dealUpMjLayer);
+				mj_up.x = mj_up.swidth * i + this.dealUpInitx;
+				mj_up.y = this.dealUpInity;
+				//lfet
+				var mj_left = this.createDealMj(game.mjdata.dealOne(),2).addTo(this.dealLeftMjLayer);
+				mj_left.x = this.dealLeftInitx;
+				mj_left.y = (mj_left.sheight*0.72) * i + this.dealLeftInity;
+				//right
+				var mj_right = this.createDealMj(game.mjdata.dealOne(),3).addTo(this.dealRightMjLayer);
+				mj_right.x = this.dealRightInitx;
+				mj_right.y = (mj_right.sheight*0.72) * i + this.dealRightInity;
+
+			}
+			this.sortPlayerMj('down');
+			this.sortPlayerMj('up');
+			this.sortPlayerMj('right');
+			this.sortPlayerMj('left');
 		},
 		
 		executeMsg: function(sendobj, msgtype, msgdata) {
@@ -105,7 +145,8 @@
 					if(self.isTurn) {
 						sendobj.removeFromParent();
 						self._throwmjSelf(sendobj.mjid,true);
-						self.sortMj();
+						self.sortPlayerMj('down');
+						//self.sortMj(self.dealDownMjLayer,0,this.dealDownInitx,1,true);
 						console.log('扔掉手牌：%s',game.mjdata.mj[sendobj.mjid][0]);
 					} else {
 						console.log('放回手牌：%s',game.mjdata.mj[sendobj.mjid][0]);
@@ -178,11 +219,32 @@
 			this.bglayer.pointerChildren = false;
 			this.throwlayer = new Hilo.Container().addTo(this);
 			this.throwlayer.pointerChildren = false;
+			
 			this.throwuplayer = new Hilo.Container().addTo(this);
 			this.throwuplayer.pointerChildren = false;
+			
+			
 			this.hualayer = new Hilo.Container().addTo(this);
 			this.hualayer.pointerChildren = false;
-			this.mjlayer = new Hilo.Container().addTo(this);
+			
+			this.mjselfW = 76;
+			this.mjselfH = 114;
+			this.shmjW = 40;
+			this.shmjH = 53;
+			this.svmjW = 49;
+			this.svmjH = 50;
+			this.dealDownMjLayer = new Hilo.Container().addTo(this);
+			this.dealDownInitx = this.width * 0.02;
+			this.dealDownInity = this.height - 10 - this.mjselfH * game.scalefact;
+			this.dealUpMjLayer = new Hilo.Container().addTo(this);
+			this.dealUpInitx = this.width * 0.30;
+			this.dealUpInity = this.height * 0.125;
+			this.dealLeftMjLayer = new Hilo.Container().addTo(this);
+			this.dealLeftInitx = this.width * 0.125;
+			this.dealLeftInity = this.height * 0.11;
+			this.dealRightMjLayer = new Hilo.Container().addTo(this);
+			this.dealRightInitx = this.width * 0.86;
+			this.dealRightInity = this.height * 0.10;
 		},
 		
 		setRoomInfo:function(){
@@ -210,7 +272,7 @@
 			var id = game.mjdata.dealOne();
 			this.residueMjLabel.txt.text = '剩余'+game.mjdata.getResidueMj().toString()+'张';
 			
-			var mj = new game.MjSelf({ mjid: id, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.mjlayer);
+			var mj = new game.MjSelf({ mjid: id, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.dealDownMjLayer);
 			var x = this.selfMjTakeInitx;
 			var y = this.height - mj.sheight - 10;
 			mj.x = x;
@@ -224,52 +286,53 @@
 				mj.setGold();
 			}
 		},
+		
+		sortPlayerMj:function(playerdir){
+			switch(playerdir){
+				case 'up':
+					this.sortMj(this.dealUpMjLayer,0,this.dealUpInitx);
+					break;
+				case 'down':
+					this.sortMj(this.dealDownMjLayer,0,this.dealDownInitx,1,true);
+					break;
+				case 'left':
+					this.sortMj(this.dealLeftMjLayer,1,this.dealLeftInity,0.72);
+					break;
+				case 'right':
+					this.sortMj(this.dealRightMjLayer,1,this.dealRightInity,0.72);
+					break;
+				default:
+					this.sortMj(this.dealDownMjLayer,0,this.dealDownInitx,1,true);
+					break;
+			}
+		},
 
-		sortMj: function() {
-			var l = this.mjlayer.children;
-			this.mjlayer.sortChildren(this._sortmj);
+		//重排顺序   direct:0  横向  1:竖向
+		sortMj: function(theMjlayer,direct,initpos,fact,isSelf) {
+			if(!fact){
+				fact = 1;
+			}
+			var l = theMjlayer.children;
+			theMjlayer.sortChildren(this._sortmj);
 			for(var i = 0; i < l.length; i++) {
 				var mj = l[i];
-				mj.x = (mj.swidth) * i + this.selfMjInitx;
-				mj.y = this.height - 10 - mj.sheight;
-				mj.initx = mj.x;
-				mj.inity = mj.y;
+				if(direct == 0){
+					mj.x = mj.swidth * fact * i + initpos;
+				}else{
+					mj.y = mj.sheight * fact * i + initpos;
+				}
+				if(isSelf){
+					mj.initx = mj.x;
+					mj.inity = mj.y;
+				}
 			}
 		},
 
-		deal: function() {
-			for(var i = 0; i < this.maxMjHandle; i++) {
-				//self -down
-				this.addMj(game.mjdata.dealOne());
-				//up
-				var mjid = game.mjdata.dealOne();
-				var x = i * 32 + this.upDealInitx;
-				var y = 70;
-				var throwmj = this._getThrowMj(mjid,1).addTo(this);
-				throwmj.x = x;
-				throwmj.y = y;
-				//lfet
-				var offsetx = 30 * game.scalefact;
-				mjid = game.mjdata.dealOne();
-				x = 70;
-				y = i*offsetx + 150;
-				throwmj = this._getThrowMj(mjid,2).addTo(this);
-				throwmj.x = x;
-				throwmj.y = y;
-				
-				//right
-				mjid = game.mjdata.dealOne();
-				x = this.rightDealInitx;
-				y = i*offsetx + 150;
-				throwmj = this._getThrowMj(mjid,3).addTo(this);
-				throwmj.x = x;
-				throwmj.y = y;
-			}
-		},
 		
-		buhua:function(theMjlayer){
+		
+		buhuaself:function(){
 			console.log('--------------------------补花---------------------');
-			var l = theMjlayer.children;
+			var l = this.dealDownMjLayer.children;
 			var beThrowMjList = [];
 			for(var i = l.length-1; i >0; i--) {
 				var sendobj = l[i];
@@ -282,15 +345,16 @@
 			for(var i=0;i<beThrowMjList.length;i++){
 				this.throwFlower(beThrowMjList[i],'down');
 				var id = game.mjdata.dealOne();
-				var mj = new game.MjSelf({ mjid: id, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.mjlayer);
+				var mj = new game.MjSelf({ mjid: id, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.dealDownMjLayer);
 			}
-			this.sortMj();
+			this.sortPlayerMj('down');
+			//this.sortMj(this.dealDownMjLayer,0,this.dealDownInitx,1,true);
 			game.mjdata.createEffect('buhua',100,200).addTo(this);
 		},
 		
 		setTurnGold:function(){
 			this.goldmj = new game.Goldmj({ mjid: game.configdata.createRandomMjid(), imgsource: 'ui', bgrectname: '15' }).addTo(this.bglayer);
-			var list = this.mjlayer.children;
+			var list = this.dealDownMjLayer.children;
 			for(var item in list) {
 				var mj = list[item];
 				if(mj.mjid == this.goldmj.mjid) {
@@ -311,10 +375,6 @@
 			return hasFlower;
 		},
 
-		addMj: function(mjid) {
-			var mj_tmp1 = new game.MjSelf({ mjid: mjid, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.mjlayer);
-			this.sortMj();
-		},
 		
 		throwOneMj:function(userdir,mjid){
 			switch(userdir){
@@ -425,6 +485,15 @@
 			this.pointer_mj.y = throwmj.y - 50;
 			
 			game.sendMsg(this, game.networker, game.networker.msg.THROWMJ, [mjid,1]);
+		},
+		
+		createDealMj:function(mjid,typemj){
+			var idname = mjid + "-"+ typemj.toString();
+			var mj = new game.MjScene({ 
+				mjid: idname,
+				pointerEnable:false,
+			});
+			return mj;
 		},
 		
 		_getThrowMj:function(mjid,typemj){
