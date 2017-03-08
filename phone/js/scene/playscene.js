@@ -68,7 +68,6 @@
 			this.width = game.configdata.mainStageSize.width;
 			this.height = game.configdata.mainStageSize.height;
 			this.items = {};
-			
 		},
 		
 		active: function(data) {
@@ -154,19 +153,6 @@
 						self.takemj();
 					}else{
 						self.otherTakemj(user);
-						/*var mjid = game.mjdata.dealOne();
-						self.residueMjLabel.txt.text = '剩余'+game.mjdata.getResidueMj().toString()+'张';
-						switch(user){
-							case 'up':
-								self._throwmjup(mjid);
-								break;
-							case 'left':
-								self._throwmjleft(mjid);
-								break;
-							case 'right':
-								self._throwmjRight(mjid);
-								break;
-						}*/
 					}
 					break;
 				case game.networker.msg.NEXTUSER_BUHUA:
@@ -193,8 +179,6 @@
 			}
 		},
 		
-		
-		
 		turnBuhua:function(){
 			if(this.checkFlower('down')){
 				this.buhua('down');
@@ -209,37 +193,6 @@
 			this.shmjH = 53;
 			this.svmjW = 49;
 			this.svmjH = 50;
-			this.dealDownMjLayer = new Hilo.Container().addTo(this);
-			this.dealDownInitx = this.width * 0.02;
-			this.dealDownInity = this.height - 10 - this.mjselfH * game.scalefact;
-			this.dealUpMjLayer = new Hilo.Container().addTo(this);
-			this.dealUpInitx = this.width * 0.30;
-			this.dealUpInity = this.height * 0.125;
-			this.dealLeftMjLayer = new Hilo.Container().addTo(this);
-			this.dealLeftInitx = this.width * 0.15 - this.svmjW;
-			this.dealLeftInity = this.height * 0.11;
-			this.dealRightMjLayer = new Hilo.Container().addTo(this);
-			this.dealRightInitx = this.width * 0.86;
-			this.dealRightInity = this.height * 0.10;
-			
-			this.throwDownInitx = this.width * 0.30;
-			this.throwDownInity = this.height  * 0.63;
-			this.throwUpInitx = this.width * 0.30;
-			this.throwUpInity = this.height * 0.33;
-			this.throwLeftInitx = this.width * 0.18 + this.svmjH;
-			this.throwLeftInity = this.height * 0.25;
-			this.throwRightInitx = this.width * 0.75;
-			this.throwRightInity = this.height * 0.25;
-			
-			this.selfMjInitx = this.width / 50;
-			this.selfMjTakeInitx = this.maxMjHandle * 74 * game.scalefact + this.selfMjInitx + 50;
-			
-			this.flowerInit = {
-				down:[this.width*0.30,this.height*0.75,0],
-				up:[this.width*0.30,this.height*0.23,0],
-				left:[this.width*0.16,this.height*0.11,0],
-				right:[this.width*0.80,this.height*0.25,0],
-			};
 			
 			this.bglayer = new Hilo.Container().addTo(this);
 			this.bglayer.pointerChildren = false;
@@ -251,6 +204,38 @@
 			
 			this.hualayer = new Hilo.Container().addTo(this);
 			this.hualayer.pointerChildren = false;
+			
+			this.dealUpMjLayer = new Hilo.Container().addTo(this);
+			this.dealUpInitx = this.width * 0.30;
+			this.dealUpInity = this.height * 0.125;
+			this.dealLeftMjLayer = new Hilo.Container().addTo(this);
+			this.dealLeftInitx = this.width * 0.15 - this.svmjW;
+			this.dealLeftInity = this.height * 0.05;
+			this.dealRightMjLayer = new Hilo.Container().addTo(this);
+			this.dealRightInitx = this.width * 0.86;
+			this.dealRightInity = this.height * 0.10;
+			this.dealDownMjLayer = new Hilo.Container().addTo(this);
+			this.dealDownInitx = this.width * 0.02;
+			this.dealDownInity = this.height - 10 - this.mjselfH * game.scalefact;
+			
+			this.throwDownInitx = this.width * 0.30;
+			this.throwDownInity = this.height  * 0.63;
+			this.throwUpInitx = this.width * 0.35;
+			this.throwUpInity = this.height * 0.33;
+			this.throwLeftInitx = this.width * 0.18 + this.svmjH;
+			this.throwLeftInity = this.height * 0.25;
+			this.throwRightInitx = this.width * 0.75;
+			this.throwRightInity = this.height * 0.25;
+			
+			this.selfMjInitx = this.width / 50;
+			this.selfMjTakeInitx = this.maxMjHandle * 74 * game.scalefact + this.selfMjInitx + 50;
+			
+			this.flowerInit = {
+				down:[this.width*0.30,this.height*0.75,0],
+				up:[this.width*0.35,this.height*0.23,0],
+				left:[this.width*0.16,this.height*0.11,0],
+				right:[this.width*0.80,this.height*0.25,0],
+			};
 		},
 		
 		setRoomInfo:function(){
@@ -474,6 +459,7 @@
 			}
 			sendobj.removeFromParent();
 			this.sortPlayerMj(userdir);
+			this.throwFlower(sendobj.mjid,userdir);
 			game.mjdata.createEffect('buhua',x,y,4).addTo(this);
 		},
 		
