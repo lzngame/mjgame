@@ -5,6 +5,7 @@ game.networker = new function() {
 		BETHROW: 'bethrow_mj_msg_100',
 		BESELECT: 'beselect_mj_msg_101',
 		NEXTUSER_HANDLE: 'nextuser_mjhandle_102',
+		NEXTUSER_BUHUA:'nextuser_buhua',
 		THROWMJ: 'throw_mj_mjid_103',
 		CREATEROOM: 'create_mj_room_104',
 		JOINROOM: 'join_mj_room_105',
@@ -12,18 +13,21 @@ game.networker = new function() {
 	this.executeMsg = function(sendobj, msgtype, msgdata) {
 		var self = this;
 		switch(msgtype) {
-			case this.msg.JOINROOM:
-				self.delayHandle(sendobj, msgdata, self.joinRoom);
+			case this.msg.JOINROOM:   //加入房间
+				self.delayHandle(1000,sendobj, msgdata, self.joinRoom);
 				break;
-			case this.msg.THROWMJ: //某玩家扔掉手牌
-				self.delayHandle(sendobj, msgdata, self.nextuserHandle);
+			case this.msg.THROWMJ:    //某玩家扔掉手牌
+				self.delayHandle(1000,sendobj, msgdata, self.nextuserHandle);
 				break;
-			case this.msg.CREATEROOM:
-				self.delayHandle(sendobj, msgdata, self.canCreateRoom, self);
+			case this.msg.CREATEROOM: //创建房间
+				self.delayHandle(1000,sendobj, msgdata, self.canCreateRoom, self);
+				break;
+			case this.msg.NEXTUSER_BUHUA://补花
+				self.delayHandle(500,sendobj, msgdata, self.buhua, self);
 				break;
 		}
 	};
-	this.delayHandle = function(sendobj, msgdata, func, self) {
+	this.delayHandle = function(delaytime,sendobj, msgdata, func, self) {
 		var self = this;
 		new Hilo.Tween.to(this, {
 			alpha: 1
@@ -68,6 +72,9 @@ game.networker = new function() {
 			roomid += n.toString();
 		}
 		return roomid;
+	};
+	this.buhua = function(playscene, msgdata, self) {
+		game.sendMsg(this, playscene, self.msg.NEXTUSER_BUHUA, 999);
 	};
 
 };

@@ -298,10 +298,13 @@ game.mjdata = new function() {
 		});
 	};
 
-	self.createEffect = function(effectname,x,y) {
+	self.createEffect = function(effectname,x,y,intervaltime) {
 		var f = this.effectatlas.getSprite(effectname);
+		if(!intervaltime){
+			intervaltime = 6;
+		}
 		var effect =  new Hilo.Sprite({
-			interval:6,
+			interval:intervaltime,
 			loop: true,
 			frames:f,
 			x:x,

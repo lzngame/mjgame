@@ -777,6 +777,12 @@
 			this.initTouch();
 			this.name = game.mjdata.smallmj[this.mjid][0];
 		},
+		setInitPos:function(x,y){
+			this.x = x;
+			this.y = y;
+			this.initx = this.x;
+			this.inity = this.y;
+		},
 		setGold:function(){
 			this.isGold = true;
 			var rect = game.configdata.getPngRect('18','ui');
@@ -863,7 +869,8 @@
 	//麻将牌 --- 其他
 	var MjScene = ns.MjScene = Hilo.Class.create({
 		Extends: Hilo.Container,
-		mjid: 'w_1-1', //w_1:麻将  1:方向  (1:正常 2:左倒 3:右倒)
+		idname:'w_1-1',//w_1:麻将  1:方向  (1:正常 2:左倒 3:右倒)
+		mjid: 'w_1', 
 		name: 'MjScene',
 		imgsource: 'mj',
 		mjimg: null,
@@ -879,7 +886,7 @@
 
 		init: function(properties) {
 			var img = game.getImg(this.imgsource);
-			var mjdata = this.mjid.split('-');
+			var mjdata = this.idname.split('-');
 			var frontname = game.mjdata.smallmj[mjdata[0]][parseInt(mjdata[1])];
 			this.rectfront = game.configdata.getPngRect(frontname, this.imgsource);
 			this.width = this.rectfront[2];
@@ -890,6 +897,8 @@
 				image: img,
 				rect: this.rectfront,
 			}).addTo(this);
+			this.mjid = mjdata[0];
+			this.name = game.mjdata.smallmj[this.mjid][0];
 		},
 	});
 	
@@ -1018,9 +1027,8 @@
 			this.width = bgrect[2];
 			this.height = bgrect[3];
 			game.configdata.createRectImg(this.imgsource, this.bgrectname, 0, 0, 1).addTo(this);
-			//var mj = new game.MjSelf({mjid:this.mjid,scaleX:0.6,scaleY:0.6}).addTo(this);
 			var idname = this.mjid + '-1';
-			var mj = new game.MjScene({mjid:idname}).addTo(this);
+			var mj = new game.MjScene({idname:idname}).addTo(this);
 			mj.x = this.width/2 - mj.width/2;
 			mj.y = this.height/2 - mj.height/2 + 10;
 			mj.pointerEnabled = false;
