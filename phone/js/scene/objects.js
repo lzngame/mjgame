@@ -840,6 +840,7 @@
 			game.sendMsg(this, game.scenes[game.configdata.SCENE_NAMES.play], game.networker.msg.BETHROW, this.mjid);
 		},
 		beselected:function(){
+			console.log('inity:%d',this.inity);
 			this.y = this.inity - 20;
 			this.x = this.initx;
 			this.isSelected = true;

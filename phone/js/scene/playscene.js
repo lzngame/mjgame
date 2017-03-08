@@ -349,8 +349,7 @@
 					mj.y = mj.sheight * fact * i + initpos;
 				}
 				if(isSelf){
-					mj.initx = mj.x;
-					mj.inity = mj.y;
+					mj.setInitPos(mj.x,this.dealDownInity);
 				}
 			}
 		},
