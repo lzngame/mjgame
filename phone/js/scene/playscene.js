@@ -6,9 +6,9 @@
 		bglayer: null,
 		
 		currentmj: null,
-
+		mjDirect:['down','left','up','right'],
+		currentThrowIndex: null,
 		isTurn: false,
-		isAllready:false,
 		
 		throwDownNum: 0,
 		throwUpNum: 0,
@@ -23,8 +23,6 @@
 		selfmj_w: 0,
 		goldmj:null,
 		
-		mjDirect:['down','left','up','right'],
-		currentThrowIndex: null,
 		
 		initFlowers:null,
 		
@@ -32,23 +30,25 @@
 		maxMjHandle:16,//手牌张数
 		selfMjInitx:0, //玩家 --（down）摆牌的x 起始位置
 		
+		dealUpMjLayer: null,
 		dealDownMjLayer: null,
+		dealLeftMjLayer: null,
+		dealRightMjLayer: null,
+		
 		dealDownInitx:0,
 		delaDownInity:0,
-		dealUpMjLayer: null,
 		dealUpInitx:0,
 		delaUpInity:0,
-		dealLeftMjLayer: null,
 		dealLeftInitx:0,
 		delaLeftInity:0,
-		dealRightMjLayer: null,
 		dealRightInitx:0,
 		delaRightInity:0,
+		
 		throwDownInitx:0,
 		throwDownInity:0,
 		throwUpInitx:0,
 		throwUpInity:0,
-		throwLeftInitx:0,
+		//this.initPostion['left']['throwX']:0,
 		throwLeftInity:0,
 		throwRightInitx:0,
 		throwRightInity:0,
@@ -94,21 +94,23 @@
 			for(var i = 0; i < this.maxMjHandle; i++) {
 				//self -down
 				var mj_down = new game.MjSelf({ mjid: game.mjdata.dealOne(), scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.dealDownMjLayer);
-				var x = mj_down.swidth * i + this.dealDownInitx;
-				var y = this.dealDownInity;
+				this.initPostion['down']['dealX']
+				//var x = mj_down.swidth * i + this.dealDownInitx;
+				var x = mj_down.swidth * i + this.initPostion['down']['dealX'];
+				var y = this.initPostion['down']['dealY'];
 				mj_down.setInitPos(x,y);
 				//up
 				var mj_up = this.createDealMj(game.mjdata.dealOne(),1).addTo(this.dealUpMjLayer);
-				mj_up.x = mj_up.swidth * i + this.dealUpInitx;
-				mj_up.y = this.dealUpInity;
+				mj_up.x = mj_up.swidth * i + this.initPostion['up']['dealX'];
+				mj_up.y = this.initPostion['up']['dealY'];
 				//lfet
 				var mj_left = this.createDealMj(game.mjdata.dealOne(),2).addTo(this.dealLeftMjLayer);
-				mj_left.x = this.dealLeftInitx;
-				mj_left.y = (mj_left.sheight*0.72) * i + this.dealLeftInity;
+				mj_left.x = this.initPostion['left']['dealX'];
+				mj_left.y = (mj_left.sheight*0.72) * i + this.initPostion['left']['dealY'];
 				//right
 				var mj_right = this.createDealMj(game.mjdata.dealOne(),3).addTo(this.dealRightMjLayer);
-				mj_right.x = this.dealRightInitx;
-				mj_right.y = (mj_right.sheight*0.72) * i + this.dealRightInity;
+				mj_right.x = this.initPostion['right']['dealX'];
+				mj_right.y = (mj_right.sheight*0.72) * i + this.initPostion['right']['dealY'];
 
 			}
 			this.sortPlayerMj('down');
@@ -205,36 +207,52 @@
 			this.hualayer = new Hilo.Container().addTo(this);
 			this.hualayer.pointerChildren = false;
 			
-			this.dealUpMjLayer = new Hilo.Container().addTo(this);
-			this.dealUpInitx = this.width * 0.30;
-			this.dealUpInity = this.height * 0.125;
+			this.dealUpMjLayer   = new Hilo.Container().addTo(this);
 			this.dealLeftMjLayer = new Hilo.Container().addTo(this);
-			this.dealLeftInitx = this.width * 0.15 - this.svmjW;
-			this.dealLeftInity = this.height * 0.05;
 			this.dealRightMjLayer = new Hilo.Container().addTo(this);
-			this.dealRightInitx = this.width * 0.86;
-			this.dealRightInity = this.height * 0.10;
-			this.dealDownMjLayer = new Hilo.Container().addTo(this);
-			this.dealDownInitx = this.width * 0.02;
-			this.dealDownInity = this.height - 10 - this.mjselfH * game.scalefact;
+			this.dealDownMjLayer  = new Hilo.Container().addTo(this);
 			
-			this.throwDownInitx = this.width * 0.30;
-			this.throwDownInity = this.height  * 0.63;
-			this.throwUpInitx = this.width * 0.35;
-			this.throwUpInity = this.height * 0.33;
-			this.throwLeftInitx = this.width * 0.18 + this.svmjH;
-			this.throwLeftInity = this.height * 0.25;
-			this.throwRightInitx = this.width * 0.75;
-			this.throwRightInity = this.height * 0.25;
 			
 			this.selfMjInitx = this.width / 50;
 			this.selfMjTakeInitx = this.maxMjHandle * 74 * game.scalefact + this.selfMjInitx + 50;
 			
-			this.flowerInit = {
-				down:[this.width*0.30,this.height*0.75,0],
-				up:[this.width*0.35,this.height*0.23,0],
-				left:[this.width*0.16,this.height*0.11,0],
-				right:[this.width*0.80,this.height*0.25,0],
+			this.initPostion = {
+				down:{
+					dealX:Math.floor(this.width * 0.02),
+					dealY:Math.floor(this.height - 10 - this.mjselfH * game.scalefact),
+					throwX:Math.floor(this.width * 0.3),
+					throwY:Math.floor(this.height * 0.63),
+					huaX:Math.floor(this.width * 0.3),
+					huaY:Math.floor(this.height * 0.75),
+					huaCount:0,
+				},
+				up:{
+					dealX:Math.floor(this.width * 0.3),
+					dealY:Math.floor(this.height * 0.125),
+					throwX:Math.floor(this.width * 0.35),
+					throwY:Math.floor(this.height * 0.33),
+					huaX:Math.floor(this.width * 0.35),
+					huaY:Math.floor(this.height * 0.23),
+					huaCount:0,
+				},
+				left:{
+					dealX:Math.floor(this.width * 0.15 - this.svmjW),
+					dealY:Math.floor(this.height * 0.05),
+					throwX:Math.floor(this.width * 0.18 + this.svmjH),
+					throwY:Math.floor(this.height * 0.25),
+					huaX:Math.floor(this.width * 0.16),
+					huaY:Math.floor(this.height * 0.11),
+					huaCount:0,
+				},
+				right:{
+					dealX:Math.floor(this.width * 0.86),
+					dealY:Math.floor(this.height * 0.10),
+					throwX:Math.floor(this.width * 0.75),
+					throwY:Math.floor(this.height * 0.25),
+					huaX:Math.floor(this.width * 0.8),
+					huaY:Math.floor(this.height * 0.25),
+					huaCount:0,
+				}
 			};
 		},
 		
@@ -317,19 +335,19 @@
 		sortPlayerMj:function(playerdir){
 			switch(playerdir){
 				case 'up':
-					this.sortMj(this.dealUpMjLayer,0,this.dealUpInitx);
+					this.sortMj(this.dealUpMjLayer,0,this.initPostion['up']['dealX']);
 					break;
 				case 'down':
-					this.sortMj(this.dealDownMjLayer,0,this.dealDownInitx,1,true);
+					this.sortMj(this.dealDownMjLayer,0,this.initPostion['down']['dealX'],1,true);
 					break;
 				case 'left':
-					this.sortMj(this.dealLeftMjLayer,1,this.dealLeftInity,0.72);
+					this.sortMj(this.dealLeftMjLayer,1,this.initPostion['left']['dealY'],0.72);
 					break;
 				case 'right':
-					this.sortMj(this.dealRightMjLayer,1,this.dealRightInity,0.72);
+					this.sortMj(this.dealRightMjLayer,1,this.initPostion['right']['dealY'],0.72);
 					break;
 				default:
-					this.sortMj(this.dealDownMjLayer,0,this.dealDownInitx,1,true);
+					this.sortMj(this.dealDownMjLayer,0,this.initPostion['down']['dealX'],1,true);
 					break;
 			}
 		},
@@ -350,7 +368,7 @@
 				}
 				if(isSelf){
 					mj.initx = mj.x;
-					mj.inity = mj.y;
+					mj.inity = this.initPostion['down']['dealY'];
 				}
 			}
 		},
@@ -389,22 +407,23 @@
 			}
 			for(var i=0;i<beThrowMjList.length;i++){
 				this.throwFlower(beThrowMjList[i],userdir);
+				var objdata = this.initPostion[userdir];
 				switch(userdir){
 					case 'down':
 						var mj_down = new game.MjSelf({ mjid: game.mjdata.dealOne(), scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.dealDownMjLayer);
-						mj_down.y = this.dealDownInity;
+						mj_down.y = objdata['dealY'];
 						break;
 					case 'up':
 						var mj_up = this.createDealMj(game.mjdata.dealOne(),1).addTo(this.dealUpMjLayer);
-						mj_up.y = this.dealUpInity;
+						mj_up.y =  objdata['dealY'];
 						break;
 					case 'left':
 						var mj_left = this.createDealMj(game.mjdata.dealOne(),2).addTo(this.dealLeftMjLayer);
-						mj_left.x = this.dealLeftInitx;
+						mj_left.x =  objdata['dealX'];
 						break;
 					case 'right':
 						var mj_right = this.createDealMj(game.mjdata.dealOne(),3).addTo(this.dealRightMjLayer);
-						mj_right.x = this.dealRightInitx;
+						mj_right.x = objdata['dealX'];
 						break;
 				}
 			}
@@ -509,21 +528,8 @@
 			}
 			return hasFlower;
 		},
-
 		
-		throwOneMj:function(userdir,mjid){
-			switch(userdir){
-				case 'down':
-					break;
-				case 'up':
-					break;
-				case 'left':
-					break;
-				case 'right':
-					break;
-			}
-		},
-		
+			
 		throwFlower:function(mjid,userdir){
 			var t = {
 				up:1,down:1,left:2,right:2
@@ -537,17 +543,17 @@
 			if(game.scalefact == 1){
 				offsetW -= 4;
 			}
+			var objdata = this.initPostion[userdir];
 			if(userdir == 'up' || userdir == 'down'){
-				var x = this.flowerInit[userdir][2] * offsetW + this.flowerInit[userdir][0];
-				var y = this.flowerInit[userdir][1];
+				var x = objdata['huaCount'] * offsetW + objdata['huaX'];
+				var y = objdata['huaY'];
 			}else{
-				var y = this.flowerInit[userdir][2] * offsetH + this.flowerInit[userdir][1];
-				var x = this.flowerInit[userdir][0];
+				var y = objdata['huaCount'] * offsetH + objdata['huaY'];
+				var x = objdata['huaX'];
 			}
-			
+			objdata['huaCount']++;
 			throwmj.x = x;
 			throwmj.y = y;
-			this.flowerInit[userdir][2]++;
 		},
 		
 		_throwmjSelf: function(mjid,isMsg) {
@@ -559,8 +565,8 @@
 			if(game.scalefact == 1){
 				offsetW -= 4;
 			}
-			var x = (this.throwDownNum % this.maxMjStack) * offsetW + this.throwDownInitx;
-			var y = -Math.floor(this.throwDownNum / this.maxMjStack) * throwmj.height + 5 + this.throwDownInity;
+			var x = (this.throwDownNum % this.maxMjStack) * offsetW + this.initPostion['down']['throwX'];
+			var y = -Math.floor(this.throwDownNum / this.maxMjStack) * throwmj.height + 5 + this.initPostion['down']['throwY'];
 			throwmj.x = x;
 			throwmj.y = y;
 			
@@ -586,8 +592,8 @@
 			if(game.scalefact == 1){
 				offsetW -= 4;
 			}
-			var x = (this.throwUpNum % this.maxMjStack) * offsetW + this.throwUpInitx;
-			var y = Math.floor(this.throwUpNum / this.maxMjStack) * throwmj.height + this.throwUpInity;
+			var x = (this.throwUpNum % this.maxMjStack) * offsetW + this.initPostion['up']['throwX'];
+			var y = Math.floor(this.throwUpNum / this.maxMjStack) * throwmj.height + this.initPostion['up']['throwY'];
 			throwmj.x = x;
 			throwmj.y = y;
 			this.throwUpNum++;
@@ -603,8 +609,8 @@
 			var throwmj = this._getThrowMj(mjid,2);
 			var y = (this.throwLeftNum % this.maxMjStack) * (throwmj.height-15) ;//+ this.width / 8 * 7;
 			var x = Math.floor(this.throwLeftNum / this.maxMjStack) * throwmj.width;// + 170;
-			throwmj.x = x + this.throwLeftInitx;
-			throwmj.y = y + this.throwLeftInity;
+			throwmj.x = x + this.initPostion['left']['throwX'];
+			throwmj.y = y + this.initPostion['left']['throwY'];
 			this.throwLeftNum++;
 
 			throwmj.pointerEnabled = false;
@@ -618,8 +624,8 @@
 			var throwmj = this._getThrowMj(mjid,3);
 			var y = (this.throwRightNum % this.maxMjStack) * (throwmj.height-15) ;//+ this.width / 8 * 7;
 			var x = -Math.floor(this.throwRightNum / this.maxMjStack) * throwmj.width;// + 170;
-			throwmj.x = x + this.throwRightInitx;
-			throwmj.y = y + this.throwRightInity;
+			throwmj.x = x + this.initPostion['right']['throwX'];
+			throwmj.y = y + this.initPostion['right']['throwY'];
 			this.throwRightNum++;
 
 			throwmj.pointerEnabled = false;
