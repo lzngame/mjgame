@@ -554,7 +554,6 @@
 			ScaleButton.superclass.constructor.call(this, properties);
 			this.init(properties);
 			this.currentScale = this.scaleX;
-			console.log(this.currentScale);
 		},
 
 		init: function(properties) {
@@ -776,6 +775,7 @@
 			this.inity = this.y;
 			this.initTouch();
 			this.name = game.mjdata.smallmj[this.mjid][0];
+			console.log('SELF:%s,(%d,%d) bmp:(%d,%d)',this.name,this.width,this.height,this.bgimg.width,this.bgimg.height);
 		},
 		setInitPos:function(x,y){
 			this.x = x;
@@ -899,6 +899,7 @@
 			}).addTo(this);
 			this.mjid = mjdata[0];
 			this.name = game.mjdata.smallmj[this.mjid][0];
+			//console.log('mjscene %s:%d:%d',this.name,this.width,this.height);
 		},
 	});
 	
@@ -1032,6 +1033,8 @@
 			mj.x = this.width/2 - mj.width/2;
 			mj.y = this.height/2 - mj.height/2 + 10;
 			mj.pointerEnabled = false;
+			this.scaleX = game.scalefact;
+			this.scaleY = game.scalefact;
 		},
 	});
 	

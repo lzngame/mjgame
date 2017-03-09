@@ -236,9 +236,9 @@
 					huaCount:0,
 				},
 				left:{
-					dealX:Math.floor(this.width * 0.15 - this.svmjW),
-					dealY:Math.floor(this.height * 0.05),
-					throwX:Math.floor(this.width * 0.18 + this.svmjH),
+					dealX:Math.floor(this.width * 0.13 - this.svmjW),
+					dealY:Math.floor(this.height * 0.11),
+					throwX:Math.floor(this.width * 0.12 + this.svmjH),
 					throwY:Math.floor(this.height * 0.25),
 					huaX:Math.floor(this.width * 0.16),
 					huaY:Math.floor(this.height * 0.11),
@@ -335,7 +335,7 @@
 		sortPlayerMj:function(playerdir){
 			switch(playerdir){
 				case 'up':
-					this.sortMj(this.dealUpMjLayer,0,this.initPostion['up']['dealX']);
+					this.sortMj(this.dealUpMjLayer,0,this.initPostion['up']['dealX'],1);
 					break;
 				case 'down':
 					this.sortMj(this.dealDownMjLayer,0,this.initPostion['down']['dealX'],1,true);
@@ -374,7 +374,7 @@
 		},
 		
 		buhua:function(userdir){
-			console.log("-----------补花：%s'---------",userdir);
+			//console.log("-----------补花：%s'---------",userdir);
 			var mjlist = null;
 			var beThrowMjList = [];
 			var x = this.width/2 - 300/2;
@@ -400,7 +400,7 @@
 			for(var i = mjlist.length-1; i >0; i--) {
 				var sendobj = mjlist[i];
 				if(sendobj.mjid.indexOf('f') != -1 || sendobj.mjid.indexOf('h') != -1){
-					console.log('-------(%d):%s',i,sendobj.name);
+					//console.log('-------(%d):%s',i,sendobj.name);
 					beThrowMjList.push(sendobj.mjid);
 					sendobj.removeFromParent();
 				}
@@ -536,13 +536,8 @@
 			};
 			var throwmj = this._getThrowMj(mjid,t[userdir]);
 			var offsetW = throwmj.width*game.scalefact;
-			var offsetH = throwmj.height* game.scalefact * 0.7;
-			if(game.scalefact <= 0.771){
-				offsetW += 4;
-			}
-			if(game.scalefact == 1){
-				offsetW -= 4;
-			}
+			var offsetH = throwmj.height* game.scalefact;
+			
 			var objdata = this.initPostion[userdir];
 			if(userdir == 'up' || userdir == 'down'){
 				var x = objdata['huaCount'] * offsetW + objdata['huaX'];
@@ -640,14 +635,15 @@
 			var mj = new game.MjScene({ 
 				idname: idname,
 				pointerEnable:false,
+				scaleX:game.scalefact,
+				scaleY:game.scalefact,
 			});
 			return mj;
 		},
 		
 		_getThrowMj:function(mjid,typemj){
 			game.sounds.playMj(mjid);
-			var idname = mjid + "-"+ typemj.toString();
-			var throwmj = new game.MjScene({ idname: idname }).addTo(this.throwlayer);
+			var throwmj = this.createDealMj(mjid,typemj).addTo(this.throwlayer);
 			throwmj.pointerEnabled = false;
 			return throwmj;
 		},

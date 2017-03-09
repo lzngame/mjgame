@@ -63,7 +63,7 @@
 		},
 		refresh: function() {
 			console.log('game init :window had loaded');
-			console.log('screen size:(%d,%d)', this.screenWidth, this.screenHeight);
+			console.log('screen size:(%d,%d)  scalefact:%f', this.screenWidth, this.screenHeight,this.scalefact);
 			this.loadqueue = new Hilo.LoadQueue();
 			this.initstage();
 			this.initEvent();
