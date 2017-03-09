@@ -23,7 +23,6 @@
 		selfmj_w: 0,
 		goldmj:null,
 		
-		
 		initFlowers:null,
 		
 		maxMjStack:9,  //堆牌长度
@@ -34,24 +33,6 @@
 		dealDownMjLayer: null,
 		dealLeftMjLayer: null,
 		dealRightMjLayer: null,
-		
-		dealDownInitx:0,
-		delaDownInity:0,
-		dealUpInitx:0,
-		delaUpInity:0,
-		dealLeftInitx:0,
-		delaLeftInity:0,
-		dealRightInitx:0,
-		delaRightInity:0,
-		
-		throwDownInitx:0,
-		throwDownInity:0,
-		throwUpInitx:0,
-		throwUpInity:0,
-		//this.initPostion['left']['throwX']:0,
-		throwLeftInity:0,
-		throwRightInitx:0,
-		throwRightInity:0,
 		
 		residueMjLabel:null,	  //剩余牌数
 		residueGamenumLabel:null, //剩余局数
@@ -89,27 +70,25 @@
 			this.takemj();
 			this.turnBuhua();
 		},
-		
+		//如果要查看牌 ,可以把 createDealMj 的最后一个参数去掉，左右的牌行，缩放改为0.72
 		deal: function() {
 			for(var i = 0; i < this.maxMjHandle; i++) {
 				//self -down
 				var mj_down = new game.MjSelf({ mjid: game.mjdata.dealOne(), scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.dealDownMjLayer);
-				this.initPostion['down']['dealX']
-				var x = mj_down.swidth * i + this.initPostion['down']['dealX'];
-				var y = this.initPostion['down']['dealY'];
-				mj_down.setInitPos(x,y);
+				mj_down.x = mj_down.swidth * i + this.initPostion['down']['dealX'];
+				mj_down.y = this.initPostion['down']['dealY'];
 				//up
 				var mj_up = this.createDealMj(game.mjdata.dealOne(),1,1).addTo(this.dealUpMjLayer);
 				mj_up.x = mj_up.swidth * i + this.initPostion['up']['dealX'];
 				mj_up.y = this.initPostion['up']['dealY'];
 				//lfet
-				var mj_left = this.createDealMj(game.mjdata.dealOne(),2).addTo(this.dealLeftMjLayer);
+				var mj_left = this.createDealMj(game.mjdata.dealOne(),2,2).addTo(this.dealLeftMjLayer);
 				mj_left.x = this.initPostion['left']['dealX'];
-				mj_left.y = (mj_left.sheight*0.72) * i + this.initPostion['left']['dealY'];
+				mj_left.y = (mj_left.sheight*0.5) * i + this.initPostion['left']['dealY'];
 				//right
-				var mj_right = this.createDealMj(game.mjdata.dealOne(),3).addTo(this.dealRightMjLayer);
+				var mj_right = this.createDealMj(game.mjdata.dealOne(),3,3).addTo(this.dealRightMjLayer);
 				mj_right.x = this.initPostion['right']['dealX'];
-				mj_right.y = (mj_right.sheight*0.72) * i + this.initPostion['right']['dealY'];
+				mj_right.y = (mj_right.sheight*0.5) * i + this.initPostion['right']['dealY'];
 
 			}
 			this.sortPlayerMj('down');
@@ -194,6 +173,8 @@
 			this.shmjH = 53;
 			this.svmjW = 49;
 			this.svmjH = 50;
+			this.slideMjWidth = 21;
+			this.slideMjHeight = 52;
 			
 			this.bglayer = new Hilo.Container().addTo(this);
 			this.bglayer.pointerChildren = false;
@@ -210,7 +191,6 @@
 			this.dealLeftMjLayer = new Hilo.Container().addTo(this);
 			this.dealRightMjLayer = new Hilo.Container().addTo(this);
 			this.dealDownMjLayer  = new Hilo.Container().addTo(this);
-			
 			
 			this.selfMjInitx = this.width / 50;
 			this.selfMjTakeInitx = this.maxMjHandle * 74 * game.scalefact + this.selfMjInitx + 50;
@@ -235,9 +215,9 @@
 					huaCount:0,
 				},
 				left:{
-					dealX:Math.floor(this.width * 0.13 - this.svmjW),
+					dealX:Math.floor(this.width * 0.125),// - this.slideMjWidth * game.scalefact),
 					dealY:Math.floor(this.height * 0.11),
-					throwX:Math.floor(this.width * 0.12 + this.svmjH),
+					throwX:Math.floor(this.width * 0.25 - this.svmjH),
 					throwY:Math.floor(this.height * 0.25),
 					huaX:Math.floor(this.width * 0.16),
 					huaY:Math.floor(this.height * 0.11),
@@ -245,7 +225,7 @@
 				},
 				right:{
 					dealX:Math.floor(this.width * 0.86),
-					dealY:Math.floor(this.height * 0.10),
+					dealY:Math.floor(this.height * 0.20),
 					throwX:Math.floor(this.width * 0.75),
 					throwY:Math.floor(this.height * 0.25),
 					huaX:Math.floor(this.width * 0.8),
@@ -340,10 +320,10 @@
 					this.sortMj(this.dealDownMjLayer,0,this.initPostion['down']['dealX'],1,true);
 					break;
 				case 'left':
-					this.sortMj(this.dealLeftMjLayer,1,this.initPostion['left']['dealY'],0.72);
+					this.sortMj(this.dealLeftMjLayer,1,this.initPostion['left']['dealY'],0.5);
 					break;
 				case 'right':
-					this.sortMj(this.dealRightMjLayer,1,this.initPostion['right']['dealY'],0.72);
+					this.sortMj(this.dealRightMjLayer,1,this.initPostion['right']['dealY'],0.5);
 					break;
 				default:
 					this.sortMj(this.dealDownMjLayer,0,this.initPostion['down']['dealX'],1,true);
@@ -366,7 +346,7 @@
 					mj.y = mj.sheight * fact * i + initpos;
 				}
 				if(isSelf){
-					mj.setInitPos(mj.x,this.dealDownInity);
+					mj.setInitPos(mj.x,this.initPostion['down']['dealY']);
 				}
 			}
 		},
@@ -412,15 +392,15 @@
 						mj_down.y = objdata['dealY'];
 						break;
 					case 'up':
-						var mj_up = this.createDealMj(game.mjdata.dealOne(),1).addTo(this.dealUpMjLayer);
+						var mj_up = this.createDealMj(game.mjdata.dealOne(),1,1).addTo(this.dealUpMjLayer);
 						mj_up.y =  objdata['dealY'];
 						break;
 					case 'left':
-						var mj_left = this.createDealMj(game.mjdata.dealOne(),2).addTo(this.dealLeftMjLayer);
+						var mj_left = this.createDealMj(game.mjdata.dealOne(),2,2).addTo(this.dealLeftMjLayer);
 						mj_left.x =  objdata['dealX'];
 						break;
 					case 'right':
-						var mj_right = this.createDealMj(game.mjdata.dealOne(),3).addTo(this.dealRightMjLayer);
+						var mj_right = this.createDealMj(game.mjdata.dealOne(),3,3).addTo(this.dealRightMjLayer);
 						mj_right.x = objdata['dealX'];
 						break;
 				}
@@ -551,14 +531,7 @@
 		
 		_throwmjSelf: function(mjid,isMsg) {
 			var throwmj = this._getThrowMj(mjid,1);
-			var offsetW = throwmj.width*game.scalefact;
-			if(game.scalefact <= 0.771){
-				offsetW += 4;
-			}
-			if(game.scalefact == 1){
-				offsetW -= 4;
-			}
-			var x = (this.throwDownNum % this.maxMjStack) * offsetW + this.initPostion['down']['throwX'];
+			var x = (this.throwDownNum % this.maxMjStack) * throwmj.swidth + this.initPostion['down']['throwX'];
 			var y = -Math.floor(this.throwDownNum / this.maxMjStack) * throwmj.height + 5 + this.initPostion['down']['throwY'];
 			throwmj.x = x;
 			throwmj.y = y;
@@ -578,14 +551,7 @@
 
 		_throwmjup: function(mjid) {
 			var throwmj = this._getThrowMj(mjid,1);
-			var offsetW = throwmj.width*game.scalefact;
-			if(game.scalefact <= 0.771){
-				offsetW += 4;
-			}
-			if(game.scalefact == 1){
-				offsetW -= 4;
-			}
-			var x = (this.throwUpNum % this.maxMjStack) * offsetW + this.initPostion['up']['throwX'];
+			var x = (this.throwUpNum % this.maxMjStack) * throwmj.swidth + this.initPostion['up']['throwX'];
 			var y = Math.floor(this.throwUpNum / this.maxMjStack) * throwmj.height + this.initPostion['up']['throwY'];
 			throwmj.x = x;
 			throwmj.y = y;
@@ -600,8 +566,8 @@
 		
 		_throwmjleft: function(mjid) {
 			var throwmj = this._getThrowMj(mjid,2);
-			var y = (this.throwLeftNum % this.maxMjStack) * (throwmj.height-15) ;//+ this.width / 8 * 7;
-			var x = Math.floor(this.throwLeftNum / this.maxMjStack) * throwmj.width;// + 170;
+			var y = (this.throwLeftNum % this.maxMjStack) * (throwmj.sheight*0.8) ;
+			var x = Math.floor(this.throwLeftNum / this.maxMjStack) * throwmj.width;
 			throwmj.x = x + this.initPostion['left']['throwX'];
 			throwmj.y = y + this.initPostion['left']['throwY'];
 			this.throwLeftNum++;
@@ -615,8 +581,8 @@
 		
 		_throwmjRight: function(mjid) {
 			var throwmj = this._getThrowMj(mjid,3);
-			var y = (this.throwRightNum % this.maxMjStack) * (throwmj.height-15) ;//+ this.width / 8 * 7;
-			var x = -Math.floor(this.throwRightNum / this.maxMjStack) * throwmj.width;// + 170;
+			var y = (this.throwRightNum % this.maxMjStack) * (throwmj.sheight*0.8) ; 
+			var x = -Math.floor(this.throwRightNum / this.maxMjStack) * throwmj.width; 
 			throwmj.x = x + this.initPostion['right']['throwX'];
 			throwmj.y = y + this.initPostion['right']['throwY'];
 			this.throwRightNum++;
@@ -632,7 +598,6 @@
 			var idname = mjid + "-"+ typemj.toString();
 			var mj = null;
 			var rectimg =null;
-			
 			mj = new game.MjScene({
 				idname: idname,
 				pointerEnable:false,

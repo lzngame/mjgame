@@ -775,7 +775,7 @@
 			this.inity = this.y;
 			this.initTouch();
 			this.name = game.mjdata.smallmj[this.mjid][0];
-			console.log('SELF:%s,(%d,%d) bmp:(%d,%d)',this.name,this.width,this.height,this.bgimg.width,this.bgimg.height);
+			//console.log('SELF:%s,(%d,%d) bmp:(%d,%d)',this.name,this.width,this.height,this.bgimg.width,this.bgimg.height);
 		},
 		setInitPos:function(x,y){
 			this.x = x;

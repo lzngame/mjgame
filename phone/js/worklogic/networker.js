@@ -17,7 +17,7 @@ game.networker = new function() {
 				self.delayHandle(1000,sendobj, msgdata, self.joinRoom);
 				break;
 			case this.msg.THROWMJ:    //某玩家扔掉手牌
-				self.delayHandle(3000,sendobj, msgdata, self.nextuserHandle);
+				self.delayHandle(1000,sendobj, msgdata, self.nextuserHandle);
 				break;
 			case this.msg.CREATEROOM: //创建房间
 				self.delayHandle(1000,sendobj, msgdata, self.canCreateRoom, self);
