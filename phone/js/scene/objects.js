@@ -878,6 +878,8 @@
 		direct: 1, //1:正常 2:左倒 3:右倒
 		swidth: 0,
 		sheight: 0,
+		
+		showback:0,
 
 		constructor: function(properties) {
 			MjScene.superclass.constructor.call(this, properties);
@@ -888,11 +890,21 @@
 			var img = game.getImg(this.imgsource);
 			var mjdata = this.idname.split('-');
 			var frontname = game.mjdata.smallmj[mjdata[0]][parseInt(mjdata[1])];
+			if(this.showback == 1){
+				frontname = 'self_80';
+			}
+			if(this.showback == 2){
+				frontname = 'self_73';
+			}
+			if(this.showback == 3){
+				frontname = 'self_83';
+			}
 			this.rectfront = game.configdata.getPngRect(frontname, this.imgsource);
 			this.width = this.rectfront[2];
 			this.height = this.rectfront[3];
 			this.swidth = this.width * game.scalefact;
 			this.sheight = this.height * game.scalefact;
+			
 			this.mjimg = new Hilo.Bitmap({
 				image: img,
 				rect: this.rectfront,

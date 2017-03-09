@@ -95,12 +95,11 @@
 				//self -down
 				var mj_down = new game.MjSelf({ mjid: game.mjdata.dealOne(), scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.dealDownMjLayer);
 				this.initPostion['down']['dealX']
-				//var x = mj_down.swidth * i + this.dealDownInitx;
 				var x = mj_down.swidth * i + this.initPostion['down']['dealX'];
 				var y = this.initPostion['down']['dealY'];
 				mj_down.setInitPos(x,y);
 				//up
-				var mj_up = this.createDealMj(game.mjdata.dealOne(),1).addTo(this.dealUpMjLayer);
+				var mj_up = this.createDealMj(game.mjdata.dealOne(),1,1).addTo(this.dealUpMjLayer);
 				mj_up.x = mj_up.swidth * i + this.initPostion['up']['dealX'];
 				mj_up.y = this.initPostion['up']['dealY'];
 				//lfet
@@ -630,13 +629,17 @@
 			game.sendMsg(this, game.networker, game.networker.msg.THROWMJ, [mjid,1]);
 		},
 		
-		createDealMj:function(mjid,typemj){
+		createDealMj:function(mjid,typemj,showback){
 			var idname = mjid + "-"+ typemj.toString();
-			var mj = new game.MjScene({ 
+			var mj = null;
+			var rectimg =null;
+			
+			mj = new game.MjScene({
 				idname: idname,
 				pointerEnable:false,
 				scaleX:game.scalefact,
 				scaleY:game.scalefact,
+				showback:showback,
 			});
 			return mj;
 		},
