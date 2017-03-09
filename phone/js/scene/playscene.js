@@ -254,6 +254,12 @@
 			btn01.x = this.width - btn01.width * game.scalefact * 0.5 - 10;
 			btn01.y = btn01.height * game.scalefact * 0.5 + 10;
 			var btn02 = game.configdata.createScalebutton('ui','lsbattle_3',btn01.x,btn01.height * (game.scalefact+1)).addTo(this);
+			
+			var portraitLeft = new game.MjPortrait({x:this.width * 0.01,y:this.height * 0.25,username:'九不连胜'}).addTo(this);
+			var portraitDown = new game.MjPortrait({x:this.width * 0.01,y:this.height * 0.625,isbank:true,username:'琪琪'}).addTo(this);
+			var portraitUp =   new game.MjPortrait({x:this.width*0.67,y:this.height * 0.1,username:'Mary'}).addTo(this);
+			var portraitRight = new game.MjPortrait({x:this.width*0.90,y:this.height * 0.5,username:'￥+￥'}).addTo(this);
+			
 		},
 
 		takemj: function() {

@@ -1051,6 +1051,37 @@
 		},
 	});
 	
+	//MjPortrait--- 头像
+	var MjPortrait = ns.MjPortrait = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name: 'MjPortrait',
+		username:'玩家',
+		headimg:null,
+		namelabel:null,
+		scorelabel:null,
+		scorebg:null,
+		isbank:false,
+
+		constructor: function(properties) {
+			MjPortrait.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		init: function(properties) {
+			this.headimg = game.configdata.createRectImg('ui','battle_100',0,0,1).addTo(this);
+			this.headimg.x = 100/2 - 74/2;
+			this.namelabel = game.configdata.createTitletext(this.username,'24px 黑体','white','rgba(0,0,0,0)',0,75,100).addTo(this);
+			this.scorebg = game.configdata.createRectImg('ui','battle_9',0,104,1).addTo(this);
+			this.scorelabel = game.configdata.createTitletext('100','22px 黑体','#AAF1AA','rgba(0,0,0,0)',10,108,100).addTo(this);
+			if(this.isbank){
+				game.configdata.createRectImg('ui','lsbattle_1',100/2-60/2,-34,1).addTo(this);
+			}
+			
+			this.pointerEnabled = false;
+			this.scaleX = game.scalefact;
+			this.scaleY = game.scalefact;
+		},
+	});
+	
 	
 	//玩家信息 PlayerInfo
 	var PlayerInfo = ns.PlayerInfo = Hilo.Class.create({
