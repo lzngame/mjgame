@@ -366,8 +366,7 @@
 					mj.y = mj.sheight * fact * i + initpos;
 				}
 				if(isSelf){
-					mj.initx = mj.x;
-					mj.inity = this.initPostion['down']['dealY'];
+					mj.setInitPos(mj.x,this.dealDownInity);
 				}
 			}
 		},
