@@ -296,7 +296,6 @@
 					var y = e.stageY - this.y;
 					this.imgpanel.x = x - this.disx;
 					this.slidedisx = e.stageX - this.tapstartx;
-					console.log(this.slidedisx);
 				}
 			});
 			this.on(Hilo.event.POINTER_END, function(e) {
@@ -916,7 +915,6 @@
 		},
 	});
 	
-	
 	//Pointermj --- 打出的牌的指示
 	var Pointermj = ns.Pointermj = Hilo.Class.create({
 		Extends: Hilo.Container,
@@ -1056,24 +1054,30 @@
 		Extends: Hilo.Container,
 		name: 'MjPortrait',
 		username:'玩家',
+		score:0,
 		headimg:null,
 		namelabel:null,
 		scorelabel:null,
 		scorebg:null,
 		isbank:false,
+		
 
 		constructor: function(properties) {
 			MjPortrait.superclass.constructor.call(this, properties);
 			this.init(properties);
 		},
 		init: function(properties) {
-			this.headimg = game.configdata.createRectImg('ui','battle_100',0,0,1).addTo(this);
-			this.headimg.x = 100/2 - 74/2;
-			this.namelabel = game.configdata.createTitletext(this.username,'24px 黑体','white','rgba(0,0,0,0)',0,75,100).addTo(this);
-			this.scorebg = game.configdata.createRectImg('ui','battle_9',0,104,1).addTo(this);
-			this.scorelabel = game.configdata.createTitletext('100','22px 黑体','#AAF1AA','rgba(0,0,0,0)',10,108,100).addTo(this);
+			var headname = 'battle_100';
+			this.headimg = game.configdata.createRectImg('ui',headname,0,0,1).addTo(this);
+			var w = 160;
+			this.headimg.x = w/2 - this.headimg.width/2;
+			this.namelabel = game.configdata.createTitletext(this.username,'22px 黑体','white','rgba(0,0,0,0)',0,75,160).addTo(this);
+			this.scorebg = game.configdata.createRectImg('ui','battle_9',0,96,1).addTo(this);
+			this.scorebg.x = w/2 - this.scorebg.width/2;
+			this.scorelabel = game.configdata.createTitletext(this.score.toString(),'22px 黑体','#AAF1AA','rgba(0,0,0,0)',w/2-36,100,100).addTo(this);
 			if(this.isbank){
-				game.configdata.createRectImg('ui','lsbattle_1',100/2-60/2,-34,1).addTo(this);
+				var bankimg = game.configdata.createRectImg('ui','lsbattle_1',this.headimg.x,0,1).addTo(this);
+				bankimg.y = -bankimg.height;
 			}
 			
 			this.pointerEnabled = false;
@@ -1085,19 +1089,23 @@
 	
 	//玩家信息 PlayerInfo
 	var PlayerInfo = ns.PlayerInfo = Hilo.Class.create({
-		direct: '', 
+		Extends: Object,//Hilo.View,
 		name: 'PlayerInfo',
+		idname:'玩家',
 		score:0,
-		userid:'0000000',
-		flowernums:0,
+		isbank:false,
+		direct:'down',
 
 		constructor: function(properties) {
-			PlayerInfo.superclass.constructor.call(this, properties);
+			//PlayerInfo.superclass.constructor.call(this, properties);
+			//debugger;
 			this.init(properties);
 		},
-
 		init: function(properties) {
-			
+			this.idname = properties.idname;
+			this.score  = properties.score;
+			this.direct = properties.direct;
+			this.isbank = properties.isbank;
 		},
 	});
 	

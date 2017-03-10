@@ -734,6 +734,8 @@ game.sceneuidata = new function(){
 			],
 			
 		];
+		
+		
 	
 	self.createAtlas = function(data){
 		var atlas = new Hilo.TextureAtlas({
