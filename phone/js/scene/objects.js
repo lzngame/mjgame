@@ -1049,6 +1049,35 @@
 		},
 	});
 	
+	//HandleMjBtn --- 吃碰杠听胡 按钮
+	var HandleMjBtn = ns.HandleMjBtn = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name: 'HandleMjBtn',
+		imgsource:'',
+		img:null,
+		handletype:0, //吃碰杠听胡过
+		mjid:null, 
+		handimg:null,
+
+		constructor: function(properties) {
+			HandleMjBtn.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		init: function(properties) {
+			var bgrect = game.configdata.getPngRect(this.bgrectname,this.imgsource);
+			this.width = bgrect[2];
+			this.height = bgrect[3];
+			game.configdata.createRectImg(this.imgsource, this.bgrectname, 0, 0, 1).addTo(this);
+			var idname = this.mjid + '-1';
+			var mj = new game.MjScene({idname:idname}).addTo(this);
+			mj.x = this.width/2 - mj.width/2;
+			mj.y = this.height/2 - mj.height/2 + 10;
+			mj.pointerEnabled = false;
+			this.scaleX = game.scalefact;
+			this.scaleY = game.scalefact;
+		},
+	});
+	
 	//MjPortrait--- 头像
 	var MjPortrait = ns.MjPortrait = Hilo.Class.create({
 		Extends: Hilo.Container,
