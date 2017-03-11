@@ -70,6 +70,11 @@
 			this.setTurnGold();
 			this.takemj();
 			this.turnBuhua();
+			
+			var btn = game.configdata.createScalebutton('ui','lsbattle_87',this.width * 0.6,this.height * 0.6).addTo(this);
+			btn.handler = function(t){
+				self.turnNext();
+			};
 		},
 		//如果要查看牌 ,可以把 createDealMj 的最后一个参数去掉，左右的牌行，缩放改为0.72
 		deal: function() {
@@ -121,19 +126,10 @@
 					self.isThrow = false;
 					break;
 				case game.networker.msg.NEXTUSER_HANDLE:
-					self.currentThrowIndex++;
-					if(self.currentThrowIndex >= 4) {
-						self.currentThrowIndex = 0;
-					}
-
-					var user = self.mjDirect[self.currentThrowIndex];
-					self.pointer_user.setDirect(user);
-
-					if(user == 'down') {
-						self.isTurn = true;
-						self.takemj();
-					} else {
-						self.otherTakemj(user);
+					if(self.checkPeng(msgdata,self.dealDownMjLayer.children) <= 1){
+						self.turnNext();
+					}else{
+						
 					}
 					break;
 				case game.networker.msg.NEXTUSER_BUHUA:
@@ -165,6 +161,50 @@
 				this.buhua('down');
 			}
 			game.sendMsg(this, game.networker, game.networker.msg.NEXTUSER_BUHUA, 'down');
+		},
+		
+		turnNext:function(){
+			var self = this;
+			self.currentThrowIndex++;
+						if(self.currentThrowIndex >= 4) {
+							self.currentThrowIndex = 0;
+						}
+						var user = self.mjDirect[self.currentThrowIndex];
+						self.pointer_user.setDirect(user);
+						if(user == 'down') {
+							self.isTurn = true;
+							self.takemj();
+						} else {
+							self.otherTakemj(user);
+						}
+		},
+		
+		checkPeng:function(mjid,mjlist){
+			var count = 0;
+			for(var index in mjlist){
+				var item = mjlist[index];
+				if(item.mjid == mjid){
+					count++;
+				}
+			}
+			if(count == 2){
+				console.log('%s 砰',mjid);
+			}
+			if(count == 3){
+				console.log('%s 杠',mjid);
+			}
+			return count;
+		},
+		
+		checkChi:function(mjid,mjlist){
+			var tmp = mjid.split('_');
+			var mjHead = tmp[0];
+			var mjOrder = tmp[1];
+			var t = [];
+			for(var i in mjlist){
+				var item = mjlist[i];
+				var itemtmp 
+			}
 		},
 
 		initLayerAndPositions: function() {

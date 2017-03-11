@@ -63,7 +63,7 @@ game.networker = new function() {
 	this.nextuserHandle = function(playscene, msgdata, self) {
 		var tmp1 = ['up', 'left', 'down'];
 		var index = Math.floor(Math.random() * 3);
-		game.sendMsg(this, playscene, self.msg.NEXTUSER_HANDLE, tmp1[index]);
+		game.sendMsg(this, playscene, self.msg.NEXTUSER_HANDLE, msgdata[0]);
 	};
 	this._createRoomId = function(){
 		var roomid  = (Math.floor(Math.random()*9)+1).toString();
