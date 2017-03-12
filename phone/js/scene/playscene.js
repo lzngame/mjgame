@@ -543,9 +543,12 @@
 		throwOneMj: function(dir, mjid, isMsg) {
 			game.sounds.playMjEffect(0);
 			var throwmj = null;
+			var self = this;
+			//self.pointer_mj.visible = false;
 			switch(dir){
 				case 'down':
 					throwmj = this._getThrowMj(mjid, 1);
+					throwmj.visible = false;
 					var x = (this.throwDownNum % this.maxMjStack) * throwmj.swidth + game.playsceneUidata.initPostion['down']['throwX'];
 					var y = -Math.floor(this.throwDownNum / this.maxMjStack) * throwmj.height + 5 + game.playsceneUidata.initPostion['down']['throwY'];
 					throwmj.x = x;
@@ -556,36 +559,113 @@
 					if(isMsg) {
 						game.sendMsg(this, game.networker, game.networker.msg.THROWMJ, [mjid, 0]);
 					}
+					var mj_show = new game.MjSelf({ mjid: mjid, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.throwlayer);
+					mj_show.pointerEnable = false;
+					mj_show.x = this.width/2 - 50;
+					mj_show.y = this.height/2;
+					new Hilo.Tween.to(mj_show,{
+						x:x,
+						y:y,
+						scaleX:0.5,
+						scaleY:0.5,
+					},{
+						duration:300,
+						delay:500,
+						onComplete:function(){
+							mj_show.removeFromParent();
+							throwmj.visible = true;
+							self.pointer_mj.visible = true;
+						}
+					});
 					break;
 				case 'left':
 					throwmj = this._getThrowMj(mjid, 2);
+					throwmj.visible = false;
 					var y = (this.throwLeftNum % this.maxMjStack) * (throwmj.sheight * 0.8);
 					var x = Math.floor(this.throwLeftNum / this.maxMjStack) * throwmj.width;
 					throwmj.x = x + game.playsceneUidata.initPostion['left']['throwX'];
 					throwmj.y = y + game.playsceneUidata.initPostion['left']['throwY'];
 					this.throwLeftNum++;
 					game.sendMsg(this, game.networker, game.networker.msg.THROWMJ, [mjid, 1]);
+					var mj_show = new game.MjSelf({ mjid: mjid, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.throwlayer);
+					mj_show.pointerEnable = false;
+					mj_show.x = this.width/2 - 250;
+					mj_show.y = this.height/2;
+					new Hilo.Tween.to(mj_show,{
+						x:throwmj.x+throwmj.height,
+						y:throwmj.y,
+						scaleX:0.5,
+						scaleY:0.5,
+						rotation:90,
+					},{
+						duration:200,
+						delay:500,
+						onComplete:function(){
+							mj_show.removeFromParent();
+							throwmj.visible = true;
+							self.pointer_mj.visible = true;
+						}
+					});
 					break;
 				case 'up':
 					throwmj = this._getThrowMj(mjid, 1);
+					throwmj.visible = false;
 					var x = (this.throwUpNum % this.maxMjStack) * throwmj.swidth + game.playsceneUidata.initPostion['up']['throwX'];
 					var y = Math.floor(this.throwUpNum / this.maxMjStack) * throwmj.height + game.playsceneUidata.initPostion['up']['throwY'];
 					throwmj.x = x;
 					throwmj.y = y;
 					this.throwUpNum++;
 					game.sendMsg(this, game.networker, game.networker.msg.THROWMJ, [mjid, 1]);
+					var mj_show = new game.MjSelf({ mjid: mjid, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.throwlayer);
+					mj_show.pointerEnable = false;
+					mj_show.x = this.width/2 - 50;
+					mj_show.y = this.height/2 -200;
+					new Hilo.Tween.to(mj_show,{
+						x:x,
+						y:y,
+						scaleX:0.5,
+						scaleY:0.5,
+					},{
+						duration:300,
+						delay:500,
+						onComplete:function(){
+							mj_show.removeFromParent();
+							throwmj.visible = true;
+							self.pointer_mj.visible = true;
+						}
+					});
 					break;
 				case 'right':
 					throwmj = this._getThrowMj(mjid, 3);
+					throwmj.visible = false;
 					var y = (this.throwRightNum % this.maxMjStack) * (throwmj.sheight * 0.8);
 					var x = -Math.floor(this.throwRightNum / this.maxMjStack) * throwmj.width;
 					throwmj.x = x + game.playsceneUidata.initPostion['right']['throwX'];
 					throwmj.y = y + game.playsceneUidata.initPostion['right']['throwY'];
 					this.throwRightNum++;
 					game.sendMsg(this, game.networker, game.networker.msg.THROWMJ, [mjid, 1]);
+					var mj_show = new game.MjSelf({ mjid: mjid, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.throwlayer);
+					mj_show.pointerEnable = false;
+					mj_show.x = this.width/2 + 250;
+					mj_show.y = this.height/2;
+					new Hilo.Tween.to(mj_show,{
+						x:throwmj.x,
+						y:throwmj.y+throwmj.width,
+						scaleX:0.5,
+						scaleY:0.5,
+						rotation:-90,
+					},{
+						duration:200,
+						delay:500,
+						onComplete:function(){
+							mj_show.removeFromParent();
+							throwmj.visible = true;
+							self.pointer_mj.visible = true;
+						}
+					});
 					break;
 			}
-			this.pointer_mj.visible = true;
+			//this.pointer_mj.visible = true;
 			this.pointer_mj.x = throwmj.x;
 			this.pointer_mj.y = throwmj.y - 40;
 		},
