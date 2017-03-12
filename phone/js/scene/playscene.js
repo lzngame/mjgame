@@ -39,7 +39,7 @@
 		roomIdLabel: null, //房间ID号
 		bankerDir: 'down', //庄家位置
 		
-		turnNext:null,
+		skipOverBtn:null,
 
 		constructor: function(properties) {
 			PlayMainscene.superclass.constructor.call(this, properties);
@@ -73,11 +73,11 @@
 			this.takemj();
 			this.turnBuhua();
 			
-			this.turnNext = game.configdata.createScalebutton('ui','lsbattle_87',this.width * 0.6,this.height * 0.6).addTo(this);
-			this.turnNext.visible = false;
-			this.turnNext.handler = function(t){
+			this.skipOverBtn = game.configdata.createScalebutton('ui','lsbattle_87',this.width * 0.6,this.height * 0.6).addTo(this);
+			this.skipOverBtn.visible = false;
+			this.skipOverBtn.handler = function(t){
 				self.turnNext();
-				this.visible = false;
+				self.skipOverBtn.visible = false;
 			};
 		},
 		//如果要查看牌 ,可以把 createDealMj 的最后一个参数去掉，左右的牌行，缩放改为0.72
@@ -133,7 +133,7 @@
 					if(self.checkPeng(msgdata,self.dealDownMjLayer.children) <= 1){
 						self.turnNext();
 					}else{
-						
+						self.skipOverBtn.visible = true;
 					}
 					break;
 				case game.networker.msg.NEXTUSER_BUHUA:
@@ -197,7 +197,7 @@
 			if(count == 3){
 				console.log('%s 杠',mjid);
 			}
-			return 0;
+			return count;
 		},
 		
 		checkChi:function(mjid,mjlist){
@@ -541,6 +541,7 @@
 		},
 
 		throwOneMj: function(dir, mjid, isMsg) {
+			game.sounds.playMjEffect(0);
 			var throwmj = null;
 			switch(dir){
 				case 'down':

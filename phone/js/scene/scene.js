@@ -134,7 +134,7 @@
 				
 				game.mjdata.init();
 
-				game.switchScene(game.configdata.SCENE_NAMES.play);
+				game.switchScene(game.configdata.SCENE_NAMES.weixinlogin);
 			});
 			game.loadqueue.start();
 		},

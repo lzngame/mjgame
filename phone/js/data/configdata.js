@@ -4,7 +4,7 @@ game.configdata = new function() {
 	var self = this;
 	// 配置信息    只读属性
 	self.CANVASID = 'CANVAS_ID';
-	self.NOLINE = true;
+	self.NOLINE = false;
 	self.BGCOLOR = '#000000';
 	self.FPS = 60;
 	self.RESOURCE_BASEDIR = 'img';
@@ -33,13 +33,13 @@ game.configdata = new function() {
 	self.LAYOUTTYPE = {
 			img: 'IMAGE_TYPE',
 			activeobj: 'ACTIVEOBJECT_TYPE',
-		},
+	};
 
-		self.MSAGE_TYPE = {
+	self.MSAGE_TYPE = {
 
-		},
+	};
 
-		self.mainStageSize = { width: 320, height: 480 };
+	self.mainStageSize = { width: 320, height: 480 };
 
 	self.getObjectSize = function(pngname) {
 		var rect = self.IMAGEDATA_3[pngname];
@@ -49,7 +49,7 @@ game.configdata = new function() {
 		} else {
 			return rect;
 		}
-	}
+	};
 
 	self.createSelectbox = function(imgbg, imgcheck, x, y) {
 		var result = new game.MjSelectbox({
@@ -61,7 +61,7 @@ game.configdata = new function() {
 		result.scaleX = game.scalefact;
 		result.scaleY = game.scalefact;
 		return result;
-	}
+	};
 
 	self.createRadiotbox = function(itemurlvalue,imgcheck, x, y, lbtext, groupid, ischeck, selectvalue, items) {
 		var result = new game.MjRadioBox({
@@ -78,7 +78,7 @@ game.configdata = new function() {
 		result.scaleX = game.scalefact;
 		result.scaleY = game.scalefact;
 		return result;
-	}
+	};
 
 	self.createScalebutton = function(imgsource, rectname, x, y) {
 		var rect = game.configdata.getPngRect(rectname, imgsource);
@@ -90,7 +90,7 @@ game.configdata = new function() {
 			scaleX: game.scalefact,
 			scaleY: game.scalefact,
 		});
-	}
+	};
 
 	self.createButton = function(imgsource, uprectname, downrectname, x, y) {
 		var uprect = game.configdata.getPngRect(uprectname);
@@ -116,7 +116,7 @@ game.configdata = new function() {
 			scaleX: game.scalefact,
 			scaleY: game.scalefact,
 		});
-	}
+	};
 
 	self.createRectImg = function(imgType, pngname, x, y, scalefact) {
 		var obj = this._getRectInfo(imgType, pngname);
@@ -143,7 +143,7 @@ game.configdata = new function() {
 			width: w_size,
 			height: h_size
 		});
-	}
+	};
 	
 	self.createRectImg2 = function(imgType, pngname, w,h) {
 		var obj = this._getRectInfo(imgType, pngname);
@@ -156,7 +156,7 @@ game.configdata = new function() {
 			width: w,
 			height: h
 		});
-	}
+	};
 	
 	self._getRectInfo = function(imgType, pngname){
 		var rect_data = null;
@@ -184,7 +184,7 @@ game.configdata = new function() {
 			rect_data = [0, 0, 0, 0];
 		}
 		return {rectinfo:rect_data,imagesource:imgsource};
-	}
+	};
 	
 
 	self.creatDoubleImg = function(imgType, bgname, pngname, x, y, scalefact) {
@@ -197,7 +197,7 @@ game.configdata = new function() {
 			scaleX: scalefact,
 			scaleY: scalefact
 		});
-	}
+	};
 	
 	self.createSimpletext = function(textvalue, font, color, bg, x, y, w) {
 		return new Hilo.Text({
@@ -213,7 +213,7 @@ game.configdata = new function() {
 			scaleX:game.scalefact,
 			scaleY:game.scalefact
 		});
-	}
+	};
 
 	self.createTitletext = function(textvalue, font, color, bg, x, y, w) {
 		return new Hilo.Text({
@@ -227,7 +227,7 @@ game.configdata = new function() {
 			maxWidth: w,
 			textAlign: 'center',
 		});
-	}
+	};
 
 	self.createBgTitletext = function(textvalue, font, color, imgsource, rectname) {
 		var obj = new Hilo.Container();
@@ -250,7 +250,7 @@ game.configdata = new function() {
 		obj.width = w;
 		obj.height = h;
 		return obj;
-	}
+	};
 
 	self.createMerrygoround = function(headimg, itemurlvalue, x, y) {
 		return new game.Merrygoround({
@@ -259,7 +259,7 @@ game.configdata = new function() {
 			headimg: headimg,
 			itemurlvalue: itemurlvalue,
 		});
-	}
+	};
 
 	self.createBg = function(imgType, pngname, x, y, scalefact) {
 		var bgpanel = new Hilo.Container({
@@ -270,7 +270,7 @@ game.configdata = new function() {
 		var rightimg = this.createRectImg(imgType, pngname, leftimg.width * 2, 0, scalefact).addTo(bgpanel);
 		rightimg.scaleX = -1;
 		return bgpanel;
-	}
+	};
 
 	self.createBgPanel = function(data, bgname, ishalf, ismodal, theparent, close_uprect, close_downrect, close_imgsource, close_offsetx, titlebg, titlefront) {
 			var panel = new Hilo.Container();
@@ -324,7 +324,7 @@ game.configdata = new function() {
 			panel.items = {};
 			game.layoutUi.layoutPanelData(data, panel.width, panel.height, game.scalefact, panel);
 			return panel;
-		},
+	};
 
 		self.createLoadgif = function() {
 			var atlas = new Hilo.TextureAtlas({
@@ -437,6 +437,20 @@ game.sounds = new function() {
 			}
 		var audioSrc = game.mjdata.smallmj[mjid][4];
 		var tmp = game.mjdata.smallmj[mjid];
+		audio = Hilo.WebSound.getAudio({
+			src: basedir + audioSrc,
+			loop: loop
+		}).play();
+	},
+	this.playMjEffect = function(index){
+		//debugger;
+		if(game.configdata.MUTE)
+			return;
+		var	loop = false;
+		var basedir = 'sound/gongyong/';
+		var s = ['audio_card_click']
+		var audioSrc = s[index]+'.mp3';
+		var t = basedir+audioSrc;
 		audio = Hilo.WebSound.getAudio({
 			src: basedir + audioSrc,
 			loop: loop
