@@ -38,6 +38,8 @@
 		residueGamenumLabel: null, //剩余局数
 		roomIdLabel: null, //房间ID号
 		bankerDir: 'down', //庄家位置
+		
+		turnNext:null,
 
 		constructor: function(properties) {
 			PlayMainscene.superclass.constructor.call(this, properties);
@@ -71,9 +73,11 @@
 			this.takemj();
 			this.turnBuhua();
 			
-			var btn = game.configdata.createScalebutton('ui','lsbattle_87',this.width * 0.6,this.height * 0.6).addTo(this);
-			btn.handler = function(t){
+			this.turnNext = game.configdata.createScalebutton('ui','lsbattle_87',this.width * 0.6,this.height * 0.6).addTo(this);
+			this.turnNext.visible = false;
+			this.turnNext.handler = function(t){
 				self.turnNext();
+				this.visible = false;
 			};
 		},
 		//如果要查看牌 ,可以把 createDealMj 的最后一个参数去掉，左右的牌行，缩放改为0.72
@@ -193,7 +197,7 @@
 			if(count == 3){
 				console.log('%s 杠',mjid);
 			}
-			return count;
+			return 0;
 		},
 		
 		checkChi:function(mjid,mjlist){
