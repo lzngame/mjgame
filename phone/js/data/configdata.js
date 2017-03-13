@@ -4,7 +4,7 @@ game.configdata = new function() {
 	var self = this;
 	// 配置信息    只读属性
 	self.CANVASID = 'CANVAS_ID';
-	self.NOLINE = false;
+	self.NOLINE = true;
 	self.BGCOLOR = '#000000';
 	self.FPS = 60;
 	self.RESOURCE_BASEDIR = 'img';
@@ -674,6 +674,7 @@ game.clock = new function() {
 	self.lasttime = 0;
 	self.systemtime = 0;
 	self.framecount = 0;
+	self.fps = 0;
 
 	self.tick = function() {
 		var now = +new Date;
@@ -681,6 +682,7 @@ game.clock = new function() {
 		self.framecount++;
 		self.systemtime += self.fpstick;
 		self.lasttime = now;
+		//self.fps = Math.floor(1000/self.fpstick);
 	};
 	self.getSystemtime = function() {
 		return self.systemtime;
@@ -690,7 +692,16 @@ game.clock = new function() {
 	};
 	self.getTick = function(){
 		return self.fpstick;
-	}
+	};
+	self.getfps = function(){
+		var fps1 = Math.floor(1000/self.fpstick);
+		if(fps1 != self.fps){
+			self.fps = fps1;
+			return fps1;
+		}else{
+			return self.fps;
+		}
+	};
 }
 
 game.drawdata = new function() {
@@ -727,13 +738,3 @@ game.drawdata = new function() {
 	};
 };
 
-function addfps(x, y, parent) {
-	var fps = new game.FpsPanel({ x: x, y: y });
-	parent.addChild(fps);
-}
-
-function setLeft(viewojb) {
-	var parent = viewojb.parent;
-	viewojb.x = parent.width / 2 - viewojb.width / 2;
-	viewojb.y = parent.height / 2 - viewojb.height / 2;
-}

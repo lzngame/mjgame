@@ -509,19 +509,19 @@ game.roominfo = new function() {
 	self.id = '000000';
 	self.paytype = 0;
 	self.paytypeSt = '';
-	self.roomman = 0;
+	self.playerNums = 0;
 
-	self.setData = function(roomid, paytype, roomman) {
+	self.setData = function(roomid, paytype, playerNums) {
 		self.id = roomid;
 		self.paytype = paytype;
-		self.roomman = roomman;
+		self.playerNums = playerNums;
 		self.paytypeSt = self.PAYTYPES[self.paytype];
 	};
 
 	self.getData = function() {
 		return {
 			roomid: self.id,
-			roomman: self.roomman,
+			playerNums: self.playerNums,
 			paytype: self.paytypeSt
 		};
 	}
@@ -556,6 +556,8 @@ game.playsceneUidata = new function() {
 				huaCount: 0,
 				userX: this.width * 0.01,
 				userY: this.height * 0.625,
+				showX: this.width/2 - this.mjselfW/2 * game.scalefact,
+				showY: this.height/2 - this.mjselfH/2 * game.scalefact + this.mjselfH * game.scalefact,
 			},
 			up: {
 				dealX: Math.floor(this.width * 0.3),
@@ -567,6 +569,8 @@ game.playsceneUidata = new function() {
 				huaCount: 0,
 				userX: this.width * 0.67,
 				userY: this.height * 0.07,
+				showX: this.width/2 - this.mjselfW/2 * game.scalefact,
+				showY: this.height/2 - this.mjselfH/2 * game.scalefact - this.mjselfH * game.scalefact,
 			},
 			left: {
 				dealX: Math.floor(this.width * 0.125), // - this.slideMjWidth * game.scalefact),
@@ -578,6 +582,8 @@ game.playsceneUidata = new function() {
 				huaCount: 0,
 				userX: this.width * 0.01,
 				userY: this.height * 0.25,
+				showX: this.width/2 - this.mjselfW/2 * game.scalefact - this.mjselfW * game.scalefact,
+				showY: this.height/2 - this.mjselfH/2 * game.scalefact,
 			},
 			right: {
 				dealX: Math.floor(this.width * 0.86),
@@ -589,6 +595,8 @@ game.playsceneUidata = new function() {
 				huaCount: 0,
 				userX: this.width * 0.88,
 				userY: this.height * 0.5,
+				showX: this.width/2 - this.mjselfW/2 * game.scalefact + this.mjselfW * game.scalefact,
+				showY: this.height/2 - this.mjselfH/2 * game.scalefact,
 			}
 		};
 	};

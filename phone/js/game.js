@@ -15,6 +15,7 @@
             history.go(0);
         }  
     }, false); 
+    
 	var game = window.game = {
 		self: this,
 		canvas: null,
@@ -36,6 +37,7 @@
 		winWidth:0,
 		winHeight:0,
 		scalefact:1,
+		
 		
 		dpr:1,
 		

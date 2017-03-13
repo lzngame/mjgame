@@ -4,7 +4,6 @@
 		name: game.configdata.SCENE_NAMES.play,
 		items: null,
 		bglayer: null,
-
 		currentmj: null,
 		mjDirect: ['down', 'left', 'up', 'right'],
 		currentThrowIndex: null,
@@ -27,7 +26,6 @@
 
 		maxMjStack: 9, //堆牌长度
 		maxMjHandle: 16, //手牌张数
-		selfMjInitx: 0, //玩家 --（down）摆牌的x 起始位置
 
 		dealUpMjLayer: null,
 		dealDownMjLayer: null,
@@ -38,8 +36,8 @@
 		residueGamenumLabel: null, //剩余局数
 		roomIdLabel: null, //房间ID号
 		bankerDir: 'down', //庄家位置
-		
-		skipOverBtn:null,
+
+		skipOverBtn: null,
 
 		constructor: function(properties) {
 			PlayMainscene.superclass.constructor.call(this, properties);
@@ -67,21 +65,23 @@
 			};
 			this.initLayerAndPositions();
 			this.setRoomInfo();
+
 			game.mjdata.initMjQueue();
-			this.deal();
+			this.deal(game.roominfo.getData().playerNums);
 			this.setTurnGold();
 			this.takemj();
 			this.turnBuhua();
-			
-			this.skipOverBtn = game.configdata.createScalebutton('ui','lsbattle_87',this.width * 0.6,this.height * 0.6).addTo(this);
+
+			this.skipOverBtn = game.configdata.createScalebutton('ui', 'lsbattle_87', this.width * 0.6, this.height * 0.6).addTo(this);
 			this.skipOverBtn.visible = false;
-			this.skipOverBtn.handler = function(t){
+			this.skipOverBtn.handler = function(t) {
 				self.turnNext();
 				self.skipOverBtn.visible = false;
 			};
 		},
 		//如果要查看牌 ,可以把 createDealMj 的最后一个参数去掉，左右的牌行，缩放改为0.72
-		deal: function() {
+		//playNumber :2,3,4 
+		deal: function(playNumber) {
 			for(var i = 0; i < this.maxMjHandle; i++) {
 				//self -down
 				var mj_down = new game.MjSelf({ mjid: game.mjdata.dealOne(), scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.dealDownMjLayer);
@@ -92,14 +92,17 @@
 				mj_up.x = mj_up.swidth * i + game.playsceneUidata.initPostion['up']['dealX'];
 				mj_up.y = game.playsceneUidata.initPostion['up']['dealY'];
 				//lfet
-				var mj_left = this.createDealMj(game.mjdata.dealOne(), 2, 2).addTo(this.dealLeftMjLayer);
-				mj_left.x = game.playsceneUidata.initPostion['left']['dealX'];
-				mj_left.y = (mj_left.sheight * 0.5) * i + game.playsceneUidata.initPostion['left']['dealY'];
+				if(playNumber >= 3) {
+					var mj_left = this.createDealMj(game.mjdata.dealOne(), 2, 2).addTo(this.dealLeftMjLayer);
+					mj_left.x = game.playsceneUidata.initPostion['left']['dealX'];
+					mj_left.y = (mj_left.sheight * 0.5) * i + game.playsceneUidata.initPostion['left']['dealY'];
+				}
 				//right
-				var mj_right = this.createDealMj(game.mjdata.dealOne(), 3, 3).addTo(this.dealRightMjLayer);
-				mj_right.x = game.playsceneUidata.initPostion['right']['dealX'];
-				mj_right.y = (mj_right.sheight * 0.5) * i + game.playsceneUidata.initPostion['right']['dealY'];
-
+				if(playNumber == 4) {
+					var mj_right = this.createDealMj(game.mjdata.dealOne(), 3, 3).addTo(this.dealRightMjLayer);
+					mj_right.x = game.playsceneUidata.initPostion['right']['dealX'];
+					mj_right.y = (mj_right.sheight * 0.5) * i + game.playsceneUidata.initPostion['right']['dealY'];
+				}
 			}
 			this.sortPlayerMj('down');
 			this.sortPlayerMj('up');
@@ -119,7 +122,7 @@
 				case game.networker.msg.BETHROW:
 					if(self.isTurn) {
 						sendobj.removeFromParent();
-						self.throwOneMj('down',sendobj.mjid, true);
+						self.throwOneMj('down', sendobj.mjid);
 						self.sortPlayerMj('down');
 						console.log('扔掉手牌：%s', game.mjdata.mj[sendobj.mjid][0]);
 					} else {
@@ -130,15 +133,16 @@
 					self.isThrow = false;
 					break;
 				case game.networker.msg.NEXTUSER_HANDLE:
-					if(self.checkPeng(msgdata,self.dealDownMjLayer.children) <= 1){
+					if(self.checkPeng(msgdata[0], self.dealDownMjLayer.children) <= 1) {
 						self.turnNext();
-					}else{
-						self.skipOverBtn.visible = true;
+					} else {
+						if(msgdata[1] != 'down')
+							self.skipOverBtn.visible = true;
 					}
 					break;
 				case game.networker.msg.NEXTUSER_BUHUA:
 					self.currentThrowIndex++;
-					if(self.currentThrowIndex >= 4) {
+					if(self.currentThrowIndex >= self.mjDirect.length) {
 						self.currentThrowIndex = 0;
 					}
 
@@ -166,48 +170,48 @@
 			}
 			game.sendMsg(this, game.networker, game.networker.msg.NEXTUSER_BUHUA, 'down');
 		},
-		
-		turnNext:function(){
+
+		turnNext: function() {
 			var self = this;
 			self.currentThrowIndex++;
-						if(self.currentThrowIndex >= 4) {
-							self.currentThrowIndex = 0;
-						}
-						var user = self.mjDirect[self.currentThrowIndex];
-						self.pointer_user.setDirect(user);
-						if(user == 'down') {
-							self.isTurn = true;
-							self.takemj();
-						} else {
-							self.otherTakemj(user);
-						}
+			if(self.currentThrowIndex >= self.mjDirect.length) {
+				self.currentThrowIndex = 0;
+			}
+			var user = self.mjDirect[self.currentThrowIndex];
+			self.pointer_user.setDirect(user);
+			if(user == 'down') {
+				self.isTurn = true;
+				self.takemj();
+			} else {
+				self.otherTakemj(user);
+			}
 		},
-		
-		checkPeng:function(mjid,mjlist){
+
+		checkPeng: function(mjid, mjlist) {
 			var count = 0;
-			for(var index in mjlist){
+			for(var index in mjlist) {
 				var item = mjlist[index];
-				if(item.mjid == mjid){
+				if(item.mjid == mjid) {
 					count++;
 				}
 			}
-			if(count == 2){
-				console.log('%s 砰',mjid);
+			if(count == 2) {
+				console.log('%s 砰', mjid);
 			}
-			if(count == 3){
-				console.log('%s 杠',mjid);
+			if(count == 3) {
+				console.log('%s 杠', mjid);
 			}
 			return count;
 		},
-		
-		checkChi:function(mjid,mjlist){
+
+		checkChi: function(mjid, mjlist) {
 			var tmp = mjid.split('_');
 			var mjHead = tmp[0];
 			var mjOrder = tmp[1];
 			var t = [];
-			for(var i in mjlist){
+			for(var i in mjlist) {
 				var item = mjlist[i];
-				var itemtmp 
+				var itemtmp
 			}
 		},
 
@@ -234,7 +238,7 @@
 			this.dealRightMjLayer = new Hilo.Container().addTo(this);
 			this.dealDownMjLayer = new Hilo.Container().addTo(this);
 			this.selfMjInitx = this.width / 50;
-			this.selfMjTakeInitx = this.maxMjHandle * 74 * game.scalefact + this.selfMjInitx + 50;
+			this.selfMjTakeInitx = this.maxMjHandle * 74 * game.scalefact + this.width / 50 + 50;
 		},
 
 		setRoomInfo: function() {
@@ -258,12 +262,23 @@
 			btn01.y = btn01.height * game.scalefact * 0.5 + 10;
 			var btn02 = game.configdata.createScalebutton('ui', 'lsbattle_3', btn01.x, btn01.height * (game.scalefact + 1)).addTo(this);
 
+			if(info.playerNums == 4) {
+				this.mjDirect = ['down', 'left', 'up', 'right'];
+			}
+			if(info.playerNums == 3) {
+				this.mjDirect = ['down', 'left', 'up'];
+			}
+			if(info.playerNums == 2) {
+				this.mjDirect = ['down', 'up'];
+			}
 			this.setPortrait();
 		},
 
 		setPortrait: function() {
 			game.userdata.init();
-			for(var dir in game.userdata.userInfo) {
+			for(var i in this.mjDirect) {
+				var dir = this.mjDirect[i];
+				var userData = game.userdata.userInfo[dir];
 				var x = game.playsceneUidata.initPostion[dir]['userX'];
 				var y = game.playsceneUidata.initPostion[dir]['userY'];
 				var name = game.userdata.userInfo[dir]['idname'];
@@ -312,7 +327,7 @@
 				self.otherTakemj(userdir);
 				self.buhuaEffect(userdir);
 			} else {
-				self.throwOneMj(userdir,mjid);
+				self.throwOneMj(userdir, mjid);
 			}
 		},
 
@@ -413,7 +428,7 @@
 			}
 			if(beThrowMjList.length > 0) {
 				this.sortPlayerMj(userdir);
-				game.mjdata.createEffect('buhua', x, y, 4).addTo(this);
+				this.buhuaEffect(userdir);
 			}
 		},
 
@@ -463,7 +478,7 @@
 			sendobj.removeFromParent();
 			this.sortPlayerMj(userdir);
 			this.throwFlower(sendobj.mjid, userdir);
-			game.mjdata.createEffect('buhua', x, y, 4).addTo(this);
+			this.buhuaEffect(userdir);
 		},
 
 		setTurnGold: function() {
@@ -474,15 +489,20 @@
 				this.checkOneGold(mj);
 			}
 		},
-		
-		checkOneGold:function(mj){
+
+		checkOneGold: function(mj) {
 			if(mj.mjid == this.goldmj.mjid) {
 				mj.setGold();
 			}
 		},
 
 		checkAllFlower: function() {
-			return(this.initFlowers['down'] + this.initFlowers['up'] + this.initFlowers['left'] + this.initFlowers['right']) == 0;
+			var sum = 0;
+			for(var i in this.mjDirect) {
+				var dir = this.mjDirect[i];
+				sum += this.initFlowers[dir];
+			}
+			return sum == 0;
 		},
 
 		checkOneMjFlower: function(mjid) {
@@ -532,7 +552,7 @@
 				var x = objdata['huaCount'] * offsetW + objdata['huaX'];
 				var y = objdata['huaY'];
 			} else {
-				var y = objdata['huaCount'] * offsetH + objdata['huaY'];
+				var y = objdata['huaCount'] * offsetH * 0.8 + objdata['huaY'];
 				var x = objdata['huaX'];
 			}
 			objdata['huaCount']++;
@@ -544,8 +564,7 @@
 			game.sounds.playMjEffect(0);
 			var throwmj = null;
 			var self = this;
-			//self.pointer_mj.visible = false;
-			switch(dir){
+			switch(dir) {
 				case 'down':
 					throwmj = this._getThrowMj(mjid, 1);
 					throwmj.visible = false;
@@ -556,27 +575,8 @@
 					this.throwDownNum++;
 					this.throwlayer.sortChildren(this._sortByY);
 					this.isTurn = false;
-					if(isMsg) {
-						game.sendMsg(this, game.networker, game.networker.msg.THROWMJ, [mjid, 0]);
-					}
-					var mj_show = new game.MjSelf({ mjid: mjid, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.throwlayer);
-					mj_show.pointerEnable = false;
-					mj_show.x = this.width/2 - 50;
-					mj_show.y = this.height/2;
-					new Hilo.Tween.to(mj_show,{
-						x:x,
-						y:y,
-						scaleX:0.5,
-						scaleY:0.5,
-					},{
-						duration:300,
-						delay:500,
-						onComplete:function(){
-							mj_show.removeFromParent();
-							throwmj.visible = true;
-							self.pointer_mj.visible = true;
-						}
-					});
+					game.sendMsg(this, game.networker, game.networker.msg.THROWMJ, [mjid, 0, 'down']);
+					this.createThrowMj(dir,mjid,throwmj.x,throwmj.y,300,100,0,throwmj,this);
 					break;
 				case 'left':
 					throwmj = this._getThrowMj(mjid, 2);
@@ -586,26 +586,9 @@
 					throwmj.x = x + game.playsceneUidata.initPostion['left']['throwX'];
 					throwmj.y = y + game.playsceneUidata.initPostion['left']['throwY'];
 					this.throwLeftNum++;
-					game.sendMsg(this, game.networker, game.networker.msg.THROWMJ, [mjid, 1]);
-					var mj_show = new game.MjSelf({ mjid: mjid, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.throwlayer);
-					mj_show.pointerEnable = false;
-					mj_show.x = this.width/2 - 250;
-					mj_show.y = this.height/2;
-					new Hilo.Tween.to(mj_show,{
-						x:throwmj.x+throwmj.height,
-						y:throwmj.y,
-						scaleX:0.5,
-						scaleY:0.5,
-						rotation:90,
-					},{
-						duration:200,
-						delay:500,
-						onComplete:function(){
-							mj_show.removeFromParent();
-							throwmj.visible = true;
-							self.pointer_mj.visible = true;
-						}
-					});
+					game.sendMsg(this, game.networker, game.networker.msg.THROWMJ, [mjid, 1, 'left']);
+					this.createThrowMj(dir,mjid,throwmj.x+throwmj.height,throwmj.y,300,200,90,throwmj,this);
+					
 					break;
 				case 'up':
 					throwmj = this._getThrowMj(mjid, 1);
@@ -615,25 +598,10 @@
 					throwmj.x = x;
 					throwmj.y = y;
 					this.throwUpNum++;
-					game.sendMsg(this, game.networker, game.networker.msg.THROWMJ, [mjid, 1]);
-					var mj_show = new game.MjSelf({ mjid: mjid, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.throwlayer);
-					mj_show.pointerEnable = false;
-					mj_show.x = this.width/2 - 50;
-					mj_show.y = this.height/2 -200;
-					new Hilo.Tween.to(mj_show,{
-						x:x,
-						y:y,
-						scaleX:0.5,
-						scaleY:0.5,
-					},{
-						duration:300,
-						delay:500,
-						onComplete:function(){
-							mj_show.removeFromParent();
-							throwmj.visible = true;
-							self.pointer_mj.visible = true;
-						}
-					});
+					game.sendMsg(this, game.networker, game.networker.msg.THROWMJ, [mjid, 1, 'up']);
+					this.createThrowMj(dir,mjid,throwmj.x,throwmj.y,300,100,0,throwmj,this);
+					
+					
 					break;
 				case 'right':
 					throwmj = this._getThrowMj(mjid, 3);
@@ -643,31 +611,37 @@
 					throwmj.x = x + game.playsceneUidata.initPostion['right']['throwX'];
 					throwmj.y = y + game.playsceneUidata.initPostion['right']['throwY'];
 					this.throwRightNum++;
-					game.sendMsg(this, game.networker, game.networker.msg.THROWMJ, [mjid, 1]);
-					var mj_show = new game.MjSelf({ mjid: mjid, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.throwlayer);
-					mj_show.pointerEnable = false;
-					mj_show.x = this.width/2 + 250;
-					mj_show.y = this.height/2;
-					new Hilo.Tween.to(mj_show,{
-						x:throwmj.x,
-						y:throwmj.y+throwmj.width,
-						scaleX:0.5,
-						scaleY:0.5,
-						rotation:-90,
-					},{
-						duration:200,
-						delay:500,
-						onComplete:function(){
-							mj_show.removeFromParent();
-							throwmj.visible = true;
-							self.pointer_mj.visible = true;
-						}
-					});
+					game.sendMsg(this, game.networker, game.networker.msg.THROWMJ, [mjid, 1, 'right']);
+					this.createThrowMj(dir,mjid,throwmj.x,throwmj.y+throwmj.width,300,200,-90,throwmj,this);
+					
+					
 					break;
 			}
-			//this.pointer_mj.visible = true;
-			this.pointer_mj.x = throwmj.x;
-			this.pointer_mj.y = throwmj.y - 40;
+			
+		},
+
+		createThrowMj: function(userdir,mjid,x,y, delay,duration,angle,throwmj,self) {
+			var mj_show = new game.MjSelf({ mjid: mjid, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.throwlayer);
+			mj_show.pointerEnable = false;
+			var objdata = game.playsceneUidata.initPostion[userdir];
+			mj_show.x = objdata.showX;
+			mj_show.y = objdata.showY;
+			new Hilo.Tween.to(mj_show, {
+				x: x,
+				y: y,
+				scaleX: 0.5,
+				scaleY: 0.5,
+			}, {
+				duration: duration,
+				delay: delay,
+				onComplete: function() {
+					mj_show.removeFromParent();
+					throwmj.visible = true;
+					self.pointer_mj.visible = true;
+					self.pointer_mj.x = throwmj.x;
+					self.pointer_mj.y = throwmj.y - 40;
+				}
+			});
 		},
 
 		createDealMj: function(mjid, typemj, showback) {
@@ -749,7 +723,8 @@
 			this.removeFromParent();
 		},
 		onUpdate: function() {
-
+			var fps = game.clock.getfps();
+			this.roomIdLabel.txt.text = game.ticker.getMeasuredFPS() +':'+fps.toString();
 		},
 	});
 })(window.game);
