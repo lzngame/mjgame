@@ -1115,6 +1115,53 @@
 		},
 	});
 	
+	//TabButton--- 切换按钮
+	var TabButton = ns.TabButton = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name: 'TabButton',
+		leftTab:null,
+		rightTab:null,
+		isLeft:true,
+		
+		score:0,
+		headimg:null,
+		namelabel:null,
+		scorelabel:null,
+		scorebg:null,
+		isbank:false,
+		
+
+		constructor: function(properties) {
+			TabButton.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		init: function(properties) {
+			var leftImg  = 'login_bg84';
+			var rightImg = 'login_bg85';
+			var lefttxt  = 'login_bg86';
+			var righttxt = 'login_bg87';
+			var bg = 'login_bg95';
+			
+			game.configdata.createRectImg('ui',bg,0,0,1).addTo(this);
+			this.leftTab = game.configdata.createRectImg('ui',leftImg,0,0,1).addTo(this);
+			this.rightTab = game.configdata.createRectImg('ui',rightImg,0,0,1).addTo(this);
+			var w = 160;
+			this.headimg.x = w/2 - this.headimg.width/2;
+			this.namelabel = game.configdata.createTitletext(this.username,'22px 黑体','white','rgba(0,0,0,0)',0,75,160).addTo(this);
+			this.scorebg = game.configdata.createRectImg('ui','battle_9',0,96,1).addTo(this);
+			this.scorebg.x = w/2 - this.scorebg.width/2;
+			this.scorelabel = game.configdata.createTitletext(this.score.toString(),'22px 黑体','#AAF1AA','rgba(0,0,0,0)',w/2-36,100,100).addTo(this);
+			if(this.isbank){
+				var bankimg = game.configdata.createRectImg('ui','lsbattle_1',this.headimg.x,0,1).addTo(this);
+				bankimg.y = -bankimg.height;
+			}
+			
+			this.pointerEnabled = false;
+			this.scaleX = game.scalefact;
+			this.scaleY = game.scalefact;
+		},
+	});
+	
 	
 	//玩家信息 PlayerInfo
 	var PlayerInfo = ns.PlayerInfo = Hilo.Class.create({

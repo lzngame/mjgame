@@ -567,43 +567,6 @@ game.sceneuidata = new function(){
 					layouttype_y:'pct',
 					aligny:'bottom_15'
 				},
-				/*{
-					itemid:'id_mainscene_setting_btn',
-					itemtype:'scalebtn',
-					itemurlvalue:'login_bg14',
-					layouttype_x:'pct',
-					alignx:'right_2',
-					layouttype_y:'pct',
-					aligny:'top_8'
-				},
-				{
-					itemid:'id_mainscene_createroom_btn',
-					itemtype:'scalebtn',
-					itemurlvalue:'5',
-					layouttype_x:'pct',
-					alignx:'left_45',
-					layouttype_y:'pct',
-					aligny:'top_50'
-				},
-				{
-					itemid:'id_mainscene_enterroom_btn',
-					itemtype:'scalebtn',
-					itemurlvalue:'6',
-					layouttype_x:'pct',
-					alignx:'left_80',
-					layouttype_y:'pct',
-					aligny:'top_50'
-				},
-				{
-					itemid:'id_mainscene_merrygoround_bottom',
-					itemtype:'merrygoround',
-					headimg:'login_bg16',
-					itemurlvalue:'login_bg17',
-					layouttype_x:'pct',
-					alignx:'left_20',
-					layouttype_y:'pct',
-					aligny:'top_90'
-				}*/
 			],
 			//---------- 2：分享按钮弹出窗口  朋友圈分享按钮  微信分享按钮
 			[
@@ -664,7 +627,7 @@ game.sceneuidata = new function(){
 					aligny:'bottom_55'
 				},
 			],
-			// -------- 3 创建房间窗口数据
+			// -------- 3 设置 福州话-普通话
 			[
 				{
 					itemid:'id_radiobox_test_1',
