@@ -112,43 +112,36 @@
 				var t = $('#game-container');
 				var tpl = "<input id='testp' style='position:absolute;top:200px;left:100px'></input>";
 				
-				
 				var x = game.screenWidth  * panel.rx;
 				var y = game.screenHeight * panel.ry;
-				
 				var px = game.screenWidth *  0.125 * panel.rwidht * game.scalefact +x;
 				var py = game.screenHeight * 0.125 * panel.rheight * game.scalefact +y;
 				
-				
-				
 				var posst = 'top:'+py+'px;left:'+px+'px';
-				var cssst = "<input id='testp' style='width:150px;position:absolute;"+ posst+"'></input>";
+				var cssst = "<input id='testp' onblur='function(){console.log(1111111111);alert(333);}' style='width:150px;position:absolute;"+ posst+"'></input>";
 				console.log(cssst);
 				console.log(tpl);
-				t.after(cssst);//"<input id='testp' style='position:absolute;top:200px;left:100px'></input>");
+				t.after(cssst);
 				//$('#testp').focus();
 				
 				panel.closebtn.on(Hilo.event.POINTER_END,function(e){
 					console.log('删除输入框');
 					$('#testp').remove();
 				});
-				
-				
 			});
 
 			this.items['id_mainscene_setting_btn'].on(Hilo.event.POINTER_END, function(e) {
-				$('#testp').remove();
+				
 			});
 
 			this.initSlideEvent();
+			
 		},
 
-		createPointoutWindow: function(data, title, text) {
+		createPointoutWindow: function(data, title, text,isTitle) {
 			var self = this;
-			var customw = this.width * 0.8;
-			var customh = this.height * 0.8;
 			var txt = game.configdata.createTitletext(text, '28px 黑体', 'black', 'rgba(0,0,0,0)', 0, 0, 600);
-			var panel = game.configdata.createBgPanel(data, 'login_bg35', true, true, self, 'login_13', 'login_14', 'ui', 55, 'login_bg111', title, customw, customh);
+			var panel = game.configdata.createBgPanel(data, 'login_bg35', true, true, self, 'login_13', 'login_14', 'ui', 55, 'login_bg111', title);
 			txt.x = panel.width * game.scalefact / 2 - 300;
 			txt.y = panel.height * game.scalefact / 2 - txt._fontHeight / 2;
 			console.log('x:%f -- y:%f',panel.x,panel.y);

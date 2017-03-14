@@ -426,6 +426,9 @@
 			this.on(Hilo.event.POINTER_END, function(e) {
 				console.log('end **************************************');
 				this.slideEnd();
+				console.log(this.slidedisy);
+				this.slidedisy = 0;
+				this.slidedisx = 0;
 			});
 			this.on('touchout', function(e) {
 				this.slideEnd();
@@ -911,7 +914,6 @@
 			}).addTo(this);
 			this.mjid = mjdata[0];
 			this.name = game.mjdata.smallmj[this.mjid][0];
-			//console.log('mjscene %s:%d:%d',this.name,this.width,this.height);
 		},
 	});
 	
@@ -1121,15 +1123,11 @@
 		name: 'TabButton',
 		leftTab:null,
 		rightTab:null,
+		lefttxtUp:null,
+		lefttxtDown:null,
+		righttxtUp:null,
+		righttxtDown:null,
 		isLeft:true,
-		
-		score:0,
-		headimg:null,
-		namelabel:null,
-		scorelabel:null,
-		scorebg:null,
-		isbank:false,
-		
 
 		constructor: function(properties) {
 			TabButton.superclass.constructor.call(this, properties);
@@ -1138,28 +1136,63 @@
 		init: function(properties) {
 			var leftImg  = 'login_bg84';
 			var rightImg = 'login_bg85';
-			var lefttxt  = 'login_bg86';
-			var righttxt = 'login_bg87';
+			var lefttxtUpImg    = 'login_bg86';
+			var lefttxtDownImg  = 'login_bg88';
+			var righttxtUpImg   = 'login_bg87';
+			var righttxtDownImg = 'login_bg89';
 			var bg = 'login_bg95';
 			
-			game.configdata.createRectImg('ui',bg,0,0,1).addTo(this);
-			this.leftTab = game.configdata.createRectImg('ui',leftImg,0,0,1).addTo(this);
-			this.rightTab = game.configdata.createRectImg('ui',rightImg,0,0,1).addTo(this);
-			var w = 160;
-			this.headimg.x = w/2 - this.headimg.width/2;
-			this.namelabel = game.configdata.createTitletext(this.username,'22px 黑体','white','rgba(0,0,0,0)',0,75,160).addTo(this);
-			this.scorebg = game.configdata.createRectImg('ui','battle_9',0,96,1).addTo(this);
-			this.scorebg.x = w/2 - this.scorebg.width/2;
-			this.scorelabel = game.configdata.createTitletext(this.score.toString(),'22px 黑体','#AAF1AA','rgba(0,0,0,0)',w/2-36,100,100).addTo(this);
-			if(this.isbank){
-				var bankimg = game.configdata.createRectImg('ui','lsbattle_1',this.headimg.x,0,1).addTo(this);
-				bankimg.y = -bankimg.height;
-			}
+			var bgImg = game.configdata.createRectImg('ui',bg,0,0,1).addTo(this);
+			this.leftTab = game.configdata.createRectImg('ui',leftImg,2,0,1).addTo(this);
+			this.rightTab = game.configdata.createRectImg('ui',rightImg,0,this.leftTab.y,1).addTo(this);
+			this.rightTab.x = bgImg.width - this.rightTab.width-2;
+			this.lefttxtUp = game.configdata.createRectImg('ui',lefttxtUpImg,0,0,1).addTo(this);
+			this.lefttxtUp.y = bgImg.height/2 - this.lefttxtUp.height/2;
+			this.lefttxtUp.x = bgImg.width * 0.1;
+			this.lefttxtDown = game.configdata.createRectImg('ui',lefttxtDownImg,this.lefttxtUp.x,this.lefttxtUp.y,1).addTo(this);
+			this.lefttxtUp.pointerEnabled = false;
 			
-			this.pointerEnabled = false;
+			
+			this.righttxtUp = game.configdata.createRectImg('ui',righttxtUpImg,0,this.lefttxtUp.y,1).addTo(this);
+			this.righttxtUp.x = bgImg.width *0.9 - this.lefttxtDown.width;
+			this.righttxtDown = game.configdata.createRectImg('ui',righttxtDownImg,this.righttxtUp.x,this.righttxtUp.y,1).addTo(this);
+			this.righttxtUp.pointerEnabled = false;
+			
+			this.width = bgImg.width;
+			this.height = bgImg.height;
 			this.scaleX = game.scalefact;
 			this.scaleY = game.scalefact;
-		}
+			
+			var self = this;
+			this.leftTab.on(Hilo.event.POINTER_START,function(e){
+				self.isLeft = true;
+				self.setState();
+				console.log('left tab');
+			});
+			this.rightTab.on(Hilo.event.POINTER_START,function(e){
+				self.isLeft = false;
+				self.setState();
+				console.log('right tab');
+			});
+			this.setState();			
+		},
+		setState:function(){
+			if(this.isLeft){
+				this.leftTab.visible = false;
+				this.lefttxtUp.visible = false;
+				this.lefttxtDown.visible = true;
+				this.rightTab.visible = true;
+				this.righttxtUp.visible = true;
+				this.righttxtDown.visible = false;
+			}else{
+				this.leftTab.visible = true;
+				this.lefttxtUp.visible = true;
+				this.lefttxtDown.visible = false;
+				this.rightTab.visible = false;
+				this.righttxtUp.visible = false;
+				this.righttxtDown.visible = true;
+			}
+		},
 	});
 	
 	//RotateMjBtn --- 旋转麻将 返回房间
@@ -1167,8 +1200,6 @@
 		Extends: Hilo.Container,
 		name: 'RotateMjBtn',
 		btnbg:null,
-		bgrectname: null,
-		mjid:null,
 
 		constructor: function(properties) {
 			RotateMjBtn.superclass.constructor.call(this, properties);

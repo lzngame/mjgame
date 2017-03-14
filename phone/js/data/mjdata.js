@@ -50,7 +50,7 @@ game.mjdata = new function() {
 		h_7: ['竹', 'self_72', 'T'],
 		h_8: ['菊', 'self_71', 'T'],
 	};
-
+	
 	self.smallmj = {
 		w_1: ['一万', 'battle_32', 'battle_hg_32', 'battle_hgR_32', 'wan1.mp3', 'F'],
 		w_2: ['两万', 'battle_33', 'battle_hg_33', 'battle_hgR_33', 'wan2.mp3', 'F'],
@@ -246,6 +246,20 @@ game.mjdata = new function() {
 		142: 'h_7',
 		143: 'h_8'
 	};
+	
+	self.talksounds = [
+		['你太牛了!','fix_msg_1'],
+		['呵呵，手气真好!','fix_msg_2'],
+		['快点出牌哟!','fix_msg_3'],
+		['今天真高兴!','fix_msg_4'],
+		['这个吃得好!','fix_msg_5'],
+		['你放炮我不胡!','fix_msg_6'],
+		['你家是开银行的吧!','fix_msg_7'],
+		['不好意思，我有事要先走一步了!','fix_msg_8'],
+		['你的牌打得太好了!','fix_msg_9'],
+		['大家好，很高兴见到各位!','fix_msg_10'],
+		['怎么又断线了，网络怎么这么差呀!','fix_msg_11'],
+	];
 
 	self.randmj = [];
 	self.initMjQueue = function() {

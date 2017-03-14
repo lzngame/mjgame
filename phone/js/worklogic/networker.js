@@ -9,6 +9,7 @@ game.networker = new function() {
 		THROWMJ: 'throw_mj_mjid_103',
 		CREATEROOM: 'create_mj_room_104',
 		JOINROOM: 'join_mj_room_105',
+		SHOWTALK: 'show_talk_panel',
 		
 		DISBANDROOM:'disband_mj_room_106', //解散房间
 	};

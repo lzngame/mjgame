@@ -242,14 +242,14 @@
 		},
 
 		setRoomInfo: function() {
-			this.residueMjLabel = game.configdata.createBgTitletext('剩余' + game.mjdata.getResidueMj().toString() + '张', '18px 黑体', 'yellow', 'ui', 'login_bg9').addTo(this.bglayer);
+			this.residueMjLabel = game.configdata.createBgTitletext('剩余' + game.mjdata.getResidueMj().toString() + '张', '18px 黑体', 'yellow', 'ui', 'login_bg9','center').addTo(this.bglayer);
 			this.residueMjLabel.x = this.width / 2 - this.residueMjLabel.width - 50;
 			this.residueMjLabel.y = this.height / 2 - this.residueMjLabel.height / 2;
 			this.residueMjLabel.txt.text = '剩余' + game.mjdata.getResidueMj().toString() + '张';
-			this.residueGamenumLabel = game.configdata.createBgTitletext('剩余3局', '18px 黑体', 'yellow', 'ui', 'login_bg9').addTo(this.bglayer);
+			this.residueGamenumLabel = game.configdata.createBgTitletext('剩余3局', '18px 黑体', 'yellow', 'ui', 'login_bg9','center').addTo(this.bglayer);
 			this.residueGamenumLabel.x = this.width / 2 + 50;
 			this.residueGamenumLabel.y = this.height / 2 - this.residueMjLabel.height / 2;
-			this.roomIdLabel = game.configdata.createBgTitletext('房间号:123980', '20px 黑体', 'white', 'ui', 'login_bg17').addTo(this.bglayer);
+			this.roomIdLabel = game.configdata.createBgTitletext('房间号:123980', '20px 黑体', 'white', 'ui', 'login_bg17','center').addTo(this.bglayer);
 			this.roomIdLabel.x = this.width / 2 - this.roomIdLabel.width / 2;
 			this.roomIdLabel.y = 0;
 			this.pointer_mj = new game.Pointermj({ imgsource: 'ui', rectname: 'lsbattle_21', scaleX: game.scalefact, scaleY: game.scalefact, visible: false }).addTo(this);
@@ -622,7 +622,7 @@
 
 		createThrowMj: function(userdir,mjid,x,y, delay,duration,angle,throwmj,self) {
 			var mj_show = new game.MjSelf({ mjid: mjid, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.throwlayer);
-			mj_show.pointerEnable = false;
+			mj_show.pointerEnabled = false;
 			var objdata = game.playsceneUidata.initPostion[userdir];
 			mj_show.x = objdata.showX;
 			mj_show.y = objdata.showY;
@@ -650,7 +650,7 @@
 			var rectimg = null;
 			mj = new game.MjScene({
 				idname: idname,
-				pointerEnable: false,
+				pointerEnabled: false,
 				scaleX: game.scalefact,
 				scaleY: game.scalefact,
 				showback: showback,

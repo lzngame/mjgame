@@ -231,7 +231,7 @@ game.configdata = new function() {
 		});
 	};
 
-	self.createBgTitletext = function(textvalue, font, color, imgsource, rectname) {
+	self.createBgTitletext = function(textvalue, font, color, imgsource, rectname,align,x) {
 		var obj = new Hilo.Container();
 		var bg = game.configdata.createRectImg(imgsource, rectname, 0, 0, 1).addTo(obj);
 		var bgrect = game.configdata.getPngRect(rectname, imgsource);
@@ -245,9 +245,12 @@ game.configdata = new function() {
 			width: w,
 			height: h,
 			maxWidth: w,
-			textAlign: 'center',
+			textAlign: align,
 		}).addTo(obj);
 		txt.y = h / 2 - txt._fontHeight / 2;
+		if(x){
+			txt.x = x;
+		}
 		obj.txt = txt;
 		obj.width = w;
 		obj.height = h;
@@ -457,6 +460,18 @@ game.sounds = new function() {
 		var basedir = 'sound/gongyong/';
 		var s = ['audio_card_click']
 		var audioSrc = s[index]+'.mp3';
+		var t = basedir+audioSrc;
+		audio = Hilo.WebSound.getAudio({
+			src: basedir + audioSrc,
+			loop: loop
+		}).play();
+	},
+	this.playTalk = function(talk){
+		if(game.configdata.MUTE)
+			return;
+		var	loop = false;
+		var basedir = 'sound/putonghua/woman/';
+		var audioSrc = talk+'.mp3';
 		var t = basedir+audioSrc;
 		audio = Hilo.WebSound.getAudio({
 			src: basedir + audioSrc,
