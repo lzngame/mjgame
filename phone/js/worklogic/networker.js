@@ -9,6 +9,8 @@ game.networker = new function() {
 		THROWMJ: 'throw_mj_mjid_103',
 		CREATEROOM: 'create_mj_room_104',
 		JOINROOM: 'join_mj_room_105',
+		
+		DISBANDROOM:'disband_mj_room_106', //解散房间
 	};
 	this.executeMsg = function(sendobj, msgtype, msgdata) {
 		var self = this;
@@ -49,15 +51,16 @@ game.networker = new function() {
 	};
 	this.canCreateRoom = function(sendobj, msgdata, self) {
 		var isEnoughcards = true;
-		if(msgdata[0] > game.userdata.roomcards) {
+		if(msgdata[0] > game.userdata.oneself.cardnums) {
 			isEnoughcards = false;
+			console.log('房卡不够');
+		}else{
+			var id = self._createRoomId();
+			var man = msgdata[1][2];
+			var paytype = msgdata[1][3];
+			game.roominfo.setData(id,paytype,man);
+			game.roominfo.isCreate = true;
 		}
-		
-		var id = self._createRoomId();
-		var man = msgdata[1][2];
-		var paytype = msgdata[1][3];
-		
-		game.roominfo.setData(id,paytype,man);
 		game.sendMsg(self, sendobj, self.msg.CREATEROOM, isEnoughcards);
 	};
 	this.nextuserHandle = function(playscene, msgdata, self) {

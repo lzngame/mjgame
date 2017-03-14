@@ -438,7 +438,7 @@ game.mjdata = new function() {
 		});
 	};
 
-	self.createEffect = function(effectname, x, y, intervaltime) {
+	self.createEffect = function(effectname, x, y, intervaltime,isonce) {
 		var f = this.effectatlas.getSprite(effectname);
 		if(!intervaltime) {
 			intervaltime = 6;
@@ -451,10 +451,14 @@ game.mjdata = new function() {
 			y: y,
 		});
 		var lastframe = effect.getNumFrames() - 1;
-		effect.setFrameCallback(lastframe, function() {
-			this.stop();
-			this.removeFromParent();
-		});
+		if(isonce){
+			effect.setFrameCallback(lastframe, function() {
+				console.log('remove effect');
+				this.stop();
+				this.removeFromParent();
+			});
+		}
+		
 		return effect;
 	};
 };
@@ -472,30 +476,39 @@ game.userdata = new function() {
 		right:null,
 	};
 	
+	self.oneself  ={
+		idname:'麻将不输钱',
+		cardnums:6,
+	};
+	
 	self.init = function(){
 		self.userInfo['down'] = new game.PlayerInfo({
 			direct:'down',
 			idname:'麻将不输钱',
 			score:891,
-			isbank:true
+			isbank:true,
+			cardnums:6,
 		});
 		self.userInfo['left'] = new game.PlayerInfo({
 			direct:'left',
 			idname:'￥@_@￥',
 			score:-11,
-			isbank:false
+			isbank:false,
+			cardnums:20,
 		});
 		self.userInfo['up'] = new game.PlayerInfo({
 			direct:'up',
 			idname:'MARY',
 			score:21,
-			isbank:false
+			cardnums:33,
+			isbank:false,
 		});
 		self.userInfo['right'] = new game.PlayerInfo({
 			direct:'right',
 			idname:'常常渐渐默默',
 			score:-411,
-			isbank:false
+			cardnums:1,
+			isbank:false,
 		});
 	};
 	
@@ -510,6 +523,7 @@ game.roominfo = new function() {
 	self.paytype = 0;
 	self.paytypeSt = '';
 	self.playerNums = 0;
+	self.isCreate = false;
 
 	self.setData = function(roomid, paytype, playerNums) {
 		self.id = roomid;
