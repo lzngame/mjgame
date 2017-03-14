@@ -7,6 +7,16 @@ game.sceneuidata = new function(){
 		console.log('scene ui data init');
 	};
 	
+	self.bgtextline = [{
+						itemid: 'id_tmp_bmp',
+						itemtype: 'bmp',
+						itemurlvalue: 'login_bg92',
+						layouttype_x: 'txt',
+						alignx: 'center',
+						layouttype_y: 'txt',
+						aligny: 'center'
+					}];
+	
 	self.weixinlogin_uidata = [
 	        [
 				{

@@ -89,6 +89,8 @@ game.configdata = new function() {
 			y: y,
 			scaleX: game.scalefact,
 			scaleY: game.scalefact,
+			width:rect[2],
+			height:rect[3],
 		});
 	};
 
@@ -313,9 +315,9 @@ game.configdata = new function() {
 			if(!close_offsetx) {
 				close_offsetx = 0;
 			}
-			var closebtn = game.configdata.createButton(close_imgsource, close_uprect, close_downrect, 0, 0).addTo(panel);
-			closebtn.x = panelwidth * game.scalefact - closebtn.width * game.scalefact - close_offsetx * game.scalefact;
-			closebtn.on(Hilo.event.POINTER_END, function(e) {
+			panel.closebtn = game.configdata.createButton(close_imgsource, close_uprect, close_downrect, 0, 0).addTo(panel);
+			panel.closebtn.x = panelwidth * game.scalefact - panel.closebtn.width * game.scalefact - close_offsetx * game.scalefact;
+			panel.closebtn.on(Hilo.event.POINTER_END, function(e) {
 				panel.hide();
 			});
 
@@ -323,6 +325,11 @@ game.configdata = new function() {
 			titleIcon.x = (panel.width - titleIcon.width) * game.scalefact / 2;
 			panel.items = {};
 			game.layoutUi.layoutPanelData(data, panel.width, panel.height, game.scalefact, panel);
+			
+			panel.rx = panel.x /theparent.width;
+			panel.ry = panel.y /theparent.height;
+			panel.rwidht = panel.width/theparent.width;
+			panel.rheight = panel.height/theparent.height;
 			return panel;
 	};
 

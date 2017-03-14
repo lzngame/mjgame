@@ -1115,6 +1115,38 @@
 		},
 	});
 	
+	//RotateMjBtn --- 旋转麻将 返回房间
+	var RotateMjBtn = ns.RotateMjBtn = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name: 'RotateMjBtn',
+		btnbg:null,
+		bgrectname: null,
+		mjid:null,
+
+		constructor: function(properties) {
+			RotateMjBtn.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		init: function(properties) {
+			this.btnbg = game.configdata.createScalebutton('ui','7',0,0).addTo(this);
+			this.btnbg.x = this.btnbg.width/2;
+			this.btnbg.y = this.btnbg.height/2;
+			var circlebgMj = game.configdata.createRectImg('ui','13',0,0,game.scalefact).addTo(this);
+			circlebgMj.x = this.btnbg.x - circlebgMj.width/2;
+			circlebgMj.y = this.btnbg.y - circlebgMj.height/2 - 80;
+			var mj= game.mjdata.createEffect('zhuanmj', 0, 0, 6).addTo(this);
+			var mjscale = game.scalefact*0.8;
+			mj.scaleX = mj.scaleY = mjscale;
+			mj.x = circlebgMj.x + circlebgMj.width/2 -  196*mjscale/2;
+			mj.y = circlebgMj.y + circlebgMj.height/2 - 210*mjscale/2;
+			this.on(Hilo.event.POINTER_END,function(e){
+				console.log('返回房间');
+			});
+			this.width = this.btnbg.width;
+			this.height = this.btnbg.height;
+		},
+	});
+	
 	
 	//玩家信息 PlayerInfo
 	var PlayerInfo = ns.PlayerInfo = Hilo.Class.create({

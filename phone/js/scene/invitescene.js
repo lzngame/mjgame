@@ -39,13 +39,14 @@
 		},
 		setRoomInfo:function(){
 			var info = game.roominfo.getData();
-			
 			this.items['id_invitescene_wintype_txt'].text = info.paytype;
 			this.items['id_invitescene_title_txt'].text = '房间号：'+info.roomid;
 		},
 
 		disbandRoom: function(btnself) {
 			console.log('disbandRoom');
+			game.roominfo.isCreate = false;
+			game.switchScene(game.configdata.SCENE_NAMES.main);
 		},
 		inviteFriend: function(btnself) {
 			console.log('inviteFriend');

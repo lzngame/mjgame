@@ -449,7 +449,7 @@
 					x += 300;
 					break;
 			}
-			game.mjdata.createEffect('buhua', x, y, 4).addTo(this);
+			game.mjdata.createEffect('buhua', x, y, 4,true).addTo(this);
 		},
 
 		buhuaSingle: function(userdir, sendobj) {
