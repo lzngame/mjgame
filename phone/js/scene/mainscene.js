@@ -136,6 +136,8 @@
 
 			this.initSlideEvent();
 			
+			
+			
 		},
 
 		createPointoutWindow: function(data, title, text,isTitle) {

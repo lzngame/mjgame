@@ -380,6 +380,7 @@
 		disx: 0,
 		disy: 0,
 		slidedisx: 0,
+		slidedisy: 0,
 		space: 5,
 		itemwidth: 0,
 
@@ -1222,6 +1223,65 @@
 			});
 			this.width = this.btnbg.width;
 			this.height = this.btnbg.height;
+		},
+	});
+	
+	
+	//Chatbubble --- 聊天泡泡
+	var Chatbubble = ns.Chatbubble = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name: 'Chatbubble',
+		placement:0,   //摆放方式 0:左上 1：右上 2：左下 3：右下
+		txt:'聊天泡泡',
+		delaytime:1800,
+		alphaduration:500,
+
+		constructor: function(properties) {
+			Chatbubble.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		init: function(properties) {
+			var self = this;
+			var showlayer = new Hilo.Container().addTo(this);
+			var bg = game.configdata.createRectImg('ui','login_bg99',0,0,1).addTo(showlayer);
+			this.width = bg.width;
+			this.height = bg.height;
+			
+			var talktxt = game.configdata.createTitletext(this.txt,'24px 黑体','#46485f','rgba(0,0,0,0)',0,20,362).addTo(showlayer);
+			if(this.placement == 0){
+				showlayer.y = -bg.height;
+			}else if(this.placement == 1){
+				bg.scaleX = -1;
+				bg.x = bg.width;
+				showlayer.y = -bg.height;
+				showlayer.x = -bg.width;
+			}else if(this.placement == 2){
+				bg.scaleY = -1;
+				bg.y = bg.height;
+				talktxt.y += 20;
+			}else if(this.placement == 3){
+				bg.scaleX = -1;
+				bg.x = bg.width;
+				bg.scaleY = -1;
+				bg.y = bg.height;
+				talktxt.y += 20;
+				showlayer.x = -bg.width;
+			}
+			/*var panel = this.getChildById(this.panelid);
+			panel.hide();
+			this.panelid = null;
+			if(sound)
+				game.sounds.playTalk(sound);
+			*/
+			new Hilo.Tween.to(self,{
+				alpha:0.1,
+			},{
+				duration:self.alphaduration,
+				delay:self.delaytime,
+				onComplete:function(){
+					self.removeFromParent();
+				}
+			});
 		},
 	});
 	

@@ -100,7 +100,8 @@
 					y:panel.height * 0.125 * game.scalefact,
 					handler:function(){
 						var txt =$('#testp')[0].value;
-						game.sendMsg(game.scenes[game.configdata.SCENE_NAMES.invite],game.networker,game.networker.msg.SHOWTALK,[txt,null]);
+						if(txt.length > 0)
+							game.sendMsg(game.scenes[game.configdata.SCENE_NAMES.invite],game.networker,game.networker.msg.SHOWTALK,[txt,null]);
 					},
 					scaleX:game.scalefact,
 					scaleY:game.scalefact,
@@ -118,23 +119,12 @@
 		
 		showtalk:function(userdir,txt,sound){
 			this.hidepanel();
-			var talklayer = new Hilo.Container({x:800,y:600}).addTo(this);
+			var talklayer = new game.Chatbubble({x:400,y:400,delaytime:2000,txt:txt}).addTo(this);
 			var panel = this.getChildById(this.panelid);
 			panel.hide();
 			this.panelid = null;
 			if(sound)
 				game.sounds.playTalk(sound);
-			game.configdata.createRectImg('ui','login_bg99',0,0,1).addTo(talklayer);
-			var talktxt = game.configdata.createTitletext(txt,'24px 黑体','#46485f','rgba(0,0,0,0)',0,20,292).addTo(talklayer);
-			new Hilo.Tween.to(talklayer,{
-				alpha:0,
-			},{
-				duration:500,
-				delay:1500,
-				onComplete:function(){
-					talklayer.removeFromParent();
-				}
-			});
 		},
 
 		disbandRoom: function(btnself) {
