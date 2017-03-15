@@ -227,7 +227,8 @@
 			var pw = game.screenWidth * 0.5 * this.panel.rwidht * game.scalefact;
 
 			var posst = 'top:' + py + 'px;left:' + px + 'px';
-			var cssst = "<input id='"+this.inputid+"'  style='width:" + pw + "px;height:20px;position:absolute;" + posst + "'></input>";
+			var cssst = "<input type='text'   id='"+this.inputid+"' placeholder='输入聊天内容...' style='width:" + pw + "px;height:12px;position:absolute;" + posst + "'></input>";
+			//var cssst = "<input type='text'  onfocus=ontxtfocus() id='"+this.inputid+"' value='输入聊天内容...' style='width:" + pw + "px;height:12px;position:absolute;" + posst + "'></input>";
 			console.log(cssst);
 			t.after(cssst);
 
