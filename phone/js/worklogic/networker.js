@@ -28,6 +28,9 @@ game.networker = new function() {
 			case this.msg.NEXTUSER_BUHUA://补花
 				self.delayHandle(500,sendobj, msgdata, self.buhua, self);
 				break;
+			case this.msg.SHOWTALK://显示聊天
+				self.delayHandle(50,sendobj,msgdata,self.showtalk,self);
+				break;
 		}
 	};
 	this.delayHandle = function(delaytime,sendobj, msgdata, func, self) {
@@ -80,5 +83,9 @@ game.networker = new function() {
 	};
 	this.buhua = function(playscene, msgdata, self) {
 		game.sendMsg(this, playscene, self.msg.NEXTUSER_BUHUA, 999);
+	};
+	this.showtalk = function(playscene, msgdata, self){
+		console.log(msgdata);
+		game.sendMsg(this, game.scenes[game.configdata.SCENE_NAMES.invite], self.msg.SHOWTALK, ['down',msgdata[0],msgdata[1]]);
 	};
 };

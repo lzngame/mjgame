@@ -23,7 +23,8 @@
 		executeMsg: function(sendobj, msgtype, msgdata) {
 			var self = this;
 			switch(msgtype) {
-				case '':
+				case game.networker.msg.SHOWTALK:
+					self.showtalk(msgdata[0],msgdata[1],msgdata[2]);
 					break;
 			}
 		},
@@ -45,6 +46,7 @@
 		},
 		showTalkpanel: function(sceneself) {
 			var panel = sceneself.createPointoutWindow([]).addTo(sceneself);
+			sceneself.panelid = panel.id;
 			var title = new game.TabButton().addTo(panel);
 			title.x = (panel.width - title.width) / 2 * game.scalefact;
 			title.y = 20;
@@ -62,16 +64,16 @@
 				var item = game.configdata.createBgTitletext(data[0], '26px 黑体', 'black', 'ui', 'login_bg92', 'left', 20).addTo(content);
 				item.y = i * 60;
 				item.sound = data[1];
+				item.txt = data[0];
 				item.on(Hilo.event.POINTER_END, function(e) {
 					if(scrollwin.slidedisy == 0) {
-						game.sounds.playTalk(this.sound);
+						game.sendMsg(game.scenes[game.configdata.SCENE_NAMES.invite],game.networker,game.networker.msg.SHOWTALK,[this.txt,this.sound]);
 					}
 				});
 			}
 			scrollwin.addContent(content, 660);
 
 			var t = $('#game-container');
-
 			var x = game.screenWidth * panel.rx;
 			var y = game.screenHeight * panel.ry;
 			var px = game.screenWidth * 0.125 * panel.rwidht * game.scalefact + x;
@@ -83,11 +85,7 @@
 			t.after(cssst);
 
 			panel.closebtn.on(Hilo.event.POINTER_END, function(e) {
-				console.log('删除输入框');
-				console.log($('#testp').value);
-				var txt =$('#testp')[0].value;
-				console.log(txt);
-				$('#testp').remove();
+				sceneself.hidepanel();
 			});
 			
 			var btn = new game.IconButton({
@@ -97,25 +95,44 @@
 					iconimg:'login_bg90',
 					x:panel.width * 0.65,
 					y:panel.height * 0.125,
-					handler:sceneself.showtalk,
+					handler:function(){
+						var txt =$('#testp')[0].value;
+						game.sendMsg(game.scenes[game.configdata.SCENE_NAMES.invite],game.networker,game.networker.msg.SHOWTALK,[txt,null]);
+					},
 					scaleX:game.scalefact,
 					scaleY:game.scalefact,
 				}).addTo(panel);
 		},
-		sendtalk:function(){
+		
+		hidepanel:function(){
+			console.log('删除输入框');
+			console.log($('#testp').value);
 			var txt =$('#testp')[0].value;
+			console.log(txt);
 			$('#testp').remove();
-			game.configdata.sendMsg();
 		},
 		
-		showtalk:function(){
-			var txt =$('#testp')[0].value;
-			$('#testp').remove();
-			console.log(txt);
-			var talklayer = new Hilo.Container({x:800,y:600}).addTo(this.parent.parent);
-			this.parent.hide();
+		sendtalk:function(){
+			//var txt =$('#testp')[0].value;
+			//$('#testp').remove();
+			//console.log(txt);
+			//this.parent.parent.showtalk(txt,this.parent,this.parent.parent,'down');
+			//game.sendMsg(this.parent, game.networker, game.networker.msg.SHOWTALK, txt);
+			
+			//game.sendMsg(game.scenes[game.configdata.SCENE_NAMES.invite],game.networker,game.networker.msg.SHOWTALK,[txt,null]);
+			
+		},
+		
+		showtalk:function(userdir,txt,sound){
+			this.hidepanel();
+			var talklayer = new Hilo.Container({x:800,y:600}).addTo(this);
+			var panel = this.getChildById(this.panelid);
+			panel.hide();
+			this.panelid = null;
+			if(sound)
+				game.sounds.playTalk(sound);
 			game.configdata.createRectImg('ui','login_bg99',0,0,1).addTo(talklayer);
-			var talktxt = game.configdata.createTitletext(txt,'34px 黑体','#46485f','rgba(0,0,0,0)',0,20,322).addTo(talklayer);
+			var talktxt = game.configdata.createTitletext(txt,'24px 黑体','#46485f','rgba(0,0,0,0)',0,20,292).addTo(talklayer);
 			new Hilo.Tween.to(talklayer,{
 				alpha:0,
 			},{
