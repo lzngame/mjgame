@@ -55,6 +55,8 @@
 				height: panel.height * game.scalefact * 6 / 8,
 				x: panel.width * game.scalefact / 8,
 				y: panel.height * game.scalefact / 4,
+				scaleX:game.scalefact,
+				scaleY:game.scalefact,
 			}).addTo(panel);
 			scrollwin.contentpanel.pointerEnabled = true;
 			var content = new Hilo.Container();
@@ -78,9 +80,10 @@
 			var y = game.screenHeight * panel.ry;
 			var px = game.screenWidth * 0.125 * panel.rwidht * game.scalefact + x;
 			var py = game.screenHeight * 0.125 * panel.rheight * game.scalefact + y;
+			var pw = game.screenWidth * 0.5 * panel.rwidht * game.scalefact;
 
 			var posst = 'top:' + py + 'px;left:' + px + 'px';
-			var cssst = "<input id='testp'  style='width:200px;height:30px;position:absolute;"+ posst+"'></input>";
+			var cssst = "<input id='testp'  style='width:"+pw+"px;height:20px;position:absolute;"+ posst+"'></input>";
 			console.log(cssst);
 			t.after(cssst);
 
@@ -93,8 +96,8 @@
 					btnupimg:'login_10',
 					btndownimg:'login_11',
 					iconimg:'login_bg90',
-					x:panel.width * 0.65,
-					y:panel.height * 0.125,
+					x:panel.width * 0.65 * game.scalefact,
+					y:panel.height * 0.125 * game.scalefact,
 					handler:function(){
 						var txt =$('#testp')[0].value;
 						game.sendMsg(game.scenes[game.configdata.SCENE_NAMES.invite],game.networker,game.networker.msg.SHOWTALK,[txt,null]);
@@ -112,16 +115,6 @@
 			$('#testp').remove();
 		},
 		
-		sendtalk:function(){
-			//var txt =$('#testp')[0].value;
-			//$('#testp').remove();
-			//console.log(txt);
-			//this.parent.parent.showtalk(txt,this.parent,this.parent.parent,'down');
-			//game.sendMsg(this.parent, game.networker, game.networker.msg.SHOWTALK, txt);
-			
-			//game.sendMsg(game.scenes[game.configdata.SCENE_NAMES.invite],game.networker,game.networker.msg.SHOWTALK,[txt,null]);
-			
-		},
 		
 		showtalk:function(userdir,txt,sound){
 			this.hidepanel();
