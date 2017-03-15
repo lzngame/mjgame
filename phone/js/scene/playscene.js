@@ -161,6 +161,9 @@
 						self.currentThrowIndex = 0;
 					}
 					break;
+				case game.networker.msg.SHOWTALK:
+					self.showtalk(msgdata[0],msgdata[1],msgdata[2]);
+					break;
 			}
 		},
 
@@ -242,6 +245,7 @@
 		},
 
 		setRoomInfo: function() {
+			var self = this;
 			this.residueMjLabel = game.configdata.createBgTitletext('剩余' + game.mjdata.getResidueMj().toString() + '张', '18px 黑体', 'yellow', 'ui', 'login_bg9','center').addTo(this.bglayer);
 			this.residueMjLabel.x = this.width / 2 - this.residueMjLabel.width - 50;
 			this.residueMjLabel.y = this.height / 2 - this.residueMjLabel.height / 2;
@@ -257,10 +261,13 @@
 			this.pointer_user = new game.Pointeruser({ imgsource: 'ui', rectname: 'battle_10', pivotx: 40, pivoty: 40, x: this.width / 2, y: this.height / 2, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.bglayer);
 			var info = game.roominfo.getData();
 			this.roomIdLabel.txt.text = '房间号：' + info.roomid;
-			var btn01 = game.configdata.createScalebutton('ui', 'lsbattle_2', 0, 10).addTo(this);
-			btn01.x = this.width - btn01.width * game.scalefact * 0.5 - 10;
-			btn01.y = btn01.height * game.scalefact * 0.5 + 10;
-			var btn02 = game.configdata.createScalebutton('ui', 'lsbattle_3', btn01.x, btn01.height * (game.scalefact + 1)).addTo(this);
+			var settingbtn = game.configdata.createScalebutton('ui', 'lsbattle_2', 0, 10).addTo(this);
+			settingbtn.x = this.width - settingbtn.width * game.scalefact * 0.5 - 10;
+			settingbtn.y = settingbtn.height * game.scalefact * 0.5 + 10;
+			var talkbtn = game.configdata.createScalebutton('ui', 'lsbattle_3', settingbtn.x, settingbtn.height * (game.scalefact + 1)).addTo(this);
+			talkbtn.on(Hilo.event.POINTER_END,function(e){
+				self.showTalkpanel(self);
+			});
 
 			if(info.playerNums == 4) {
 				this.mjDirect = ['down', 'left', 'up', 'right'];
@@ -286,6 +293,37 @@
 				var isbank = game.userdata.userInfo[dir]['isbank'];
 				var portrait = new game.MjPortrait({ x: x, y: y, username: name, score: score, isbank: isbank }).addTo(this.bglayer);
 			}
+		},
+		
+		showTalkpanel: function(sceneself) {
+			var panel = new game.ShowTalkpanel({parentscene:sceneself,targetscene:game.configdata.SCENE_NAMES.play});
+			panel.addTo(sceneself);
+		},
+		
+		hidepanel:function(){
+			console.log('删除输入框');
+			var panel = this.getChildById(this.panelid);
+			panel.hide();
+			this.panelid = null;
+		},
+		
+		showtalk:function(userdir,txt,sound){
+			var x = game.playsceneUidata.initPostion[userdir]['userX'];
+			var y = game.playsceneUidata.initPostion[userdir]['userY'];
+			var ids ={
+				up:[3,74,74],
+				down:[0,0,74],
+				left:[0,0,74],
+				right:[1,0,120],
+			};
+			var placement = ids[userdir][0];
+			var disy = ids[userdir][1] * game.scalefact;
+			var disx = ids[userdir][2] * game.scalefact;
+			
+			this.hidepanel();
+			var talklayer = new game.Chatbubble({x:x+disx,y:y+disy,delaytime:2000,txt:txt,placement:placement}).addTo(this);
+			if(sound)
+				game.sounds.playTalk(sound);
 		},
 
 		takemj: function() {

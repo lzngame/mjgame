@@ -37,6 +37,7 @@
 				});
 			}
 		},
+		
 		disBtnHandle:function(){
 			var self = this;
 			for(var idname in this.funcs){

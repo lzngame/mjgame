@@ -45,84 +45,31 @@
 			this.items['id_invitescene_title_txt'].text = '房间号：' + info.roomid;
 		},
 		showTalkpanel: function(sceneself) {
-			var panel = sceneself.createPointoutWindow([]).addTo(sceneself);
-			sceneself.panelid = panel.id;
-			var title = new game.TabButton().addTo(panel);
-			title.x = (panel.width - title.width) / 2 * game.scalefact;
-			title.y = 20;
-			var scrollwin = new game.Scrollwindow({
-				width: 621, //panel.width * game.scalefact * 6 / 8,
-				height: panel.height * game.scalefact * 6 / 8,
-				x: panel.width * game.scalefact / 8,
-				y: panel.height * game.scalefact / 4,
-				scaleX:game.scalefact,
-				scaleY:game.scalefact,
-			}).addTo(panel);
-			scrollwin.contentpanel.pointerEnabled = true;
-			var content = new Hilo.Container();
-
-			for(var i in game.mjdata.talksounds) {
-				var data = game.mjdata.talksounds[i];
-				var item = game.configdata.createBgTitletext(data[0], '26px 黑体', 'black', 'ui', 'login_bg92', 'left', 20).addTo(content);
-				item.y = i * 60;
-				item.sound = data[1];
-				item.txt = data[0];
-				item.on(Hilo.event.POINTER_END, function(e) {
-					if(scrollwin.slidedisy == 0) {
-						game.sendMsg(game.scenes[game.configdata.SCENE_NAMES.invite],game.networker,game.networker.msg.SHOWTALK,[this.txt,this.sound]);
-					}
-				});
-			}
-			scrollwin.addContent(content, 660);
-
-			var t = $('#game-container');
-			var x = game.screenWidth * panel.rx;
-			var y = game.screenHeight * panel.ry;
-			var px = game.screenWidth * 0.125 * panel.rwidht * game.scalefact + x;
-			var py = game.screenHeight * 0.125 * panel.rheight * game.scalefact + y;
-			var pw = game.screenWidth * 0.5 * panel.rwidht * game.scalefact;
-
-			var posst = 'top:' + py + 'px;left:' + px + 'px';
-			var cssst = "<input id='testp'  style='width:"+pw+"px;height:20px;position:absolute;"+ posst+"'></input>";
-			console.log(cssst);
-			t.after(cssst);
-
-			panel.closebtn.on(Hilo.event.POINTER_END, function(e) {
-				sceneself.hidepanel();
-			});
-			
-			var btn = new game.IconButton({
-					imgsource:'ui',
-					btnupimg:'login_10',
-					btndownimg:'login_11',
-					iconimg:'login_bg90',
-					x:panel.width * 0.65 * game.scalefact,
-					y:panel.height * 0.125 * game.scalefact,
-					handler:function(){
-						var txt =$('#testp')[0].value;
-						if(txt.length > 0)
-							game.sendMsg(game.scenes[game.configdata.SCENE_NAMES.invite],game.networker,game.networker.msg.SHOWTALK,[txt,null]);
-					},
-					scaleX:game.scalefact,
-					scaleY:game.scalefact,
-				}).addTo(panel);
+			var panel = new game.ShowTalkpanel({parentscene:sceneself,targetscene:game.configdata.SCENE_NAMES.invite});
+			panel.addTo(sceneself);
 		},
 		
 		hidepanel:function(){
 			console.log('删除输入框');
-			console.log($('#testp').value);
-			var txt =$('#testp')[0].value;
-			console.log(txt);
-			$('#testp').remove();
-		},
-		
-		
-		showtalk:function(userdir,txt,sound){
-			this.hidepanel();
-			var talklayer = new game.Chatbubble({x:400,y:400,delaytime:2000,txt:txt}).addTo(this);
 			var panel = this.getChildById(this.panelid);
 			panel.hide();
 			this.panelid = null;
+		},
+		
+		showtalk:function(userdir,txt,sound){
+			var ids ={
+				up:['id_invitescene_playerup_bmp',2,74],
+				down:['id_invitescene_playerdown_bmp',0,0],
+				left:['id_invitescene_playerleft_bmp',0,0],
+				right:['id_invitescene_playerright_bmp',1,0],
+			};
+			var obj = this.items[ids[userdir][0]];
+			var placement = ids[userdir][1];
+			var dis = ids[userdir][2] * game.scalefact;
+			var x = obj.x;
+			var y = obj.y;
+			this.hidepanel();
+			var talklayer = new game.Chatbubble({x:x,y:y+dis,delaytime:2000,txt:txt,placement:placement}).addTo(this);
 			if(sound)
 				game.sounds.playTalk(sound);
 		},
@@ -139,13 +86,6 @@
 		gobackScene: function(btnself) {
 			console.log('gobackScene');
 			game.switchScene(game.configdata.SCENE_NAMES.main);
-		},
-
-		createPointoutWindow: function(data) {
-			var self = this;
-			var panel = game.configdata.createBgPanel(data, 'login_bg35', true, true, self, 'login_13', 'login_14', 'ui', 55, 'empty', 'empty');
-			console.log('x:%f -- y:%f', panel.x, panel.y);
-			return panel;
 		},
 
 		deactive: function() {

@@ -86,6 +86,8 @@ game.networker = new function() {
 	};
 	this.showtalk = function(playscene, msgdata, self){
 		console.log(msgdata);
-		game.sendMsg(this, game.scenes[game.configdata.SCENE_NAMES.invite], self.msg.SHOWTALK, ['down',msgdata[0],msgdata[1]]);
+		var dirs = ['down','up','right','left'];
+		var dir = dirs[Math.floor(Math.random()*4)];
+		game.sendMsg(this, playscene, self.msg.SHOWTALK, [dir,msgdata[0],msgdata[1]]);
 	};
 };
