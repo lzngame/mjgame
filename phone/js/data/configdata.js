@@ -176,6 +176,10 @@ game.configdata = new function() {
 				rect_data = game.loaddata.IMAGEDATA_3[pngname];
 				imgsource = game.getImg('bg');
 				break;
+			case 'brows':
+				rect_data = game.loaddata.IMAGEDATA_4[pngname];
+				imgsource = game.getImg('brows');
+				break;
 			default:
 				rect_data = game.loaddata.IMAGEDATA_1[pngname];
 				imgsource = game.getImg('ui');
@@ -381,6 +385,9 @@ game.configdata = new function() {
 					break;
 				case 'bg': //
 					rect = game.loaddata.IMAGEDATA_3[pngname];
+					break;
+				case 'brows': //
+					rect = game.loaddata.IMAGEDATA_4[pngname];
 					break;
 				default:
 					rect = game.loaddata.IMAGEDATA_1[pngname];

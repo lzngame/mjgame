@@ -24,7 +24,7 @@
 			var self = this;
 			switch(msgtype) {
 				case game.networker.msg.SHOWTALK:
-					self.showtalk(msgdata[0],msgdata[1],msgdata[2]);
+					self.showtalk(msgdata[0],msgdata[1],msgdata[2],msgdata[3]);
 					break;
 			}
 		},
@@ -56,7 +56,7 @@
 			this.panelid = null;
 		},
 		
-		showtalk:function(userdir,txt,sound){
+		showtalk:function(userdir,showtype,txt,sound){
 			var ids ={
 				up:['id_invitescene_playerup_bmp',2,74],
 				down:['id_invitescene_playerdown_bmp',0,0],
@@ -69,7 +69,10 @@
 			var x = obj.x;
 			var y = obj.y;
 			this.hidepanel();
-			var talklayer = new game.Chatbubble({x:x,y:y+dis,delaytime:2000,txt:txt,placement:placement}).addTo(this);
+			if(showtype == 'text')
+				var talklayer = new game.Chatbubble({x:x,y:y+dis,delaytime:2000,txt:txt,placement:placement}).addTo(this);
+			else
+				var talklayer = new game.Chatbubble({x:x,y:y+dis,delaytime:2000,rectname:txt,placement:placement}).addTo(this);
 			if(sound)
 				game.sounds.playTalk(sound);
 		},

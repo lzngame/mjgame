@@ -162,7 +162,7 @@
 					}
 					break;
 				case game.networker.msg.SHOWTALK:
-					self.showtalk(msgdata[0],msgdata[1],msgdata[2]);
+					self.showtalk(msgdata[0],msgdata[1],msgdata[2],msgdata[3]);
 					break;
 			}
 		},
@@ -307,7 +307,7 @@
 			this.panelid = null;
 		},
 		
-		showtalk:function(userdir,txt,sound){
+		showtalk:function(userdir,showtype,txt,sound){
 			var x = game.playsceneUidata.initPostion[userdir]['userX'];
 			var y = game.playsceneUidata.initPostion[userdir]['userY'];
 			var ids ={
@@ -321,7 +321,10 @@
 			var disx = ids[userdir][2] * game.scalefact;
 			
 			this.hidepanel();
-			var talklayer = new game.Chatbubble({x:x+disx,y:y+disy,delaytime:2000,txt:txt,placement:placement}).addTo(this);
+			if(showtype == 'text')
+				var talklayer = new game.Chatbubble({x:x+disx,y:y+disy,delaytime:2000,txt:txt,placement:placement}).addTo(this);
+			else
+				var talklayer = new game.Chatbubble({x:x+disx,y:y+disy,delaytime:2000,rectname:txt,placement:placement}).addTo(this);
 			if(sound)
 				game.sounds.playTalk(sound);
 		},

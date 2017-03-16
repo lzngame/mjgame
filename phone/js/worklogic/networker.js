@@ -88,6 +88,7 @@ game.networker = new function() {
 		console.log(msgdata);
 		var dirs = ['down','up','right','left'];
 		var dir = dirs[Math.floor(Math.random()*4)];
-		game.sendMsg(this, playscene, self.msg.SHOWTALK, [dir,msgdata[0],msgdata[1]]);
+		
+		game.sendMsg(this, playscene, self.msg.SHOWTALK, [dir,msgdata[0],msgdata[1],msgdata[2]]);
 	};
 };

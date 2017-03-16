@@ -1129,6 +1129,9 @@
 		righttxtUp:null,
 		righttxtDown:null,
 		isLeft:true,
+		leftfunc:null,
+		rightfunc:null,
+		parentscene:null,
 
 		constructor: function(properties) {
 			TabButton.superclass.constructor.call(this, properties);
@@ -1169,11 +1172,17 @@
 				self.isLeft = true;
 				self.setState();
 				console.log('left tab');
+				if(self.leftfunc){
+					self.leftfunc(self.parentscene);
+				}
 			});
 			this.rightTab.on(Hilo.event.POINTER_START,function(e){
 				self.isLeft = false;
 				self.setState();
 				console.log('right tab');
+				if(self.rightfunc){
+					self.rightfunc(self.parentscene);
+				}
 			});
 			this.setState();			
 		},
@@ -1233,6 +1242,7 @@
 		name: 'Chatbubble',
 		placement:0,   //摆放方式 0:左上 1：右上 2：左下 3：右下
 		txt:'聊天泡泡',
+		rectname:null,
 		delaytime:1800,
 		alphaduration:500,
 
@@ -1246,19 +1256,23 @@
 			var bg = game.configdata.createRectImg('ui','login_bg99',0,0,1).addTo(showlayer);
 			this.width = bg.width;
 			this.height = bg.height;
-			
+			var brows = game.configdata.createRectImg('brows',this.rectname,0,0,1).addTo(this);
 			var talktxt = game.configdata.createTitletext(this.txt,'24px 黑体','#46485f','rgba(0,0,0,0)',0,20,362).addTo(showlayer);
 			if(this.placement == 0){
 				showlayer.y = -bg.height;
+				brows.y = -bg.height;
 			}else if(this.placement == 1){
 				bg.scaleX = -1;
 				bg.x = bg.width;
 				showlayer.y = -bg.height;
 				showlayer.x = -bg.width;
+				brows.y = -bg.height;
+				brows.x = -bg.width;
 			}else if(this.placement == 2){
 				bg.scaleY = -1;
 				bg.y = bg.height;
 				talktxt.y += 20;
+				brows.y += 20;
 			}else if(this.placement == 3){
 				bg.scaleX = -1;
 				bg.x = bg.width;
@@ -1266,6 +1280,10 @@
 				bg.y = bg.height;
 				talktxt.y += 20;
 				showlayer.x = -bg.width;
+				showlayer.x = -bg.width;
+			}
+			if(this.rectname != null){
+				talktxt.visible = false;
 			}
 			/*var panel = this.getChildById(this.panelid);
 			panel.hide();
