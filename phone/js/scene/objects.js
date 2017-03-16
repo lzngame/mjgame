@@ -1231,15 +1231,21 @@
 			this.width = this.downimg.width;
 			this.height = this.downimg.height;
 			this.on(Hilo.event.POINTER_END,function(e){
-				self.isUp = !self.isUp;
-				self.setState();
-				if(self.func){
-					self.func();
+				if(!self.isUp){
+					console.log('当前状态，不能点击');
+				}else{
+					self.isUp = !self.isUp;
+					self.setState(this.isUp);
+					if(self.func){
+						self.func();
+					}
 				}
+				
 			});
-			this.setState();			
+			this.setState(this.isUp);			
 		},
-		setState:function(){
+		setState:function(status){
+			this.isUp = status;
 			if(this.isUp){
 				this.downimg.visible = false;
 				this.upimg.visible = true;

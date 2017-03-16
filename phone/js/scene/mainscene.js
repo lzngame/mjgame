@@ -145,7 +145,12 @@
 			
 			new game.Invitepanel({parentscene:this}).addTo(this);
 		},
-
+		hidepanel:function(){
+			console.log('删除输入框');
+			var panel = this.getChildById(this.panelid);
+			panel.hide();
+			this.panelid = null;
+		},
 		createPointoutWindow: function(data, title, text,isTitle) {
 			var self = this;
 			var txt = game.configdata.createTitletext(text, '28px 黑体', 'black', 'rgba(0,0,0,0)', 0, 0, 600);

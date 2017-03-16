@@ -181,6 +181,11 @@
 		Extends: Hilo.Container,
 		name: 'Invitepanel',
 		parentscene:null,
+		codebtn:null,
+		invitebtn:null,
+		tabpanelCode:null,
+		tabpanelInvite:null,
+		inputid:'inputinviteid',
 		constructor: function(properties) {
 			Invitepanel.superclass.constructor.call(this, properties);
 			this.init(properties);
@@ -189,36 +194,75 @@
 			var self = this;
 			this.panel = game.configdata.createBgPanel([], 'login_bg35', true, true, this.parentscene, 'login_13', 'login_14', 'ui', 55, 'login_bg111', 'huodongzhongxin').addTo(this);
 			this.parentscene.panelid = this.id;
-			//this.panel.scaleX = this.panel.scaleY = game.scalefact;
-			var t1 = new game.SwitchButton({front:'yaoqing2',downimg:'tuiguang2',upimg:'tuiguang3',x:0,y:this.panel.height * 0.125}).addTo(this.panel);
-			var t2 = new game.SwitchButton({front:'yaoqing3',downimg:'tuiguang2',upimg:'tuiguang3',x:0,y:this.panel.height * 0.25}).addTo(this.panel);
-			t1.x = this.panel.width * 0.15 - t1.width;
-			t2.x = t1.x;
+			this.codebtn = new game.SwitchButton({front:'yaoqing2',downimg:'tuiguang2',upimg:'tuiguang3',x:0,y:this.panel.height * 0.25* game.scalefact,isUp:false,func:this.codebtnfunc}).addTo(this.panel);
+			this.invitebtn = new game.SwitchButton({front:'yaoqing3',downimg:'tuiguang2',upimg:'tuiguang3',x:0,y:this.panel.height * 0.375* game.scalefact,isUp:true,func:this.invitebtnfunc}).addTo(this.panel);
+			this.codebtn.x = this.panel.width * 0.125 * game.scalefact - this.codebtn.width * game.scalefact;
+			this.invitebtn.x = this.codebtn.x;
+			this.codebtn.scaleX = this.codebtn.scaleY = game.scalefact;
+			this.invitebtn.scaleX = this.invitebtn.scaleY = game.scalefact;
+			this.panel.closebtn.on(Hilo.event.POINTER_END, function(e) {
+				self.parentscene.hidepanel();
+			});
 			
-			//var bg = game.configdata.createRectImg('bg','login_bg36',this.panel.width*0.25,this.panel.height * 0.125,1).addTo(this.panel);
-			//bg.width = this.panel.width * 0.125 * 5;
-			//bg.heihg = this.panel.height * 0.125 * 6;
-			
-			var tabpanel = game.configdata.createBgPanel([], 'login_bg36', false, false, this.panel, 'empty', 'empty', 'ui', 55, 'empty', 'empty').addTo(this.panel);
-			tabpanel.x = this.panel.width * 0.15;
-			var txt = game.configdata.createTitletext('输入邀请码可以获得房卡，邀请码可发送邀请链接后查看', '36px 黑体', 'black', 'rgba(0,0,0,0)', 0, 0, 600);
-			txt.x = tabpanel.width * 0.125;
-			txt.y = tabpanel.height * 0.125;
-			txt.addTo(tabpanel);
+			this.tabpanelCode = game.configdata.createBgPanel([], 'login_bg36', false, false, this.panel, 'empty', 'empty', 'ui', 55, 'empty', 'empty').addTo(this.panel);
+			this.tabpanelCode.x = this.panel.width * 0.125 * game.scalefact;
+			this.tabpanelCode.y = this.panel.height * 0.125 * game.scalefact;
+			var txt = game.configdata.createTitletext('输入邀请码可以获得房卡，邀请码可发送邀请链接后查看', '30px 黑体', '#27342b', 'rgba(0,0,0,0)', 0, 0, this.tabpanelCode.width *game.scalefact);
+			txt.y = this.tabpanelCode.height * 0.1* game.scalefact;
+			txt.addTo(this.tabpanelCode);
 			var btn = new game.IconButton({
 					imgsource: 'ui',
 					btnupimg: 'login_10',
 					btndownimg: 'login_11',
 					iconimg: 'login_bg72',
-				}).addTo(tabpanel);
-			btn.x = tabpanel.width/2 - btn.width/2;
-			btn.y = tabpanel.height * 0.74;
+					scaleX:game.scalefact,
+					scaleY:game.scalefact,
+				}).addTo(this.tabpanelCode);
+			btn.x = this.tabpanelCode.width/2* game.scalefact - btn.width/2* game.scalefact;
+			btn.y = this.tabpanelCode.height * 0.74* game.scalefact;
+			var factw = this.tabpanelCode.width/this.panel.width;
+			var faceh = this.tabpanelCode.height/this.panel.height;
+			this.insertDomtxt(0.25,0.50,0.4,0.04,this.panel.rx,this.panel.ry,this.panel.rwidht,this.panel.rheight,'输入邀请码...');
 			
-			this.insertDomtxt(0.25,0.50,0.5,0.04,tabpanel.rx,tabpanel.ry,tabpanel.rwidht,tabpanel.rheight);
-			
+			this.tabpanelInvite = game.configdata.createBgPanel([], 'login_bg36', false, false, this.panel, 'empty', 'empty', 'ui', 55, 'empty', 'empty').addTo(this.panel);
+			this.tabpanelInvite.x = this.panel.width * 0.125 * game.scalefact;
+			this.tabpanelInvite.y = this.panel.height * 0.125 * game.scalefact;
+			var txt = game.configdata.createTitletext('规则说明', '28px 黑体', '#27342b', 'rgba(0,0,0,0)', 0, 0, this.tabpanelCode.width *game.scalefact);
+			txt.y = this.tabpanelInvite.height * 0.01* game.scalefact;
+			txt.addTo(this.tabpanelInvite);
+			var btn = new game.IconButton({
+					imgsource: 'ui',
+					btnupimg: 'login_10',
+					btndownimg: 'login_11',
+					iconimg: 'yaoqing1',
+					scaleX:game.scalefact,
+					scaleY:game.scalefact,
+				}).addTo(this.tabpanelInvite);
+			btn.x = this.tabpanelInvite.width/2* game.scalefact - btn.width/2* game.scalefact;
+			btn.y = this.tabpanelInvite.height * 0.84* game.scalefact;
+			game.configdata.createSimpletext('规则说明', '24px 黑体', '#27342b', 'rgba(0,0,0,0)', 20, 50, this.tabpanelCode.width *game.scalefact).addTo(this.tabpanelInvite);
+			this.tabpanelInvite.visible = false;
 		},
-		
-		insertDomtxt:function(pctx,pcty,pctw,pcth,rx,ry,rwidth,rheight){
+		codebtnfunc:function(){
+			var self = this.parent.parent;
+			self.invitebtn.setState(true);
+			self.insertDomtxt(0.25,0.50,0.4,0.04,self.panel.rx,self.panel.ry,self.panel.rwidht,self.panel.rheight,'输入邀请码...');
+			self.tabpanelCode.visible = true;
+			self.tabpanelInvite.visible = false;
+		},
+		invitebtnfunc:function(){
+			var self = this.parent.parent;
+			self.codebtn.setState(true);
+			self.tabpanelCode.visible = false;
+			self.tabpanelInvite.visible = true;
+			$('#'+self.inputid).remove();
+		},
+		hide:function(){
+			var input_id = '#'+this.inputid;
+			$(input_id).remove();
+			this.panel.hide();
+		},
+		insertDomtxt:function(pctx,pcty,pctw,pcth,rx,ry,rwidth,rheight,placeholdertxt){
 			var t = $('#game-container');
 			var x =  game.screenWidth  * rx;
 			var y =  game.screenHeight * ry;
@@ -228,7 +272,7 @@
 			var ph = game.screenHeight *  pcth *  rheight  * game.scalefact;
 			
 			var posst = 'top:' + py + 'px;left:' + px + 'px';
-			var cssst = "<input type='text'   id='"+this.inputid+"' placeholder='输入聊天内容...' style='width:" + pw + "px;height:"+ph+"px;position:absolute;" + posst + "'></input>";
+			var cssst = "<input type='text'   id='"+this.inputid+"' placeholder='"+placeholdertxt+"...' style='width:" + pw + "px;height:"+ph+"px;position:absolute;" + posst + "'></input>";
 			//var cssst = "<input type='text'   id='"+this.inputid+"' placeholder='输入聊天内容...' style='width:" + pw + "px;height:12px;position:absolute;" + posst + "'></input>";
 			//var cssst = "<input type='text'  onfocus=ontxtfocus() id='"+this.inputid+"' value='输入聊天内容...' style='width:" + pw + "px;height:12px;position:absolute;" + posst + "'></input>";
 			console.log(cssst);

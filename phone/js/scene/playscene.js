@@ -138,6 +138,8 @@
 					} else {
 						if(msgdata[1] != 'down')
 							self.skipOverBtn.visible = true;
+						else	
+							self.turnNext();
 					}
 					break;
 				case game.networker.msg.NEXTUSER_BUHUA:
