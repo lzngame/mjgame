@@ -131,13 +131,19 @@
 			});
 
 			this.items['id_mainscene_setting_btn'].on(Hilo.event.POINTER_END, function(e) {
-				
+				self.showInvitepanel();
 			});
 
 			this.initSlideEvent();
 			
 			
+		},
+		
+		showInvitepanel:function(){
+			//var panel = new game.ShowTalkpanel({parentscene:sceneself,targetscene:game.configdata.SCENE_NAMES.invite});
+			//panel.addTo(sceneself);
 			
+			new game.Invitepanel({parentscene:this}).addTo(this);
 		},
 
 		createPointoutWindow: function(data, title, text,isTitle) {
@@ -157,9 +163,9 @@
 			var btn = new game.RoomSurebtn({
 				itemurlvalue: 'login_10',
 				defaultNum: 5,
-				caricon: 'chuangqian',
-				sureicon: 'login_bg72',
-				btndown: 'login_11',
+				caricon:   'chuangqian',
+				sureicon:  'login_bg72',
+				btndown:   'login_11',
 				imgsource: 'ui',
 				scaleX: game.scalefact,
 				scaleY: game.scalefact,
@@ -247,6 +253,7 @@
 			var panel = game.configdata.createBgPanel(data, bgname, ishalf, ismodal, theparent, 'login_13', 'login_14', 'ui', 55, 'login_bg111', 'fenxiang');
 			return panel;
 		},
+		
 		createPromptpanel4: function(data, bgname, ishalf, ismodal, theparent) {
 			var panel = game.configdata.createBgPanel([], bgname, ishalf, ismodal, theparent, 'login_13', 'login_14', 'ui', 55, 'login_bg111', 'login_bg63');
 			var scrollwin = new game.Scrollwindow({
@@ -288,6 +295,7 @@
 
 			return panel;
 		},
+		
 		inceptNum: function(numst) {
 			if(numst.length == 6 && !isNaN(numst)) {
 				var scene = this.parent.parent;

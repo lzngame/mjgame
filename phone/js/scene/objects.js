@@ -1205,6 +1205,51 @@
 		},
 	});
 	
+	
+	
+	//SwitchButton--- 纵向的切换按钮
+	var SwitchButton = ns.SwitchButton = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name: 'SwitchButton',
+		downimg:null,
+		upimg:null,
+		front:null,
+		isUp:true,
+		func:null,
+
+		constructor: function(properties) {
+			SwitchButton.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		init: function(properties) {
+			var self = this;
+			this.downimg = game.configdata.createRectImg('ui',this.downimg,0,0,1).addTo(this);
+			this.upimg = game.configdata.createRectImg('ui',this.upimg,0,0,1).addTo(this);
+			this.front = game.configdata.createRectImg('ui',this.front,0,0,1).addTo(this);
+			this.front.x = this.downimg.width/2 - this.front.width/2;
+			this.front.y = this.downimg.height/2 - this.front.height/2;
+			this.width = this.downimg.width;
+			this.height = this.downimg.height;
+			this.on(Hilo.event.POINTER_END,function(e){
+				self.isUp = !self.isUp;
+				self.setState();
+				if(self.func){
+					self.func();
+				}
+			});
+			this.setState();			
+		},
+		setState:function(){
+			if(this.isUp){
+				this.downimg.visible = false;
+				this.upimg.visible = true;
+			}else{
+				this.downimg.visible = true;
+				this.upimg.visible = false;
+			}
+		},
+	});
+	
 	//RotateMjBtn --- 旋转麻将 返回房间
 	var RotateMjBtn = ns.RotateMjBtn = Hilo.Class.create({
 		Extends: Hilo.Container,

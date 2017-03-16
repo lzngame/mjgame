@@ -175,7 +175,71 @@
 
 		},
 	});
+	
+	//Invitepanel -- 邀请码面板
+	var Invitepanel = ns.Invitepanel = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name: 'Invitepanel',
+		parentscene:null,
+		constructor: function(properties) {
+			Invitepanel.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		init: function(properties) {
+			var self = this;
+			this.panel = game.configdata.createBgPanel([], 'login_bg35', true, true, this.parentscene, 'login_13', 'login_14', 'ui', 55, 'login_bg111', 'huodongzhongxin').addTo(this);
+			this.parentscene.panelid = this.id;
+			//this.panel.scaleX = this.panel.scaleY = game.scalefact;
+			var t1 = new game.SwitchButton({front:'yaoqing2',downimg:'tuiguang2',upimg:'tuiguang3',x:0,y:this.panel.height * 0.125}).addTo(this.panel);
+			var t2 = new game.SwitchButton({front:'yaoqing3',downimg:'tuiguang2',upimg:'tuiguang3',x:0,y:this.panel.height * 0.25}).addTo(this.panel);
+			t1.x = this.panel.width * 0.15 - t1.width;
+			t2.x = t1.x;
+			
+			//var bg = game.configdata.createRectImg('bg','login_bg36',this.panel.width*0.25,this.panel.height * 0.125,1).addTo(this.panel);
+			//bg.width = this.panel.width * 0.125 * 5;
+			//bg.heihg = this.panel.height * 0.125 * 6;
+			
+			var tabpanel = game.configdata.createBgPanel([], 'login_bg36', false, false, this.panel, 'empty', 'empty', 'ui', 55, 'empty', 'empty').addTo(this.panel);
+			tabpanel.x = this.panel.width * 0.15;
+			var txt = game.configdata.createTitletext('输入邀请码可以获得房卡，邀请码可发送邀请链接后查看', '36px 黑体', 'black', 'rgba(0,0,0,0)', 0, 0, 600);
+			txt.x = tabpanel.width * 0.125;
+			txt.y = tabpanel.height * 0.125;
+			txt.addTo(tabpanel);
+			var btn = new game.IconButton({
+					imgsource: 'ui',
+					btnupimg: 'login_10',
+					btndownimg: 'login_11',
+					iconimg: 'login_bg72',
+				}).addTo(tabpanel);
+			btn.x = tabpanel.width/2 - btn.width/2;
+			btn.y = tabpanel.height * 0.74;
+			
+			this.insertDomtxt(0.25,0.50,0.5,0.04,tabpanel.rx,tabpanel.ry,tabpanel.rwidht,tabpanel.rheight);
+			
+		},
+		
+		insertDomtxt:function(pctx,pcty,pctw,pcth,rx,ry,rwidth,rheight){
+			var t = $('#game-container');
+			var x =  game.screenWidth  * rx;
+			var y =  game.screenHeight * ry;
+			var px = game.screenWidth  *  pctx *  rwidth   * game.scalefact + x;
+			var py = game.screenHeight *  pcty *  rheight  * game.scalefact + y;
+			var pw = game.screenWidth  *  pctw *  rwidth   * game.scalefact;
+			var ph = game.screenHeight *  pcth *  rheight  * game.scalefact;
+			
+			var posst = 'top:' + py + 'px;left:' + px + 'px';
+			var cssst = "<input type='text'   id='"+this.inputid+"' placeholder='输入聊天内容...' style='width:" + pw + "px;height:"+ph+"px;position:absolute;" + posst + "'></input>";
+			//var cssst = "<input type='text'   id='"+this.inputid+"' placeholder='输入聊天内容...' style='width:" + pw + "px;height:12px;position:absolute;" + posst + "'></input>";
+			//var cssst = "<input type='text'  onfocus=ontxtfocus() id='"+this.inputid+"' value='输入聊天内容...' style='width:" + pw + "px;height:12px;position:absolute;" + posst + "'></input>";
+			console.log(cssst);
+			t.after(cssst);
+		},
+		
+		onUpdate: function() {
 
+		},
+	});
+	
 	//ShowTalkpanel  -- 聊天操作面板
 	var ShowTalkpanel = ns.ShowTalkpanel = Hilo.Class.create({
 		Extends: Hilo.Container,
@@ -256,10 +320,12 @@
 				item.sound = data[1];
 				item.txt = data[0];
 				item.on(Hilo.event.POINTER_END, function(e) {
-					if(e.stageY < scrollwin.y || e.stageY > scrollwin.height + scrollwin.y){
+					console.log('%d:%d:%d',e.stageY,ty, scrollwin.height);
+					var ty = self.panel.y+scrollwin.y;
+					if(e.stageY <  ty || e.stageY > scrollwin.height + ty){
 						console.log('out range');
 					}else{
-						console.log('%d:%d:%d',e.stageY,scrollwin.y, scrollwin.height);
+
 						if(scrollwin.slidedisy == 0) {
 							game.sendMsg(game.scenes[self.targetscene], game.networker, game.networker.msg.SHOWTALK, ['text',this.txt, this.sound]);
 						}
@@ -312,10 +378,12 @@
 				item.name = browsname;
 				item.on(Hilo.event.POINTER_END, function(e) {
 					var ty = self.panel.y+scrollwin.y;
-					if(e.stageY <  tx || e.stageY > self.panel.height + ty){
+					console.log('%d:%d:%d',e.stageY,ty, self.panel.height);
+					
+					if(e.stageY <  ty || e.stageY > scrollwin.height + ty){
 						console.log('out range');
 					}else{
-						console.log('%d:%d:%d',e.stageY,ty, self.panel.height);
+						console.log('%d:%d:%d',e.stageY,ty, scrollwin.height);
 						if(scrollwin.slidedisy == 0) {
 							game.sendMsg(game.scenes[self.targetscene], game.networker, game.networker.msg.SHOWTALK, ['brows',this.name]);
 						}
