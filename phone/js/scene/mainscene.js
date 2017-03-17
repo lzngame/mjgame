@@ -137,11 +137,14 @@
 				console.log('id_mainscene_share_btn');
 				self.createSettingWindow(self);
 			});
+			this.items['id_mainscene_recharge_btn'].on(Hilo.event.POINTER_END, function(e) {
+				console.log('id_mainscene_recharge_btn');
+				self.createRechargeWindow(self);
+			});
 
 			this.initSlideEvent();
 			
 
-			
 		},
 		
 		showInvitepanel:function(){
@@ -242,50 +245,42 @@
 			
 			btn.x = panel.width* game.scalefact/2 - btn.width * game.scalefact/2 ;
 			btn.y = panel.height* game.scalefact * (5/8);
-
-			/*var setvalue = [0, 0, 0, 0];
-			for(var itemid in panel.items) {
-				var radiobox = panel.items[itemid];
-				if(radiobox.groupid) {
-					if(radiobox.isSelected) {
-						if(radiobox.groupid == 'groupid001') {
-							setvalue[0] = radiobox.value;
-						}
-						if(radiobox.groupid == 'groupid002') {
-							setvalue[1] = radiobox.value;
-						}
-						if(radiobox.groupid == 'groupid003') {
-							setvalue[2] = radiobox.value;
-						}
-						if(radiobox.groupid == 'groupid004') {
-							setvalue[3] = radiobox.value;
-						}
-					}
-					radiobox.onhandle = function(txt) {
-						if(this.groupid == 'groupid001') {
-							setvalue[0] = this.value;
-						}
-						if(this.groupid == 'groupid002') {
-							setvalue[1] = this.value;
-						}
-						if(this.groupid == 'groupid003') {
-							setvalue[2] = this.value;
-						}
-						if(this.groupid == 'groupid004') {
-							setvalue[3] = this.value;
-						}
-						var carnums = self.calculatePaycard(setvalue);
-						btn.setLabelNum(carnums);
-					}
-				}
+		},
+		
+		createRechargeWindow: function(self) {
+			var panel = game.configdata.createBgPanel([], 'login_bg35', true, true, self, 'login_13', 'login_14', 'ui', 55, 'login_bg111', 'zhongzhiz10');
+			panel.addTo(self);
+			new game.CardNumber({x:panel.width * 0.125 * game.scalefact,y:panel.height*0.05 * game.scalefact,scaleX:game.scalefact,scaleY:game.scalefact}).addTo(panel);
+			
+			
+			var bglayer = game.configdata.createRectImg('bg','login_bg36',0,0,1).addTo(panel);
+			bglayer.x = panel.width*game.scalefact/2 - bglayer.width*game.scalefact/2;
+			bglayer.y = panel.height*game.scalefact/2 - bglayer.height*game.scalefact/2 + panel.height*game.scalefact*0.1;
+			bglayer.scaleX = game.scalefact;
+			bglayer.scaleY = game.scalefact;
+			var scrollhead = new game.Scrollwindow({
+				width:bglayer.width,
+				height:bglayer.height,
+				direct:'V',
+				scaleX:game.scalefact,
+				scaleY:game.scalefact,
+			}).addTo(panel);
+			scrollhead.x  = bglayer.x;
+			scrollhead.y  = bglayer.y + bglayer.height * game.scalefact * 0.05;
+			
+			var content = new Hilo.Container();
+			scrollhead.contentpanel.pointerEnabled = true;
+			var count = 4;
+			var w = 0;
+			for(var i=0;i<count;i++){
+				var head = new game.Rechargeablecard({carimg:'zhongzhi18'}).addTo(content);
+				//head.scaleX = game.scalefact;
+				//head.scaleY = game.scalefact;
+				head.x = head.width* i;
+				//head.y = 90/2 - head.height/2;
+				w += head.width;
 			}
-			btn.setLabelNum(self.calculatePaycard(setvalue));
-			btn.on(Hilo.event.POINTER_END, function(e) {
-				var carnums = self.calculatePaycard(setvalue);
-				self.showLoadgif(true);
-				game.sendMsg(self, game.networker, game.networker.msg.CREATEROOM, [carnums, setvalue]);
-			});
-			return panel;*/
+			scrollhead.addContent(content,w);
 		},
 
 		switchCreateRoom: function(msgdata) {

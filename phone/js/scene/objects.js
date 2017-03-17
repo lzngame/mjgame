@@ -1405,6 +1405,108 @@
 		},
 	});
 	
+	//Rechargeablecard --- 充值卡
+	var Rechargeablecard = ns.Rechargeablecard = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name: 'Rechargeablecard',
+		isdouble:false,
+		carimg:null,
+		btn:null,
+
+		constructor: function(properties) {
+			Rechargeablecard.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		init: function(properties) {
+			var bg = game.configdata.createRectImg('ui','zhongzhiz11',0,0,1).addTo(this);
+			this.width = bg.width;
+			this.height = bg.height;
+			this.carimg = game.configdata.createRectImg('ui',this.carimg,0,0,1).addTo(this);
+			this.carimg.x = this.width/2 - this.carimg.width/2;
+			this.carimg.y = this.height * 0.18;
+			if(this.isdouble){
+				game.configdata.createRectImg('ui','zhongzhiz19',0,0,1).addTo(this);
+			}
+			this.btn = new game.IconButton({imgsource:'ui',btnupimg: 'login_bg97',btndownimg: 'login_bg98',iconimg: 'zhongzhiz12'}).addTo(this);
+			this.btn.x = this.width/2 - this.btn.width/2;
+			this.btn.y = this.height*0.95 - this.btn.height;
+			
+			new game.RechargeablecardText({y:this.height* 0.6,value:300}).addTo(this);
+		},
+	});
+	
+	//RechargeablecardText --- 充值卡横幅字
+	var RechargeablecardText = ns.RechargeablecardText = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name: 'RechargeablecardText',
+		isdouble:false,
+		value:10,
+		piceimg:null,
+		btn:null,
+
+		constructor: function(properties) {
+			RechargeablecardText.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		
+		init: function(properties) {
+			var bg = game.configdata.createRectImg('ui','zeng',0,0,1).addTo(this);
+			this.width = bg.width;
+			this.height = bg.height;
+			var piceimg = game.configdata.createRectImg('ui','zhang',0,0,1).addTo(this);
+			var num = new game.ImgNumber({value:this.value}).addTo(this);
+			var w = num.width + piceimg.width;
+			num.x = bg.width/2 - w/2;
+			num.y = bg.height/2 - num.height/2;
+			piceimg.x = num.x + num.width;
+			piceimg.y = bg.height/2 - piceimg.height/2;
+		},
+	});
+	
+	//ImgNumber --- 图片数字
+	var ImgNumber = ns.ImgNumber = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name: 'ImgNumber',
+		value:0,
+		prefix:'zhongzhiz',
+		initx:0,
+		constructor: function(properties) {
+			ImgNumber.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		init: function(properties) {
+			var nst = this.value.toString();
+			var ar = [];
+			for(var i=0;i<nst.length;i++){
+				var dst = nst.charAt(i);
+				var d = parseInt(dst);
+				var dname = this.prefix + dst;
+				var drect = game.configdata.getPngRect(dname);
+				var img = game.configdata.createRectImg('ui',dname,this.initx,0,1).addTo(this);
+				this.initx += drect[2];
+				this.width += drect[2];
+				this.height = drect[3];
+			}
+		},
+	});
+	
+	//CardNumber --- 房卡数字
+	var CardNumber = ns.CardNumber = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name: 'CardNumber',
+		value:50,
+		constructor: function(properties) {
+			CardNumber.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		init: function(properties) {
+			var bg = game.configdata.createRectImg('ui','chuangqian',0,0,1).addTo(this);
+			this.width = bg.width;
+			this.height = bg.height;
+			var txt = game.configdata.createSimpletext(this.value.toString(), '24px 黑体', 'white', 'rgba(0,0,0,0)', 50, 20, this.width).addTo(this);
+		},
+	});
+	
 	
 	//Chatbubble --- 聊天泡泡
 	var Chatbubble = ns.Chatbubble = Hilo.Class.create({

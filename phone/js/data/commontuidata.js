@@ -52,7 +52,7 @@ game.commontuidata = new function(){
 			]
 		];
 	
-	self.main_uidata = [
+	/*self.main_uidata = [
 	        [
 				{
 					itemid:'id_weixinlogbg_girl_bmp',
@@ -146,7 +146,7 @@ game.commontuidata = new function(){
 					aligny:'top_90'
 				}
 			]
-		];
+		];*/
 	
 	self.createAtlas = function(data){
 		var atlas = new Hilo.TextureAtlas({

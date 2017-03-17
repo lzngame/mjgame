@@ -87,6 +87,15 @@ game.sceneuidata = new function(){
 					aligny:'top_8'
 				},
 				{
+					itemid:'id_mainscene_recharge_btn',
+					itemtype:'scalebtn',
+					itemurlvalue:'chongzhiBtn',
+					layouttype_x:'pct',
+					alignx:'left_25',
+					layouttype_y:'pct',
+					aligny:'top_3'
+				},
+				{
 					itemid:'id_mainscene_share_btn',
 					itemtype:'scalebtn',
 					itemurlvalue:'1',
