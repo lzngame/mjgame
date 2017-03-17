@@ -35,9 +35,6 @@ game.configdata = new function() {
 			activeobj: 'ACTIVEOBJECT_TYPE',
 	};
 
-	self.MSAGE_TYPE = {
-
-	};
 
 	self.mainStageSize = { width: 320, height: 480 };
 

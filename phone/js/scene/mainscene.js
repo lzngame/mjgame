@@ -133,9 +133,14 @@
 			this.items['id_mainscene_setting_btn'].on(Hilo.event.POINTER_END, function(e) {
 				self.showInvitepanel();
 			});
+			this.items['id_mainscene_share_btn'].on(Hilo.event.POINTER_END, function(e) {
+				console.log('id_mainscene_share_btn');
+				self.createSettingWindow(self);
+			});
 
 			this.initSlideEvent();
 			
+
 			
 		},
 		
@@ -161,7 +166,7 @@
 			txt.addTo(panel);
 			return panel;
 		},
-
+		
 		createPromptpanel: function(bgname, ishalf, ismodal, theparent) {
 			var self = this;
 			var panel = game.configdata.createBgPanel(game.sceneuidata.main_uidata[3], bgname, ishalf, ismodal, theparent, 'login_13', 'login_14', 'ui', 55, 'login_bg111', 'login_bg42');
@@ -221,6 +226,66 @@
 				game.sendMsg(self, game.networker, game.networker.msg.CREATEROOM, [carnums, setvalue]);
 			});
 			return panel;
+		},
+
+		createSettingWindow: function(self) {
+			var panel = game.configdata.createBgPanel(game.sceneuidata.main_uidata[4], 'login_bg35', true, true, self, 'login_13', 'login_14', 'ui', 55, 'login_bg111', 'login_bg64');
+			var btn = new game.IconButton({
+				imgsource: 'ui',
+				btnupimg: 'login_10',
+				btndownimg: 'login_11',
+				iconimg: 'login_bg67',
+				scaleX: game.scalefact,
+				scaleY: game.scalefact,
+			}).addTo(panel);
+			panel.addTo(self);
+			
+			btn.x = panel.width* game.scalefact/2 - btn.width * game.scalefact/2 ;
+			btn.y = panel.height* game.scalefact * (5/8);
+
+			/*var setvalue = [0, 0, 0, 0];
+			for(var itemid in panel.items) {
+				var radiobox = panel.items[itemid];
+				if(radiobox.groupid) {
+					if(radiobox.isSelected) {
+						if(radiobox.groupid == 'groupid001') {
+							setvalue[0] = radiobox.value;
+						}
+						if(radiobox.groupid == 'groupid002') {
+							setvalue[1] = radiobox.value;
+						}
+						if(radiobox.groupid == 'groupid003') {
+							setvalue[2] = radiobox.value;
+						}
+						if(radiobox.groupid == 'groupid004') {
+							setvalue[3] = radiobox.value;
+						}
+					}
+					radiobox.onhandle = function(txt) {
+						if(this.groupid == 'groupid001') {
+							setvalue[0] = this.value;
+						}
+						if(this.groupid == 'groupid002') {
+							setvalue[1] = this.value;
+						}
+						if(this.groupid == 'groupid003') {
+							setvalue[2] = this.value;
+						}
+						if(this.groupid == 'groupid004') {
+							setvalue[3] = this.value;
+						}
+						var carnums = self.calculatePaycard(setvalue);
+						btn.setLabelNum(carnums);
+					}
+				}
+			}
+			btn.setLabelNum(self.calculatePaycard(setvalue));
+			btn.on(Hilo.event.POINTER_END, function(e) {
+				var carnums = self.calculatePaycard(setvalue);
+				self.showLoadgif(true);
+				game.sendMsg(self, game.networker, game.networker.msg.CREATEROOM, [carnums, setvalue]);
+			});
+			return panel;*/
 		},
 
 		switchCreateRoom: function(msgdata) {

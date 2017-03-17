@@ -555,6 +555,35 @@ game.roominfo = new function() {
 	}
 };
 
+//活动配置数据
+game.InviteData = new function() {
+	var self = this;
+	
+	self.rulenote = '1.邀请好友下载并登录朋朋政和麻将，在邀请码处输入您发送的邀请码，你的好友可以登录并领取房卡奖励。\n2.被邀请的好友玩4局之后，您可以获得房卡奖励。';
+
+	self.PAYTYPES = ['放胡单赔', '放胡双倍单赔', '放胡全赔'];
+	self.id = '000000';
+	self.paytype = 0;
+	self.paytypeSt = '';
+	self.playerNums = 0;
+	self.isCreate = false;
+
+	self.setData = function(roomid, paytype, playerNums) {
+		self.id = roomid;
+		self.paytype = paytype;
+		self.playerNums = playerNums;
+		self.paytypeSt = self.PAYTYPES[self.paytype];
+	};
+
+	self.getData = function() {
+		return {
+			roomid: self.id,
+			playerNums: self.playerNums,
+			paytype: self.paytypeSt
+		};
+	}
+};
+
 //麻将界面配置数据
 game.playsceneUidata = new function() {
 	var self = this;

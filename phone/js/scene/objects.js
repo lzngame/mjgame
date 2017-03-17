@@ -300,14 +300,14 @@
 			});
 			this.on(Hilo.event.POINTER_END, function(e) {
 				console.log('end **************************************');
-				this.slideEnd();
+				this.slideEndH();
 			});
 			this.on('touchout', function(e) {
-				this.slideEnd();
+				this.slideEndH();
 				console.log('000000000000000000***********************************');
 			});
 		},
-		slideEnd: function() {
+		slideEndH: function() {
 			if(Math.abs(this.slidedisx) > 60) {
 				if(this.slidedisx < 0) {
 					this.currentIndex++;
@@ -359,7 +359,7 @@
 				} else {
 					this.slidedisx = -65;
 				}
-				this.slideEnd();
+				this.slideEndH();
 			}
 		}
 	});
@@ -368,8 +368,11 @@
 	var Scrollwindow = ns.Scrollwindow = Hilo.Class.create({
 		Extends: Hilo.Container,
 		name: 'Scrollwindow',
+		direct:'H',
+		bglayer:null,
 		contentpanel: null,
 		panelheight: 0,
+		panelwidth:0,
 		roundmask: null,
 		currentposy: 0,
 		tapstart: false,
@@ -391,17 +394,20 @@
 			Scrollwindow.superclass.constructor.call(this, properties);
 			this.init(properties);
 		},
-		addContent: function(contentlayer, layerheight) {
+		addContent: function(contentlayer, size) {
 			contentlayer.addTo(this.contentpanel);
-			this.panelheight = layerheight;
+			if(this.direct == 'H')
+				this.panelheight = size;
+			else	
+				this.panelwidth = size;
 		},
 
 		init: function(properties) {
 			console.log('scroll init');
 			var bg = game.drawdata.drawItemRect(1, 'green', 'rgba(0,0,0,0)', 0, 0, this.width, this.height, this);
 			this.roundmask = game.drawdata.drawItemRect(1, 'rgba(0,0,0,0)', 'rgba(0,0,0,0)', 0, 0, this.width, this.height, this);
-
-			this.contentpanel = new Hilo.Container().addTo(this);
+			this.bglayer = new Hilo.Container().addTo(this);
+			this.contentpanel = new Hilo.Container({background:'yellow'}).addTo(this);
 			this.contentpanel.pointerEnabled = false;
 
 			this.contentpanel.mask = this.roundmask;
@@ -417,26 +423,41 @@
 				if(this.tapstart) {
 					var x = e.stageX - this.x;
 					var y = e.stageY - this.y;
-					//this.contentpanel.x = x - this.disx;
-					//this.slidedisx = e.stageX - this.tapstartx;
-					this.contentpanel.y = y - this.disy;
-					this.slidedisy = e.stageY - this.tapstarty;
-					console.log(this.slidedisy);
+					
+					if(this.direct == 'H'){
+						this.contentpanel.y = y - this.disy;
+						this.slidedisy = e.stageY - this.tapstarty;
+					}else{
+						this.contentpanel.x = x - this.disx;
+						this.slidedisx = e.stageX - this.tapstartx;
+					}
+					console.log('slidedisx:%d,slidedisy:%d',this.slidedisx,this.slidedisy);
 				}
 			});
 			this.on(Hilo.event.POINTER_END, function(e) {
 				console.log('end **************************************');
-				this.slideEnd();
-				console.log(this.slidedisy);
+				if(this.direct == 'H'){
+					this.slideEndH();
+					console.log(this.slidedisy);
+				}else{
+					this.slideEndV();
+					console.log(this.slidedisx);
+				}
+				
 				this.slidedisy = 0;
 				this.slidedisx = 0;
 			});
 			this.on('touchout', function(e) {
-				this.slideEnd();
+				if(this.direct == 'H'){
+					this.slideEndH();
+				}else{
+					this.slideEndV();
+				}
 				console.log('000000000000000000***********************************');
 			});
 		},
-		slideEnd: function() {
+		slideEndH: function() {
+			console.log('slideEndH');
 			var self = this;
 			if(this.contentpanel.y > 0) {
 				new Hilo.Tween.to(self.contentpanel, {
@@ -455,6 +476,26 @@
 				});
 			}
 		},
+		slideEndV: function() {
+			console.log('slideEndV');
+			var self = this;
+			if(this.contentpanel.x > 0) {
+				new Hilo.Tween.to(self.contentpanel, {
+					x: 0
+				}, {
+					duration: 200,
+				});
+			}
+			if(this.contentpanel.x < self.width - self.panelwidth) {
+				var x = self.width - self.panelwidth;
+				console.log(x);
+				new Hilo.Tween.to(self.contentpanel, {
+					x: x
+				}, {
+					duration: 200,
+				});
+			}
+		},
 		autoSlideTo: function(targetx, durationtime) {
 			var self = this;
 			new Hilo.Tween.to(self.imgpanel, {
@@ -463,17 +504,14 @@
 				duration: durationtime,
 			});
 		},
-		//如果使用自己创建的全局方法,在Basescene 里面注册启用,这是一个滑出事件 ,等同于 touchout
-		onSlideOut:function(x1, y1, x2, y2) {
-			if(this.parent) {
-				console.log('out x:%s y:%s  --- x:%s y:%s', x1, y1, x2, y2);
-			}
-		},
+		
+		//方向  1：右 2：左     1：下  2：上
+		//当有滑动事件产生时触发，需要注册到 scene 
 		onSlide:function(directx, directy) {
 			if(this.parent) {
 				console.log('slide-h:%s v:%s', directx, directy);
 			}
-			if(directy != 0) {
+			if(directy != 0 && this.direct == 'H') {
 				var dis = 1;
 				if(directy == 2) {
 					dis = -1;
@@ -502,7 +540,40 @@
 					ease: Hilo.Ease.Quart.EaseOut,
 					onComplete: function() {
 						console.log('complete');
-						self.slideEnd();
+						self.slideEndH();
+					}
+				});
+			}
+			if(directx != 0 && this.direct == 'V') {
+				var dis = 1;
+				if(directx == 2) {
+					dis = -1;
+				}
+				var self = this;
+				var space = 200;
+				var dur = 1000;
+				var currentx = self.contentpanel.x;
+				var disTop = 0 - currentx;
+				var disBottom = currentx - (self.width - self.panelwidth);
+				if(directx == 1 && disTop < 200) {
+					space = 50;
+					dur = 400;
+					console.log('+000000000');
+				}
+				if(directx == 2 && disBottom < 200) {
+					space = 50;
+					console.log('-000000000');
+					dur = 400;
+				}
+
+				Hilo.Tween.to(self.contentpanel, {
+					y: currentx + dis * space,
+				}, {
+					duration: dur,
+					ease: Hilo.Ease.Quart.EaseOut,
+					onComplete: function() {
+						console.log('complete');
+						self.slideEndV();
 					}
 				});
 			}
@@ -1283,6 +1354,54 @@
 			});
 			this.width = this.btnbg.width;
 			this.height = this.btnbg.height;
+		},
+	});
+	
+	//InvitefriendIcon --- 邀请房卡奖励图标
+	var InvitefriendIcon = ns.InvitefriendIcon = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name: 'InvitefriendIcon',
+		bgicon:null,
+		numimg:null,
+		txt:null,
+		txtnum:null,
+		invitenum:10,
+		cardnum:1,
+
+		constructor: function(properties) {
+			InvitefriendIcon.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		init: function(properties) {
+			this.bgicon = game.configdata.createRectImg('ui','yaoqing5',0,0).addTo(this);
+			this.width = this.bgicon.width;
+			this.height = this.bgicon.height;
+			this.txt = game.configdata.createTitletext('邀请'+this.invitenum.toString()+'人', '20px 黑体', 'black', 'rgba(0,0,0,0)', 0, this.bgicon.height, this.bgicon.width).addTo(this);
+			this.txtnum = game.configdata.createSimpletext(this.cardnum.toString(), '28px 黑体', 'white', 'rgba(0,0,0,0)', this.bgicon.width-30, this.bgicon.height-30, this.bgicon.width).addTo(this);
+		},
+	});
+	
+	//InvitefriendPanel --- 邀请房卡奖励面板
+	var InvitefriendPanel = ns.InvitefriendPanel = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name: 'InvitefriendPanel',
+		data:[[3,1],[5,3],[7,5],[10,8]],
+
+		constructor: function(properties) {
+			InvitefriendPanel.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		init: function(properties) {
+			var line = game.configdata.createRectImg('ui','yaoqing6',0,30,1).addTo(this);	
+			this.width = line.width;
+			//for(var i= 0;i<this.data.length;i++){
+			for(var i=this.data.length-1;i>-1;i--){
+				var item = this.data[i];
+				var invitenum = item[1];
+				var cardnum = item[0];
+				var icon  = new game.InvitefriendIcon({invitenum:invitenum,cardnum:cardnum}).addTo(this);
+				icon.x = this.width  - (this.data.length -i) * line.width/5 + 30;
+			}
 		},
 	});
 	

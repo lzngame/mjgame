@@ -239,8 +239,35 @@
 					scaleY:game.scalefact,
 				}).addTo(this.tabpanelInvite);
 			btn.x = this.tabpanelInvite.width/2* game.scalefact - btn.width/2* game.scalefact;
-			btn.y = this.tabpanelInvite.height * 0.84* game.scalefact;
-			game.configdata.createSimpletext('规则说明', '24px 黑体', '#27342b', 'rgba(0,0,0,0)', 20, 50, this.tabpanelCode.width *game.scalefact).addTo(this.tabpanelInvite);
+			btn.y = this.tabpanelInvite.height * 0.94* game.scalefact;
+			var rule = game.configdata.createSimpletext(game.InviteData.rulenote, '24px 黑体', '#27342b', 'rgba(0,0,0,0)', 20, 50, this.tabpanelInvite.width *game.scalefact).addTo(this.tabpanelInvite);
+			rule.lineSpacing = 6;
+			var friends = game.configdata.createTitletext('邀请的好友(0)', '24px 黑体', '#27342b', 'rgba(0,0,0,0)', 0, this.tabpanelInvite.height * game.scalefact * 0.35, this.tabpanelInvite.width *game.scalefact).addTo(this.tabpanelInvite);
+			
+			var scrollhead = new game.Scrollwindow({
+				width:715,
+				height:90,
+				direct:'V',
+				scaleX:game.scalefact,
+				scaleY:game.scalefact
+			}).addTo(this.tabpanelInvite);
+			scrollhead.x  = this.tabpanelInvite.width* game.scalefact/2 - scrollhead.width * game.scalefact /2;
+			scrollhead.y  = this.tabpanelInvite.height* game.scalefact/2;
+			game.configdata.createRectImg('ui','tuiguang8',0,0,1).addTo(scrollhead.bglayer);
+			var content = new Hilo.Container();
+			var count = 10;
+			var w = 0;
+			for(var i=0;i<count;i++){
+				var head = game.configdata.createRectImg('ui','battle_100',0,0,1).addTo(content);
+				head.x = head.width* i*1.5;
+				head.y = 90/2 - head.height/2;
+				w = head.x;
+			}
+			scrollhead.addContent(content,w + 74);
+			
+			new game.InvitefriendPanel({x:this.tabpanelInvite.width*game.scalefact*0.125,y:this.tabpanelInvite.height*0.125*6*game.scalefact,scaleX:game.scalefact,scaleY:game.scalefact}).addTo(this.tabpanelInvite);
+			
+			
 			this.tabpanelInvite.visible = false;
 		},
 		codebtnfunc:function(){
