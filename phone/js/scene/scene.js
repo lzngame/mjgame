@@ -208,7 +208,12 @@
 			var self = this;
 			this.items['id_weixinlogin_btn'].on(Hilo.event.POINTER_END, function(e) {
 				console.log('switch main scene');
-				game.switchScene(game.configdata.SCENE_NAMES.main);
+				var t = self.items['id_agreeweixinlogin_selectbox'];
+				if(t.isSelected){
+					game.switchScene(game.configdata.SCENE_NAMES.main);
+				}else{
+					self.createPointoutWindow([], 'login_9', '请同意用户协议').addTo(self);
+				}
 			});
 
 		},

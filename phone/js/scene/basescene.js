@@ -37,7 +37,16 @@
 				});
 			}
 		},
-		
+		createPointoutWindow: function(data, title, text,isTitle) {
+			var self = this;
+			var txt = game.configdata.createTitletext(text, '28px 黑体', 'black', 'rgba(0,0,0,0)', 0, 0, 600);
+			var panel = game.configdata.createBgPanel(data, 'login_bg35', true, true, self, 'login_13', 'login_14', 'ui', 55, 'login_bg111', title);
+			txt.x = panel.width * game.scalefact / 2 - 300;
+			txt.y = panel.height * game.scalefact / 2 - txt._fontHeight / 2;
+			console.log('x:%f -- y:%f',panel.x,panel.y);
+			txt.addTo(panel);
+			return panel;
+		},
 		disBtnHandle:function(){
 			var self = this;
 			for(var idname in this.funcs){

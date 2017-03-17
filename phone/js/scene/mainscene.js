@@ -159,7 +159,7 @@
 			panel.hide();
 			this.panelid = null;
 		},
-		createPointoutWindow: function(data, title, text,isTitle) {
+		/*createPointoutWindow: function(data, title, text,isTitle) {
 			var self = this;
 			var txt = game.configdata.createTitletext(text, '28px 黑体', 'black', 'rgba(0,0,0,0)', 0, 0, 600);
 			var panel = game.configdata.createBgPanel(data, 'login_bg35', true, true, self, 'login_13', 'login_14', 'ui', 55, 'login_bg111', title);
@@ -168,7 +168,7 @@
 			console.log('x:%f -- y:%f',panel.x,panel.y);
 			txt.addTo(panel);
 			return panel;
-		},
+		},*/
 		
 		createPromptpanel: function(bgname, ishalf, ismodal, theparent) {
 			var self = this;
