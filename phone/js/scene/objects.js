@@ -253,12 +253,13 @@
 					x: i * (this.itemwidth),
 					y: this.height / 2 - h / 2,
 				}).addTo(this.imgpanel);
-				var btn = game.configdata.createButton('ui', 'login_13', 'login_14', img.x, img.y).addTo(this.imgpanel);
-				btn.pointerEnabled = true;
+				
 				img.pointerEnabled = false;
-				btn.on(Hilo.event.POINTER_END, function(e) {
-					console.log(this.x);
-				});
+				//var btn = game.configdata.createButton('ui', 'login_13', 'login_14', img.x, img.y).addTo(this.imgpanel);
+				//btn.pointerEnabled = true;
+				//btn.on(Hilo.event.POINTER_END, function(e) {
+				//	console.log(this.x);
+				//});
 			}
 			for(var i = 0; i < imglist.length; i++) {
 				var imgurl = game.getImg('ui');

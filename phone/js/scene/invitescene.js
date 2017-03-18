@@ -92,6 +92,8 @@
 			win.closebtn.on(Hilo.event.POINTER_END,function(e){
 				game.switchScene(game.configdata.SCENE_NAMES.main);
 			});
+			if(btnself.panelid)
+				btnself.hidepanel();
 		},
 		inviteFriend: function(btnself) {
 			console.log('inviteFriend');
