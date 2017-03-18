@@ -1463,7 +1463,7 @@
 		},
 	});
 	
-	//ImgNumber --- 图片数字
+	//ImgNumber --- 图片数字(不带符号的整数)
 	var ImgNumber = ns.ImgNumber = Hilo.Class.create({
 		Extends: Hilo.Container,
 		name: 'ImgNumber',
@@ -1490,6 +1490,40 @@
 		},
 	});
 	
+	
+	//SignImgNumber --- 图片数字(带符号的整数)
+	var SignImgNumber = ns.SignImgNumber = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name: 'SignImgNumber',
+		value:0,
+		prefix:'shuizi',
+		initx:0,
+		signNegative:null,
+		signPositive:null,
+		constructor: function(properties) {
+			SignImgNumber.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		init: function(properties) {
+			var n = Math.abs(this.value);
+			var num = new game.ImgNumber({value:n,prefix:this.prefix}).addTo(this);
+			var signName = '';
+			if(this.value != 0){
+				if(this.value > 0)
+					signName = this.signPositive;
+				else
+					signName = this.signNegative;
+				var sign = game.configdata.createRectImg('ui',signName,0,0,1).addTo(this);
+				sign.y = num.height/2 - sign.height/2;
+				num.x = sign.width;
+				this.width = sign.width + num.width;
+			}else{
+				this.width = num.width;
+				this.height = num.height;
+			}
+		},
+	});
+	
 	//CardNumber --- 房卡数字
 	var CardNumber = ns.CardNumber = Hilo.Class.create({
 		Extends: Hilo.Container,
@@ -1506,6 +1540,99 @@
 			var txt = game.configdata.createSimpletext(this.value.toString(), '24px 黑体', 'white', 'rgba(0,0,0,0)', 50, 20, this.width).addTo(this);
 		},
 	});
+	
+	//BalanceAccountCard --- 结算卡片
+	var BalanceAccountCard = ns.BalanceAccountCard = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name: 'BalanceAccountCard',
+		score:0,
+		isowner:false,   //是否为房主
+		iswiner:false,   //是否为胜利方
+		constructor: function(properties) {
+			BalanceAccountCard.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		init: function(properties) {
+			var bg = game.configdata.createRectImg('ui','jiesuanmianban',0,0,1).addTo(this);
+			this.width = bg.width;
+			this.height = bg.height;
+			var scoreimg = new SignImgNumber({value:this.score,prefix:'shuzi',signNegative:'shuzijian',signPositive:'shuzijia'}).addTo(this);
+			scoreimg.x = bg.width/2 - scoreimg.width/2;
+			scoreimg.y = bg.height * 0.62;
+			if(this.isowner){
+				game.configdata.createRectImg('ui','login_bg74',0,0,1).addTo(this);
+			}
+			if(this.iswiner){
+				var winimg = game.configdata.createRectImg('ui','login_bg77',0,0,1).addTo(this);
+				winimg.x = bg.width/2 - winimg.width/2;
+				winimg.y = bg.height *0.25;
+			}
+		},
+	});
+	
+	
+	//CountDown --- 倒计时
+	var CountDown = ns.CountDown = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name: 'CountDown',
+		totaltime:600,   //秒为单位
+		sumtime:0,
+		txt:null,
+		iszero:false,
+		txtwidth:200,
+		stop:false,
+		func:null,
+		fontclr:'black',
+		fontsize:'28px 黑体',
+		fontbg:'rgba(0,0,0,0)',
+		constructor: function(properties) {
+			CountDown.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		init: function(properties) {
+			this.txt = game.configdata.createTitletext(this.getShowString(this.totaltime), this.fontsize, this.fontclr, this.fontbg, 0, 0, this.txtwidth).addTo(this);
+		},
+		onUpdate:function(){
+			if(!this.stop){
+				this.sumtime += game.clock.getTick();
+				if(this.sumtime > 1000 || Math.abs(this.sumtime - 1000) < 10){
+					console.log(this.sumtime);
+					this.sumtime = 0;
+					this.totaltime--;
+					if(this.totaltime < 0){
+						this.totaltime = 0;
+						this.stop = true;
+						if(this.func){
+							this.func();
+						}
+					}
+					this.txt.text = this.getShowString(this.totaltime);
+				}
+			}
+		},
+		getShowString:function(tmp){
+			var temp = tmp;
+			var second = temp % 60;
+			temp = (temp - second)/60;
+			var minute = temp % 60;
+			temp = (temp - minute)/60;
+			var hour = temp % 24;
+			var day = (temp - hour)/24;
+			
+			var dayst = '';
+			if(day != 0)
+				dayst = day +':天';
+			var hourst = '';
+			if(hour != 0)
+				hourst = hour+':时';
+			
+			var showtxt = day + ':天:'+hour+'时:'+minute+'分:'+second+'秒';
+			if(this.iszero)
+				showtxt = dayst+hourst+minute+'分:'+second+'秒';
+			return showtxt;
+		},
+	});
+	
 	
 	
 	//Chatbubble --- 聊天泡泡

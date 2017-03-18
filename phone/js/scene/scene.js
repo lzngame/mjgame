@@ -215,7 +215,6 @@
 					self.createPointoutWindow([], 'login_9', '请同意用户协议').addTo(self);
 				}
 			});
-
 		},
 
 		deactive: function() {

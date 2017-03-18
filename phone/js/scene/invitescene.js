@@ -3,6 +3,7 @@
 		Extends: game.BaseScene,
 		name: game.configdata.SCENE_NAMES.invite,
 		items: null,
+		countdown:null,
 
 		constructor: function(properties) {
 			InviteMainscene.superclass.constructor.call(this, properties);
@@ -43,6 +44,10 @@
 			var info = game.roominfo.getData();
 			this.items['id_invitescene_wintype_txt'].text = info.paytype;
 			this.items['id_invitescene_title_txt'].text = '房间号：' + info.roomid;
+			//this.countdown = new game.CountDown({scaleX:game.scalefact,scaleY:game.scalefact,totaltime:600,iszero:true,y:this.height * game.scalefact * 0.375,fontclr:'white',fontbg:'green',func:function(){console.log('倒计时结束');}}).addTo(this);
+			this.countdown = new game.CountDown({totaltime:info.countdown,iszero:true,y:this.height  * 0.375,fontclr:'white',func:function(){console.log('倒计时结束');}}).addTo(this);
+			this.countdown.x = this.width /2 - this.countdown.txtwidth/2;
+			
 		},
 		showTalkpanel: function(sceneself) {
 			var panel = new game.ShowTalkpanel({parentscene:sceneself,targetscene:game.configdata.SCENE_NAMES.invite});
@@ -81,6 +86,7 @@
 			console.log('disbandRoom');
 			game.roominfo.isCreate = false;
 			game.switchScene(game.configdata.SCENE_NAMES.main);
+			game.roominfo.reset();
 		},
 		inviteFriend: function(btnself) {
 			console.log('inviteFriend');
@@ -89,6 +95,7 @@
 		gobackScene: function(btnself) {
 			console.log('gobackScene');
 			game.switchScene(game.configdata.SCENE_NAMES.main);
+			game.roominfo.countdown = btnself.countdown.totaltime;
 		},
 
 		deactive: function() {

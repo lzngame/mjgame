@@ -538,6 +538,7 @@ game.roominfo = new function() {
 	self.paytypeSt = '';
 	self.playerNums = 0;
 	self.isCreate = false;
+	self.countdown = 600;  //创建倒计时
 
 	self.setData = function(roomid, paytype, playerNums) {
 		self.id = roomid;
@@ -545,12 +546,22 @@ game.roominfo = new function() {
 		self.playerNums = playerNums;
 		self.paytypeSt = self.PAYTYPES[self.paytype];
 	};
+	//清零
+	self.reset = function(){
+		self.id = '000000';
+		self.paytype = 0;
+		self.paytypeSt = '';
+		self.playerNums = 0;
+		self.isCreate = false;
+		self.countdown = 600;  //创建倒计时
+	};
 
 	self.getData = function() {
 		return {
 			roomid: self.id,
 			playerNums: self.playerNums,
-			paytype: self.paytypeSt
+			paytype: self.paytypeSt,
+			countdown:self.countdown,
 		};
 	}
 };
