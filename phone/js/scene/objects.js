@@ -24,6 +24,10 @@
 				self.imgcheck.visible = self.isSelected;
 			});
 		},
+		setSelect:function(isshow){
+			this.isSelected = isshow;
+			this.imgcheck.visible = this.isSelected;
+		},
 		onUpdate: function() {
 
 		},

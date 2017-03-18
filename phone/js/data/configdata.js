@@ -48,10 +48,11 @@ game.configdata = new function() {
 		}
 	};
 
-	self.createSelectbox = function(imgbg, imgcheck, x, y) {
+	self.createSelectbox = function(imgbg, imgcheck, isSelected,x, y) {
 		var result = new game.MjSelectbox({
 			imgbg: imgbg,
 			imgcheck: imgcheck,
+			isSelected:isSelected,
 			x: x,
 			y: y
 		});
@@ -526,7 +527,7 @@ game.layoutUi = new function() {
 				theparent.items[itemdata.itemid] = game.configdata.createScalebutton('ui', itemdata.itemurlvalue, x + w / 2, y + h / 2).addTo(theparent);
 			}
 			if(itemdata.itemtype === 'selectbox') {
-				theparent.items[itemdata.itemid] = game.configdata.createSelectbox(itemdata.itemurlvalue, itemdata.selectvalue, x, y).addTo(theparent);
+				theparent.items[itemdata.itemid] = game.configdata.createSelectbox(itemdata.itemurlvalue, itemdata.selectvalue, itemdata.isSelected,x, y).addTo(theparent);
 			}
 			if(itemdata.itemtype === 'radiobox') {
 				theparent.items[itemdata.itemid] = game.configdata.createRadiotbox(itemdata.itemurlvalue, itemdata.selectvalue, x, y, itemdata.lbtext, itemdata.groupid, itemdata.ischeck, itemdata.value,theparent.items).addTo(theparent);

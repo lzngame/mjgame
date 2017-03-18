@@ -95,6 +95,7 @@
 			game.configdata.mainStageSize.height = this.stage.height;
 			this.ticker = new Hilo.Ticker(game.configdata.FPS);
 			this.ticker.addTick(game.clock);
+			this.ticker.addTick(game.roominfo);
 			this.ticker.addTick(this.stage);
 			this.ticker.addTick(Hilo.Tween);
 			this.ticker.start();

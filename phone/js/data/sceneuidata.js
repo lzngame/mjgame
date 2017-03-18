@@ -45,6 +45,7 @@ game.sceneuidata = new function(){
 					itemid:'id_agreeweixinlogin_selectbox',
 					itemtype:'selectbox',
 					itemurlvalue:'login_bg48',
+					isSelected:true,
 					selectvalue:'login_4',
 					layouttype_x:'pct',
 					alignx:'left_36',

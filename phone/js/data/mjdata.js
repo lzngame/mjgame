@@ -50,7 +50,7 @@ game.mjdata = new function() {
 		h_7: ['竹', 'self_72', 'T'],
 		h_8: ['菊', 'self_71', 'T'],
 	};
-	
+
 	self.smallmj = {
 		w_1: ['一万', 'battle_32', 'battle_hg_32', 'battle_hgR_32', 'wan1.mp3', 'F'],
 		w_2: ['两万', 'battle_33', 'battle_hg_33', 'battle_hgR_33', 'wan2.mp3', 'F'],
@@ -246,19 +246,19 @@ game.mjdata = new function() {
 		142: 'h_7',
 		143: 'h_8'
 	};
-	
+
 	self.talksounds = [
-		['你太牛了!','fix_msg_1'],
-		['呵呵，手气真好!','fix_msg_2'],
-		['快点出牌哟!','fix_msg_3'],
-		['今天真高兴!','fix_msg_4'],
-		['这个吃得好!','fix_msg_5'],
-		['你放炮我不胡!','fix_msg_6'],
-		['你家是开银行的吧!','fix_msg_7'],
-		['不好意思,我有事要先走一步了!','fix_msg_8'],
-		['你的牌打得太好了!','fix_msg_9'],
-		['大家好,很高兴见到各位!','fix_msg_10'],
-		['怎么又断线了,网络怎么这么差呀!','fix_msg_11'],
+		['你太牛了!', 'fix_msg_1'],
+		['呵呵，手气真好!', 'fix_msg_2'],
+		['快点出牌哟!', 'fix_msg_3'],
+		['今天真高兴!', 'fix_msg_4'],
+		['这个吃得好!', 'fix_msg_5'],
+		['你放炮我不胡!', 'fix_msg_6'],
+		['你家是开银行的吧!', 'fix_msg_7'],
+		['不好意思,我有事要先走一步了!', 'fix_msg_8'],
+		['你的牌打得太好了!', 'fix_msg_9'],
+		['大家好,很高兴见到各位!', 'fix_msg_10'],
+		['怎么又断线了,网络怎么这么差呀!', 'fix_msg_11'],
 	];
 
 	self.randmj = [];
@@ -452,7 +452,7 @@ game.mjdata = new function() {
 		});
 	};
 
-	self.createEffect = function(effectname, x, y, intervaltime,isonce) {
+	self.createEffect = function(effectname, x, y, intervaltime, isonce) {
 		var f = this.effectatlas.getSprite(effectname);
 		if(!intervaltime) {
 			intervaltime = 6;
@@ -465,14 +465,14 @@ game.mjdata = new function() {
 			y: y,
 		});
 		var lastframe = effect.getNumFrames() - 1;
-		if(isonce){
+		if(isonce) {
 			effect.setFrameCallback(lastframe, function() {
 				console.log('remove effect');
 				this.stop();
 				this.removeFromParent();
 			});
 		}
-		
+
 		return effect;
 	};
 };
@@ -481,51 +481,51 @@ game.mjdata = new function() {
 game.userdata = new function() {
 	var self = this;
 
-	self.usersDir = ['down','left','up','right'];
-	
+	self.usersDir = ['down', 'left', 'up', 'right'];
+
 	self.userInfo = {
-		down:null,
-		left:null,
-		up:null,
-		right:null,
+		down: null,
+		left: null,
+		up: null,
+		right: null,
 	};
-	
-	self.oneself  ={
-		idname:'麻将不输钱',
-		cardnums:6,
+
+	self.oneself = {
+		idname: '麻将不输钱',
+		cardnums: 6,
 	};
-	
-	self.init = function(){
+
+	self.init = function() {
 		self.userInfo['down'] = new game.PlayerInfo({
-			direct:'down',
-			idname:'麻将不输钱',
-			score:891,
-			isbank:true,
-			cardnums:6,
+			direct: 'down',
+			idname: '麻将不输钱',
+			score: 891,
+			isbank: true,
+			cardnums: 6,
 		});
 		self.userInfo['left'] = new game.PlayerInfo({
-			direct:'left',
-			idname:'￥@_@￥',
-			score:-11,
-			isbank:false,
-			cardnums:20,
+			direct: 'left',
+			idname: '￥@_@￥',
+			score: -11,
+			isbank: false,
+			cardnums: 20,
 		});
 		self.userInfo['up'] = new game.PlayerInfo({
-			direct:'up',
-			idname:'MARY',
-			score:21,
-			cardnums:33,
-			isbank:false,
+			direct: 'up',
+			idname: 'MARY',
+			score: 21,
+			cardnums: 33,
+			isbank: false,
 		});
 		self.userInfo['right'] = new game.PlayerInfo({
-			direct:'right',
-			idname:'常常渐渐默默',
-			score:-411,
-			cardnums:1,
-			isbank:false,
+			direct: 'right',
+			idname: '常常渐渐默默',
+			score: -411,
+			cardnums: 1,
+			isbank: false,
 		});
 	};
-	
+
 };
 
 //房间配置数据
@@ -533,12 +533,16 @@ game.roominfo = new function() {
 	var self = this;
 
 	self.PAYTYPES = ['放胡单赔', '放胡双倍单赔', '放胡全赔'];
+	self.COUNTDOWN_TIME = 10;
 	self.id = '000000';
 	self.paytype = 0;
 	self.paytypeSt = '';
 	self.playerNums = 0;
 	self.isCreate = false;
-	self.countdown = 600;  //创建倒计时
+	
+	self.countdown = self.COUNTDOWN_TIME; //创建倒计时
+
+	self.sumtime = 0;
 
 	self.setData = function(roomid, paytype, playerNums) {
 		self.id = roomid;
@@ -547,13 +551,13 @@ game.roominfo = new function() {
 		self.paytypeSt = self.PAYTYPES[self.paytype];
 	};
 	//清零
-	self.reset = function(){
+	self.reset = function() {
 		self.id = '000000';
 		self.paytype = 0;
 		self.paytypeSt = '';
 		self.playerNums = 0;
 		self.isCreate = false;
-		self.countdown = 600;  //创建倒计时
+		self.countdown = self.COUNTDOWN_TIME; //创建倒计时
 	};
 
 	self.getData = function() {
@@ -561,15 +565,32 @@ game.roominfo = new function() {
 			roomid: self.id,
 			playerNums: self.playerNums,
 			paytype: self.paytypeSt,
-			countdown:self.countdown,
+			countdown: self.countdown,
 		};
-	}
+	};
+
+	self.tick = function() {
+		if(self.isCreate) {
+			self.sumtime += game.clock.getTick();
+			if(self.sumtime > 1000 || Math.abs(self.sumtime - 1000) < 10) {
+				console.log(self.sumtime);
+				self.sumtime = 0;
+				self.countdown--;
+				if(self.countdown < 0) {
+					self.countdown = 0;
+					game.sendMsg(this,game.currentScene,game.networker.msg.DISBANDROOM,true);
+					console.log('发出解散房间消息-->%s',game.currentScene.name);
+					self.reset();
+				}
+			}
+		}
+	};
 };
 
 //活动配置数据
 game.InviteData = new function() {
 	var self = this;
-	
+
 	self.rulenote = '1.邀请好友下载并登录朋朋政和麻将，在邀请码处输入您发送的邀请码，你的好友可以登录并领取房卡奖励。\n2.被邀请的好友玩4局之后，您可以获得房卡奖励。';
 
 	self.PAYTYPES = ['放胡单赔', '放胡双倍单赔', '放胡全赔'];
@@ -624,8 +645,8 @@ game.playsceneUidata = new function() {
 				huaCount: 0,
 				userX: this.width * 0.01,
 				userY: this.height * 0.625,
-				showX: this.width/2 - this.mjselfW/2 * game.scalefact,
-				showY: this.height/2 - this.mjselfH/2 * game.scalefact + this.mjselfH * game.scalefact,
+				showX: this.width / 2 - this.mjselfW / 2 * game.scalefact,
+				showY: this.height / 2 - this.mjselfH / 2 * game.scalefact + this.mjselfH * game.scalefact,
 			},
 			up: {
 				dealX: Math.floor(this.width * 0.3),
@@ -637,8 +658,8 @@ game.playsceneUidata = new function() {
 				huaCount: 0,
 				userX: this.width * 0.67,
 				userY: this.height * 0.07,
-				showX: this.width/2 - this.mjselfW/2 * game.scalefact,
-				showY: this.height/2 - this.mjselfH/2 * game.scalefact - this.mjselfH * game.scalefact,
+				showX: this.width / 2 - this.mjselfW / 2 * game.scalefact,
+				showY: this.height / 2 - this.mjselfH / 2 * game.scalefact - this.mjselfH * game.scalefact,
 			},
 			left: {
 				dealX: Math.floor(this.width * 0.125), // - this.slideMjWidth * game.scalefact),
@@ -650,8 +671,8 @@ game.playsceneUidata = new function() {
 				huaCount: 0,
 				userX: this.width * 0.01,
 				userY: this.height * 0.25,
-				showX: this.width/2 - this.mjselfW/2 * game.scalefact - this.mjselfW * game.scalefact,
-				showY: this.height/2 - this.mjselfH/2 * game.scalefact,
+				showX: this.width / 2 - this.mjselfW / 2 * game.scalefact - this.mjselfW * game.scalefact,
+				showY: this.height / 2 - this.mjselfH / 2 * game.scalefact,
 			},
 			right: {
 				dealX: Math.floor(this.width * 0.86),
@@ -663,8 +684,8 @@ game.playsceneUidata = new function() {
 				huaCount: 0,
 				userX: this.width * 0.88,
 				userY: this.height * 0.5,
-				showX: this.width/2 - this.mjselfW/2 * game.scalefact + this.mjselfW * game.scalefact,
-				showY: this.height/2 - this.mjselfH/2 * game.scalefact,
+				showX: this.width / 2 - this.mjselfW / 2 * game.scalefact + this.mjselfW * game.scalefact,
+				showY: this.height / 2 - this.mjselfH / 2 * game.scalefact,
 			}
 		};
 	};

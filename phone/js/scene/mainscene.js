@@ -4,6 +4,7 @@
 		name: game.configdata.SCENE_NAMES.main,
 		items: null,
 		rotate:null,
+		backBtn:null,
 
 		constructor: function(properties) {
 			MainScene.superclass.constructor.call(this, properties);
@@ -33,6 +34,9 @@
 							self.createPointoutWindow([], 'login_9', '对不起，没有此房间').addTo(self);
 						}
 					}
+					break;
+				case game.networker.msg.DISBANDROOM:
+					self.disbandRoom(self);
 					break;
 			}
 		},
@@ -64,17 +68,20 @@
 			sl.scaleX = game.scalefact;
 			sl.scaleY = game.scalefact;
 			
-			var rx = this.items['id_mainscene_enterroom_btn'].x;
-			var ry = this.items['id_mainscene_enterroom_btn'].y;
-			var backBtn = new game.RotateMjBtn().addTo(this);
-			backBtn.x = rx - backBtn.width/2;
-			backBtn.y = ry - backBtn.height/2;
-			backBtn.visible = game.roominfo.isCreate;
-			this.items['id_mainscene_enterroom_btn'].visible = !backBtn.visible;
-			backBtn.on(Hilo.event.POINTER_END,function(e){
-				console.log('返回已经创建的房间');
-				game.switchScene(game.configdata.SCENE_NAMES.invite);
-			});
+			if(game.roominfo.isCreate){
+				var rx = this.items['id_mainscene_enterroom_btn'].x;
+				var ry = this.items['id_mainscene_enterroom_btn'].y;
+				this.backBtn = new game.RotateMjBtn().addTo(this);
+				this.backBtn.x = rx - this.backBtn.width/2;
+				this.backBtn.y = ry - this.backBtn.height/2;
+				this.backBtn.visible = game.roominfo.isCreate;
+				this.items['id_mainscene_enterroom_btn'].visible = !this.backBtn.visible;
+				this.backBtn.on(Hilo.event.POINTER_END,function(e){
+					console.log('返回已经创建的房间');
+					game.switchScene(game.configdata.SCENE_NAMES.invite);
+				});
+			}
+			
 			
 			
 			
@@ -158,6 +165,13 @@
 			var panel = this.getChildById(this.panelid);
 			panel.hide();
 			this.panelid = null;
+		},
+		disbandRoom: function(btnself) {
+			console.log('disbandRoom');
+			var win = btnself.createPointoutWindow(game.sceneuidata.bgtextline, 'login_9', '房间解散，游戏未开始不扣除房卡。').addTo(btnself);
+			this.backBtn.off();
+			this.backBtn.removeFromParent();
+			this.items['id_mainscene_enterroom_btn'].visible = true;
 		},
 		/*createPointoutWindow: function(data, title, text,isTitle) {
 			var self = this;

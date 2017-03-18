@@ -27,6 +27,9 @@
 				case game.networker.msg.SHOWTALK:
 					self.showtalk(msgdata[0],msgdata[1],msgdata[2],msgdata[3]);
 					break;
+				case game.networker.msg.DISBANDROOM:
+					self.disbandRoom(self);
+					break;
 			}
 		},
 		active: function(data) {
@@ -84,9 +87,11 @@
 
 		disbandRoom: function(btnself) {
 			console.log('disbandRoom');
-			game.roominfo.isCreate = false;
-			game.switchScene(game.configdata.SCENE_NAMES.main);
 			game.roominfo.reset();
+			var win = btnself.createPointoutWindow(game.sceneuidata.bgtextline, 'login_9', '房间解散，游戏未开始不扣除房卡。').addTo(btnself);
+			win.closebtn.on(Hilo.event.POINTER_END,function(e){
+				game.switchScene(game.configdata.SCENE_NAMES.main);
+			});
 		},
 		inviteFriend: function(btnself) {
 			console.log('inviteFriend');
