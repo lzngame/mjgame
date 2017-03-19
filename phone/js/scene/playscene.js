@@ -78,6 +78,8 @@
 				self.turnNext();
 				self.skipOverBtn.visible = false;
 			};
+			
+			game.roominfo.isStart = true;
 		},
 		//如果要查看牌 ,可以把 createDealMj 的最后一个参数去掉，左右的牌行，缩放改为0.72
 		//playNumber :2,3,4 

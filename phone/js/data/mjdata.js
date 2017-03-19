@@ -539,6 +539,7 @@ game.roominfo = new function() {
 	self.paytypeSt = '';
 	self.playerNums = 0;
 	self.isCreate = false;
+	self.isStart = false;
 	
 	self.countdown = self.COUNTDOWN_TIME; //创建倒计时
 
@@ -558,6 +559,7 @@ game.roominfo = new function() {
 		self.playerNums = 0;
 		self.isCreate = false;
 		self.countdown = self.COUNTDOWN_TIME; //创建倒计时
+		self.isStart = false;
 	};
 
 	self.getData = function() {
@@ -570,7 +572,7 @@ game.roominfo = new function() {
 	};
 
 	self.tick = function() {
-		if(self.isCreate) {
+		if(self.isCreate && !self.isStart) {
 			self.sumtime += game.clock.getTick();
 			if(self.sumtime > 1000 || Math.abs(self.sumtime - 1000) < 10) {
 				console.log(self.sumtime);
