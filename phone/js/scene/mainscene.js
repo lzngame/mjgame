@@ -17,6 +17,15 @@
 			this.y = -this.height;
 			this.x = game.stage.width / 2 - this.width / 2;
 			this.items = {};
+			this.funcs = {
+				id_mainscene_createroom_btn: this.createMjRoom,
+				id_mainscene_joinroom_btn: this.joinMjRoom,
+				id_mainscene_shareable_btn: this.shareGame,
+				id_mainscene_generalize_btn:this.generalizeGame,
+				id_mainscene_help_btn:this.helpGame,
+				id_mainscene_recharge_btn:this.rechargeGame,
+				id_mainscene_setting_btn:this.settingGame,
+			};
 		},
 		executeMsg: function(sendobj, msgtype, msgdata) {
 			var self = this;
@@ -69,97 +78,64 @@
 			sl.scaleY = game.scalefact;
 			
 			if(game.roominfo.isCreate){
-				var rx = this.items['id_mainscene_enterroom_btn'].x;
-				var ry = this.items['id_mainscene_enterroom_btn'].y;
+				var rx = this.items['id_mainscene_joinroom_btn'].x;
+				var ry = this.items['id_mainscene_joinroom_btn'].y;
 				this.backBtn = new game.RotateMjBtn().addTo(this);
 				this.backBtn.x = rx - this.backBtn.width/2;
 				this.backBtn.y = ry - this.backBtn.height/2;
 				this.backBtn.visible = game.roominfo.isCreate;
-				this.items['id_mainscene_enterroom_btn'].visible = !this.backBtn.visible;
+				this.items['id_mainscene_joinroom_btn'].visible = !this.backBtn.visible;
 				this.backBtn.on(Hilo.event.POINTER_END,function(e){
 					console.log('返回已经创建的房间');
 					game.switchScene(game.configdata.SCENE_NAMES.invite);
 				});
 			}
 			
-			
-			
-			
-			var self = this;
-			this.items['id_mainscene_createroom_btn'].on(Hilo.event.POINTER_END, function(e) {
-				console.log('want to create a room');
-				if(game.roominfo.isCreate){
-					self.createPointoutWindow(game.sceneuidata.bgtextline, 'login_9', '房间已经创建').addTo(self);
-				}else{
-					var prompt = self.createPromptpanel('login_bg35', true, true, self);
-					prompt.addTo(self);
-				}
-			});
-
-			this.items['id_mainscene_enterroom_btn'].on(Hilo.event.POINTER_END, function(e) {
-				console.log('create a room');
-				var prompt = self.createPromptpanel2([], 'login_bg35', true, true, self);
-				prompt.addTo(self);
-				prompt.iscurrent = true;
-				self.currentpanel = prompt;
-			});
-
-			this.items['id_mainscene_expandable_btn'].on(Hilo.event.POINTER_END, function(e) {
-				var prompt = self.createPromptpanel3(game.sceneuidata.main_uidata[2], 'login_bg35', true, true, self);
-				prompt.addTo(self);
-			});
-
-			this.items['id_mainscene_score_btn'].on(Hilo.event.POINTER_END, function(e) {
-				var prompt = self.createPromptpanel4(game.sceneuidata.main_uidata[2], 'login_bg35', true, true, self);
-				prompt.addTo(self);
-			});
-
-			this.items['id_mainscene_help_btn'].on(Hilo.event.POINTER_END, function(e) {
-				var panel = self.createPointoutWindow([], 'login_9', '测试一下添加输入').addTo(self);
-				var t = $('#game-container');
-				var tpl = "<input id='testp' style='position:absolute;top:200px;left:100px'></input>";
-				
-				var x = game.screenWidth  * panel.rx;
-				var y = game.screenHeight * panel.ry;
-				var px = game.screenWidth *  0.125 * panel.rwidht * game.scalefact +x;
-				var py = game.screenHeight * 0.125 * panel.rheight * game.scalefact +y;
-				
-				var posst = 'top:'+py+'px;left:'+px+'px';
-				var cssst = "<input id='testp' onblur='function(){console.log(1111111111);alert(333);}' style='width:150px;position:absolute;"+ posst+"'></input>";
-				console.log(cssst);
-				console.log(tpl);
-				t.after(cssst);
-				//$('#testp').focus();
-				
-				panel.closebtn.on(Hilo.event.POINTER_END,function(e){
-					console.log('删除输入框');
-					$('#testp').remove();
-				});
-			});
-
-			this.items['id_mainscene_setting_btn'].on(Hilo.event.POINTER_END, function(e) {
-				self.showInvitepanel();
-			});
-			this.items['id_mainscene_share_btn'].on(Hilo.event.POINTER_END, function(e) {
-				console.log('id_mainscene_share_btn');
-				self.createSettingWindow(self);
-			});
-			this.items['id_mainscene_recharge_btn'].on(Hilo.event.POINTER_END, function(e) {
-				console.log('id_mainscene_recharge_btn');
-				self.createRechargeWindow(self);
-			});
-
+			this.initBtnHandle();
 			this.initSlideEvent();
-			
 
 		},
 		
-		showInvitepanel:function(){
-			//var panel = new game.ShowTalkpanel({parentscene:sceneself,targetscene:game.configdata.SCENE_NAMES.invite});
-			//panel.addTo(sceneself);
-			
-			new game.Invitepanel({parentscene:this}).addTo(this);
+		createMjRoom:function(self){
+			console.log('want to create a room');
+			if(game.roominfo.isCreate){
+					self.createPointoutWindow(game.sceneuidata.bgtextline, 'login_9', '房间已经创建').addTo(self);
+			}else{
+					var prompt = self.createPromptpanel('login_bg35', true, true, self);
+					prompt.addTo(self);
+			}
 		},
+		
+		joinMjRoom:function(self){
+			console.log('join a room');
+			var prompt = self.createPromptpanel2([], 'login_bg35', true, true, self);
+			prompt.addTo(self);
+			prompt.iscurrent = true;
+			self.currentpanel = prompt;
+		},
+		
+		shareGame:function(self){
+			var prompt = self.createPromptpanel3(game.sceneuidata.main_uidata[2], 'login_bg35', true, true, self);
+			prompt.addTo(self);
+		},
+		
+		helpGame:function(self){
+			var prompt = self.createPromptpanel4(game.sceneuidata.main_uidata[2], 'login_bg35', true, true, self);
+			prompt.addTo(self);
+		},
+		
+		settingGame:function(self){
+			self.createSettingWindow(self);
+		},
+		
+		generalizeGame:function(self){
+			new game.Invitepanel({parentscene:self}).addTo(self);
+		},
+		
+		rechargeGame:function(self){
+			self.createRechargeWindow(self);
+		},
+		
 		hidepanel:function(){
 			console.log('删除输入框');
 			var panel = this.getChildById(this.panelid);
@@ -171,7 +147,7 @@
 			var win = btnself.createPointoutWindow(game.sceneuidata.bgtextline, 'login_9', '房间解散，游戏未开始不扣除房卡。').addTo(btnself);
 			this.backBtn.off();
 			this.backBtn.removeFromParent();
-			this.items['id_mainscene_enterroom_btn'].visible = true;
+			this.items['id_mainscene_joinroom_btn'].visible = true;
 			if(this.panelid)
 				this.hidepanel();
 		},
@@ -280,10 +256,7 @@
 			var w = 0;
 			for(var i=0;i<count;i++){
 				var head = new game.Rechargeablecard({carimg:'zhongzhi18'}).addTo(content);
-				//head.scaleX = game.scalefact;
-				//head.scaleY = game.scalefact;
 				head.x = head.width* i;
-				//head.y = 90/2 - head.height/2;
 				w += head.width;
 			}
 			scrollhead.addContent(content,w);

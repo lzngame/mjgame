@@ -77,17 +77,7 @@ game.sceneuidata = new function(){
 				},
 	        ],
 			[
-				{
-					itemid:'id_mainscene_expandable_btn',
-					itemtype:'scalebtn',
-					itemurlvalue:'tuiguang15',
-					btnup:'tuiguang15',
-					layouttype_x:'pct',
-					alignx:'right_34',
-					layouttype_y:'pct',
-					aligny:'top_8'
-				},
-				{
+				{   //充值
 					itemid:'id_mainscene_recharge_btn',
 					itemtype:'scalebtn',
 					itemurlvalue:'chongzhiBtn',
@@ -96,16 +86,26 @@ game.sceneuidata = new function(){
 					layouttype_y:'pct',
 					aligny:'top_3'
 				},
-				{
-					itemid:'id_mainscene_share_btn',
+				{  	//分享
+					itemid:'id_mainscene_shareable_btn',
 					itemtype:'scalebtn',
-					itemurlvalue:'1',
+					itemurlvalue:'tuiguang15',
+					btnup:'tuiguang15',
 					layouttype_x:'pct',
 					alignx:'right_26',
 					layouttype_y:'pct',
 					aligny:'top_8'
 				},
-				{
+				{	//推广
+					itemid:'id_mainscene_generalize_btn',
+					itemtype:'scalebtn',
+					itemurlvalue:'1',
+					layouttype_x:'pct',
+					alignx:'right_18',
+					layouttype_y:'pct',
+					aligny:'top_8'
+				},
+				/*{	//战绩  ---- 推后制作
 					itemid:'id_mainscene_score_btn',
 					itemtype:'scalebtn',
 					itemurlvalue:'login_bg14',
@@ -113,8 +113,8 @@ game.sceneuidata = new function(){
 					alignx:'right_18',
 					layouttype_y:'pct',
 					aligny:'top_8'
-				},
-				{
+				},*/
+				{	//帮助
 					itemid:'id_mainscene_help_btn',
 					itemtype:'scalebtn',
 					itemurlvalue:'lsbattle_5',
@@ -123,7 +123,7 @@ game.sceneuidata = new function(){
 					layouttype_y:'pct',
 					aligny:'top_8'
 				},
-				{
+				{	//设置
 					itemid:'id_mainscene_setting_btn',
 					itemtype:'scalebtn',
 					itemurlvalue:'lsbattle_2',
@@ -142,7 +142,7 @@ game.sceneuidata = new function(){
 					aligny:'center'
 				},
 				{
-					itemid:'id_mainscene_enterroom_btn',
+					itemid:'id_mainscene_joinroom_btn',
 					itemtype:'scalebtn',
 					itemurlvalue:'6',
 					layouttype_x:'pct',
