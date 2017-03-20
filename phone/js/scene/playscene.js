@@ -36,6 +36,8 @@
 		residueGamenumLabel: null, //剩余局数
 		roomIdLabel: null, //房间ID号
 		bankerDir: 'down', //庄家位置
+		
+		ishuangzhuang:false,
 
 		skipOverBtn: null,
 
@@ -64,14 +66,14 @@
 				right: 1
 			};
 			this.initLayerAndPositions();
+			
 			this.setRoomInfo();
-
 			game.mjdata.initMjQueue();
 			this.deal(game.roominfo.getData().playerNums);
 			this.setTurnGold();
 			this.takemj();
 			this.turnBuhua();
-
+			
 			//this.skipOverBtn = game.configdata.createScalebutton('ui', 'lsbattle_87', this.width * 0.6, this.height * 0.6).addTo(this);
 			this.skipOverBtn = new game.HandleMjBtn({x:this.width * 0.6, y:this.height * 0.6}).addTo(this);
 			this.skipOverBtn.visible = false;
@@ -80,41 +82,33 @@
 				self.skipOverBtn.visible = false;
 			});
 			game.roominfo.isStart = true;
+			
+			this.ishuangzhuang = false;
+			this.throwDownNum =  0;
+			this.throwUpNum = 0;
+			this.throwLeftNum = 0;
+			this.throwRightNum = 0;
+			game.playsceneUidata.initPostion['down']['huaCount'] = 0;
+			game.playsceneUidata.initPostion['up']['huaCount'] = 0;
+			game.playsceneUidata.initPostion['left']['huaCount'] = 0;
+			game.playsceneUidata.initPostion['right']['huaCount'] = 0;
+
+			this.isThrow = false;
 		},
-		//如果要查看牌 ,可以把 createDealMj 的最后一个参数去掉，左右的牌行，缩放改为0.72
-		//playNumber :2,3,4 
-		deal: function(playNumber) {
-			for(var i = 0; i < this.maxMjHandle; i++) {
-				//self -down
-				var mj_down = new game.MjSelf({ mjid: game.mjdata.dealOne(), scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.dealDownMjLayer);
-				mj_down.x = mj_down.swidth * i + game.playsceneUidata.initPostion['down']['dealX'];
-				mj_down.y = game.playsceneUidata.initPostion['down']['dealY'];
-				//up
-				var mj_up = this.createDealMj(game.mjdata.dealOne(), 1, 1).addTo(this.dealUpMjLayer);
-				mj_up.x = mj_up.swidth * i + game.playsceneUidata.initPostion['up']['dealX'];
-				mj_up.y = game.playsceneUidata.initPostion['up']['dealY'];
-				//lfet
-				if(playNumber >= 3) {
-					var mj_left = this.createDealMj(game.mjdata.dealOne(), 2, 2).addTo(this.dealLeftMjLayer);
-					mj_left.x = game.playsceneUidata.initPostion['left']['dealX'];
-					mj_left.y = (mj_left.sheight * 0.5) * i + game.playsceneUidata.initPostion['left']['dealY'];
-				}
-				//right
-				if(playNumber == 4) {
-					var mj_right = this.createDealMj(game.mjdata.dealOne(), 3, 3).addTo(this.dealRightMjLayer);
-					mj_right.x = game.playsceneUidata.initPostion['right']['dealX'];
-					mj_right.y = (mj_right.sheight * 0.5) * i + game.playsceneUidata.initPostion['right']['dealY'];
-				}
-			}
-			this.sortPlayerMj('down');
-			this.sortPlayerMj('up');
-			this.sortPlayerMj('right');
-			this.sortPlayerMj('left');
+		
+		clear:function(){
+			
 		},
+		
 
 		executeMsg: function(sendobj, msgtype, msgdata) {
 			var self = this;
 			switch(msgtype) {
+				case game.networker.msg.HUANGZHUANG:
+					self.isTurn = false;
+					console.log('huangzhuang');
+					self.huangzhuang();
+					break;
 				case game.networker.msg.BESELECT:
 					if(self.currentmj)
 						self.currentmj.backQueue();
@@ -171,6 +165,38 @@
 					break;
 			}
 		},
+		
+		//如果要查看牌 ,可以把 createDealMj 的最后一个参数去掉，左右的牌行，缩放改为0.72
+		//playNumber :2,3,4 
+		deal: function(playNumber) {
+			for(var i = 0; i < this.maxMjHandle; i++) {
+				//self -down
+				var mj_down = new game.MjSelf({ mjid: game.mjdata.dealOne(), scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.dealDownMjLayer);
+				mj_down.x = mj_down.swidth * i + game.playsceneUidata.initPostion['down']['dealX'];
+				mj_down.y = game.playsceneUidata.initPostion['down']['dealY'];
+				//up
+				var mj_up = this.createDealMj(game.mjdata.dealOne(), 1, 1).addTo(this.dealUpMjLayer);
+				mj_up.x = mj_up.swidth * i + game.playsceneUidata.initPostion['up']['dealX'];
+				mj_up.y = game.playsceneUidata.initPostion['up']['dealY'];
+				//lfet
+				if(playNumber >= 3) {
+					var mj_left = this.createDealMj(game.mjdata.dealOne(), 2, 2).addTo(this.dealLeftMjLayer);
+					mj_left.x = game.playsceneUidata.initPostion['left']['dealX'];
+					mj_left.y = (mj_left.sheight * 0.5) * i + game.playsceneUidata.initPostion['left']['dealY'];
+				}
+				//right
+				if(playNumber == 4) {
+					var mj_right = this.createDealMj(game.mjdata.dealOne(), 3, 3).addTo(this.dealRightMjLayer);
+					mj_right.x = game.playsceneUidata.initPostion['right']['dealX'];
+					mj_right.y = (mj_right.sheight * 0.5) * i + game.playsceneUidata.initPostion['right']['dealY'];
+				}
+			}
+			
+			this.sortPlayerMj('down');
+			this.sortPlayerMj('up');
+			this.sortPlayerMj('right');
+			this.sortPlayerMj('left');
+		},
 
 		turnBuhua: function() {
 			if(this.checkFlower('down')) {
@@ -181,6 +207,8 @@
 
 		turnNext: function() {
 			var self = this;
+			if(self.ishuangzhuang)
+				return;
 			self.currentThrowIndex++;
 			if(self.currentThrowIndex >= self.mjDirect.length) {
 				self.currentThrowIndex = 0;
@@ -251,10 +279,10 @@
 
 		setRoomInfo: function() {
 			var self = this;
-			this.residueMjLabel = game.configdata.createBgTitletext('剩余' + game.mjdata.getResidueMj().toString() + '张', '18px 黑体', 'yellow', 'ui', 'login_bg9','center').addTo(this.bglayer);
+			this.residueMjLabel = game.configdata.createBgTitletext('剩余' + game.networker.getResidueMj().toString() + '张', '18px 黑体', 'yellow', 'ui', 'login_bg9','center').addTo(this.bglayer);
 			this.residueMjLabel.x = this.width / 2 - this.residueMjLabel.width - 50;
 			this.residueMjLabel.y = this.height / 2 - this.residueMjLabel.height / 2;
-			this.residueMjLabel.txt.text = '剩余' + game.mjdata.getResidueMj().toString() + '张';
+			this.residueMjLabel.txt.text = '剩余' + game.networker.getResidueMj().toString() + '张';
 			this.residueGamenumLabel = game.configdata.createBgTitletext('剩余3局', '18px 黑体', 'yellow', 'ui', 'login_bg9','center').addTo(this.bglayer);
 			this.residueGamenumLabel.x = this.width / 2 + 50;
 			this.residueGamenumLabel.y = this.height / 2 - this.residueMjLabel.height / 2;
@@ -305,11 +333,101 @@
 			panel.addTo(sceneself);
 		},
 		
+		//局间结算
+		showPartBalancecount:function(sceneself){
+			var l = this.dealDownMjLayer.children;
+			var panel = new game.PartBalanceAccountpanel().addTo(this);
+		},
+		
 		hidepanel:function(){
 			console.log('删除输入框');
 			var panel = this.getChildById(this.panelid);
 			panel.hide();
 			this.panelid = null;
+		},
+		
+		huangzhuang:function(){
+			this.ishuangzhuang = true;
+			var self = this;
+			var img = game.configdata.createRectImg('ui','battle_108',0,0,1).addTo(this);
+			img.pivotX = img.width/2;
+			img.pivotY = img.height/2;
+			img.x = this.width/2;
+			img.y = this.height/2;
+			img.scaleX = img.scaleY = 0.5;
+			new Hilo.Tween.to(img,{
+				scaleX:1,
+				scaleY:1,
+			},{
+				delay:200,
+				duration:400,
+				ease: Hilo.Ease.Bounce.EaseOut,
+				onComplete:function(){
+					new Hilo.Tween.to(img,{
+						alpha:0.3
+					},{
+						delay:100,
+						duration:300,
+						onComplete:function(){
+							//game.switchScene(game.configdata.SCENE_NAMES.weixinlogin);
+							self.createBalanceaccountWindow(self);
+						}
+					})
+				}
+			});
+		},
+		
+		createBalanceaccountWindow: function(self) {
+			var panel = game.configdata.createBgPanel([], 'login_bg35', true, true, self, 'login_13', 'login_14', 'ui', 55, 'login_bg111', 'login_bg81');
+			panel.addTo(self);
+			var inity = panel.height * 0.125;
+			for(var i in self.mjDirect){
+				var dir = self.mjDirect[i];
+				var l = null;
+				if(dir == 'down')
+					l = self.dealDownMjLayer.children;
+				if(dir == 'up')
+					l = self.dealUpMjLayer.children;
+				if(dir == 'right')
+					l = self.dealRightMjLayer.children;
+				if(dir == 'left')
+					l = self.dealLeftMjLayer.children;
+				var queue = new game.BalanceAccountMjqueue({y:inity,l:l}).addTo(panel);
+				queue.x = panel.width/2 - queue.width/2;
+				inity += 120;
+				console.log('x:%d y:%d',queue.x,queue.y);
+			}
+			var l = this.dealDownMjLayer.children;
+			
+			
+			var btn = new game.IconButton({
+				imgsource: 'ui',
+				btnupimg: 'login_10',
+				btndownimg: 'login_11',
+				iconimg: 'login_bg79',
+				scaleX: game.scalefact,
+				scaleY: game.scalefact,
+			}).addTo(panel);
+			btn.x = panel.width* game.scalefact/2 - btn.width * game.scalefact/2  -btn.width * game.scalefact;
+			btn.y = panel.height* game.scalefact * (7/8);
+			
+			var btn2 = new game.IconButton({
+				imgsource: 'ui',
+				btnupimg: 'login_bg65',
+				btndownimg: 'login_bg66',
+				iconimg: 'login_bg83',
+				scaleX: game.scalefact,
+				scaleY: game.scalefact,
+			}).addTo(panel);
+			btn2.x = panel.width* game.scalefact/2 - btn.width * game.scalefact/2  +btn.width * game.scalefact;
+			btn2.y = panel.height* game.scalefact * (7/8);
+			
+			btn.handler = function(){
+				game.mjdata.initMjQueue();
+				self.destory();
+				self.active();
+			};
+			
 		},
 		
 		showtalk:function(userdir,showtype,txt,sound){
@@ -336,7 +454,7 @@
 
 		takemj: function() {
 			var id = game.mjdata.dealOne();
-			this.residueMjLabel.txt.text = '剩余' + game.mjdata.getResidueMj().toString() + '张';
+			this.residueMjLabel.txt.text = '剩余' + game.networker.getResidueMj().toString() + '张';
 
 			var mj = new game.MjSelf({ mjid: id, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.dealDownMjLayer);
 			var x = this.selfMjTakeInitx;
@@ -367,7 +485,7 @@
 		otherTakemj: function(userdir) {
 			var self = this;
 			var mjid = game.mjdata.dealOne();
-			self.residueMjLabel.txt.text = '剩余' + game.mjdata.getResidueMj().toString() + '张';
+			self.residueMjLabel.txt.text = '剩余' + game.networker.getResidueMj().toString() + '张';
 			if(this.checkOneMjFlower(mjid)) {
 				self.throwFlower(mjid, userdir);
 				self.otherTakemj(userdir);
@@ -471,6 +589,7 @@
 						mj_right.x = objdata['dealX'];
 						break;
 				}
+				this.residueMjLabel.txt.text = '剩余' + game.networker.getResidueMj().toString() + '张';
 			}
 			if(beThrowMjList.length > 0) {
 				this.sortPlayerMj(userdir);
@@ -610,6 +729,8 @@
 			game.sounds.playMjEffect(0);
 			var throwmj = null;
 			var self = this;
+			if(self.ishuangzhuang)
+				return;
 			switch(dir) {
 				case 'down':
 					throwmj = this._getThrowMj(mjid, 1);

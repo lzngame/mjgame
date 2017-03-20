@@ -12,6 +12,7 @@ game.networker = new function() {
 		SHOWTALK: 'show_talk_panel_106',
 		DISBANDROOM:'disband_mj_room_107',    //解散房间
 		SCROLLIMGLIST:'scroll_image_list_108',//滚动图片
+		HUANGZHUANG:'huangzhuang',            //黄庄
 	};
 	this.executeMsg = function(sendobj, msgtype, msgdata) {
 		var self = this;
@@ -20,7 +21,11 @@ game.networker = new function() {
 				self.delayHandle(1000,sendobj, msgdata, self.joinRoom);
 				break;
 			case this.msg.THROWMJ:    //某玩家扔掉手牌
-				self.delayHandle(1000,sendobj, msgdata, self.nextuserHandle);
+				if(this.checkResidue()){
+					game.sendMsg(this,game.currentScene,this.msg.HUANGZHUANG,game.mjdata.getResidueMj());
+				}else{
+					self.delayHandle(1000,sendobj, msgdata, self.nextuserHandle);
+				}
 				break;
 			case this.msg.CREATEROOM: //创建房间
 				self.delayHandle(1000,sendobj, msgdata, self.canCreateRoom, self);
@@ -33,6 +38,21 @@ game.networker = new function() {
 				break;
 		}
 	};
+	
+	this.getResidueMj = function(){
+		if(this.checkResidue()){
+			game.sendMsg(this,game.currentScene,this.msg.HUANGZHUANG,game.mjdata.getResidueMj());
+			return 0;
+		}else{
+			return game.mjdata.getResidueMj() - game.roominfo.lastmj;
+		}
+	};
+	
+	this.checkResidue = function(){
+		var residue = game.mjdata.getResidueMj();
+		return residue == game.roominfo.lastmj;
+	};
+	
 	this.delayHandle = function(delaytime,sendobj, msgdata, func, self) {
 		var self = this;
 		new Hilo.Tween.to(this, {

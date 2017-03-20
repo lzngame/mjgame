@@ -1621,7 +1621,7 @@
 			this.width = bg.width;
 			this.height = bg.height;
 			var mjname = game.mjdata.mj[this.mjid][1];
-			this.mj = game.configdata.createRectImg('mj',mjname,0,0,1).addTo(this);
+			this.mj =  game.configdata.createRectImg('mj',mjname,0,0,1).addTo(this);
 			this.mj.x = this.width/2 - this.mj.width/2;
 			this.mj.y = this.height - this.mj.height;
 		},
@@ -1762,6 +1762,43 @@
 					self.removeFromParent();
 				}
 			});
+		},
+	});
+	
+	//BalanceAccountMjqueue --- 结算麻将序列
+	var BalanceAccountMjqueue = ns.BalanceAccountMjqueue = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name: 'BalanceAccountMjqueue',
+		bg:null,
+		scoreicon:null,
+		scoretxt:null,
+		score:120,
+		l:null,
+		numimg:null,
+		txt:null,
+		txtnum:null,
+		invitenum:10,
+		cardnum:1,
+
+		constructor: function(properties) {
+			BalanceAccountMjqueue.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		init: function(properties) {
+			this.bg = game.configdata.createRectImg('ui','login_bg75',0,0).addTo(this);
+			this.scoreicon = game.configdata.createRectImg('ui','login_bg78',800,5).addTo(this);
+			this.width = this.bg.width;
+			this.height = this.bg.height;
+			this.scoretxt = game.configdata.createSimpletext(this.score.toString(), '30px 黑体', 'white', 'rgba(0,0,0,0)', this.scoreicon.x + this.scoreicon.width*1.1, this.scoreicon.y, 150).addTo(this);
+			for(var i in this.l){
+				var mjid = this.l[i].mjid;
+				console.log(mjid);
+				var idname = mjid+'-1';
+				var mj = new game.MjScene({idname:idname}).addTo(this);
+				mj.x = i * mj.width;
+				mj.y = this.height/2 - mj.height/2;
+				
+			}
 		},
 	});
 	

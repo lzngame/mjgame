@@ -534,12 +534,14 @@ game.roominfo = new function() {
 
 	self.PAYTYPES = ['放胡单赔', '放胡双倍单赔', '放胡全赔'];
 	self.COUNTDOWN_TIME = 10;
+	self.LASTMJNUM = 42;
 	self.id = '000000';
 	self.paytype = 0;
 	self.paytypeSt = '';
 	self.playerNums = 0;
 	self.isCreate = false;
 	self.isStart = false;
+	self.lastmj = self.LASTMJNUM;//黄庄的剩余张
 	
 	self.countdown = self.COUNTDOWN_TIME; //创建倒计时
 
@@ -560,6 +562,7 @@ game.roominfo = new function() {
 		self.isCreate = false;
 		self.countdown = self.COUNTDOWN_TIME; //创建倒计时
 		self.isStart = false;
+		self.lastmj = self.LASTMJNUM;
 	};
 
 	self.getData = function() {

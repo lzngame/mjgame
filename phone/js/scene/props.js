@@ -484,5 +484,183 @@
 
 		},
 	});
+	
+	
+	
+	//PartBalanceAccountpanel  -- 局间结算面板
+	var PartBalanceAccountpanel = ns.PartBalanceAccountpanel = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name: 'PartBalanceAccountpanel',
+		parentscene: null,
+		panel:null,
+		inputid:'INVITESCENE_ID',
+		targetscene:null,
+		talkpanel:null,
+		browspanel:null,
+		sendbtn:null,
+		constructor: function(properties) {
+			PartBalanceAccountpanel.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		init: function(properties) {
+			var self = this;
+			this.panel = game.configdata.createBgPanel([], 'login_bg35', true, true, self, 'login_13', 'login_14', 'ui', 55, 'login_bg111', 'login_bg81').addTo(this);
+			//this.parentscene.panelid = this.id;
+			
+			//new game.BalanceAccountMjqueue().addTo(this.panel);
+			
+			/*var title = new game.TabButton({parentscene:this,leftfunc:this.showTalk,rightfunc:this.showBrows}).addTo(this.panel);
+			title.x = (this.panel.width - title.width) / 2 * game.scalefact;
+			title.y = 0;
+			this.createTalkPanel();
+			this.createBrowsPanel();
+			this.browspanel.visible = false;
+
+			this.panel.addTo(this);
+			this.panel.closebtn.on(Hilo.event.POINTER_END, function(e) {
+				self.parentscene.hidepanel();
+			});*/
+		},
+		showTalk:function(parentscene){
+			console.log(this);
+			console.log('talk');
+			parentscene._showTalk();
+		},
+		showBrows:function(parentscene){
+			console.log(this);
+			console.log('brows');
+			parentscene._showBrows();
+		},
+		_showTalk:function(){
+			this.talkpanel.visible = true;
+			this.sendbtn.visible = true;
+			this.browspanel.visible = false;
+			this.insertDomtxt(0.125,0.125,0.5,0.04,this.panel.rx,this.panel.ry,this.panel.rwidht,this.panel.rheight);
+		},
+		_showBrows:function(){
+			this.talkpanel.visible = false;
+			this.sendbtn.visible = false;
+			this.browspanel.visible = true;
+			var input_id = '#'+this.inputid;
+			$(input_id).remove();
+		},
+		hide:function(){
+			var input_id = '#'+this.inputid;
+			$(input_id).remove();
+			this.panel.hide();
+		},
+		createTalkPanel:function(){
+			var self = this;
+			var scrollwin = new game.Scrollwindow({
+				width: 621, //panel.width * game.scalefact * 6 / 8,
+				height: this.panel.height * game.scalefact * 6 / 8,
+				x: this.panel.width  * game.scalefact / 8,
+				y: this.panel.height * game.scalefact / 4,
+				scaleX: game.scalefact,
+				scaleY: game.scalefact,
+			}).addTo(this.panel);
+			scrollwin.contentpanel.pointerEnabled = true;
+			var content = new Hilo.Container();
+			//content.pointerChildren = false;
+			for(var i in game.mjdata.talksounds) {
+				var data = game.mjdata.talksounds[i];
+				var item = game.configdata.createBgTitletext(data[0], '26px 黑体', 'black', 'ui', 'login_bg92', 'left', 20).addTo(content);
+				item.y = i * 60;
+				item.sound = data[1];
+				item.txt = data[0];
+				item.on(Hilo.event.POINTER_END, function(e) {
+					console.log('%d:%d:%d',e.stageY,ty, scrollwin.height);
+					var ty = self.panel.y+scrollwin.y;
+					if(e.stageY <  ty || e.stageY > scrollwin.height + ty){
+						console.log('out range');
+					}else{
+
+						if(scrollwin.slidedisy == 0) {
+							game.sendMsg(game.scenes[self.targetscene], game.networker, game.networker.msg.SHOWTALK, ['text',this.txt, this.sound]);
+						}
+					}
+				});
+			}
+			scrollwin.addContent(content, 660);
+			
+			this.insertDomtxt(0.125,0.125,0.5,0.04,this.panel.rx,this.panel.ry,this.panel.rwidht,this.panel.rheight);
+
+			this.sendbtn = new game.IconButton({
+				imgsource: 'ui',
+				btnupimg: 'login_10',
+				btndownimg: 'login_11',
+				iconimg: 'login_bg90',
+				x: this.panel.width * 0.65 * game.scalefact,
+				y: this.panel.height * 0.125 * game.scalefact,
+				handler: function() {
+					var txt = $('#'+self.inputid)[0].value;
+					if(txt.length > 0)
+						game.sendMsg(game.scenes[self.targetscene], game.networker, game.networker.msg.SHOWTALK, ['text',txt, null]);
+				},
+				scaleX: game.scalefact,
+				scaleY: game.scalefact,
+			}).addTo(this.panel);
+			
+			this.talkpanel = scrollwin;
+		},
+		createBrowsPanel:function(){
+			var self = this;
+			var scrollwin = new game.Scrollwindow({
+				width:  820, //panel.width * game.scalefact * 6 / 8,
+				height: this.panel.height * game.scalefact * 6 / 8,
+				x: this.panel.width  * game.scalefact / 8,
+				y: this.panel.height * game.scalefact / 4,
+				scaleX: game.scalefact,
+				scaleY: game.scalefact,
+			}).addTo(this.panel);
+			scrollwin.contentpanel.pointerEnabled = true;
+			var content = new Hilo.Container();
+			//content.pointerChildren = false;
+			var wnum = 9.0;
+			for(var i=0;i<30;i++) {
+				var browsname = 'biaoqing'+((i+1).toString());
+				var rect = game.configdata.getPngRect(browsname,'brows');
+				var data = game.mjdata.talksounds[i];
+				var x = (i % wnum) *80;
+				var y = Math.floor(i/wnum) *80;
+				var item = game.configdata.createRectImg('brows',browsname,x,y,1).addTo(content);
+				item.name = browsname;
+				item.on(Hilo.event.POINTER_END, function(e) {
+					var ty = self.panel.y+scrollwin.y;
+					console.log('%d:%d:%d',e.stageY,ty, self.panel.height);
+					
+					if(e.stageY <  ty || e.stageY > scrollwin.height + ty){
+						console.log('out range');
+					}else{
+						console.log('%d:%d:%d',e.stageY,ty, scrollwin.height);
+						if(scrollwin.slidedisy == 0) {
+							game.sendMsg(game.scenes[self.targetscene], game.networker, game.networker.msg.SHOWTALK, ['brows',this.name]);
+						}
+					}
+				});
+			}
+			scrollwin.addContent(content, 660);
+			this.browspanel = scrollwin;
+		},
+		insertDomtxt:function(pctx,pcty,pctw,pcth,rx,ry,rwidth,rheight){
+			var t = $('#game-container');
+			var x =  game.screenWidth  * rx;
+			var y =  game.screenHeight * ry;
+			var px = game.screenWidth  *  pctx *  rwidth   * game.scalefact + x;
+			var py = game.screenHeight *  pcty *  rheight  * game.scalefact + y;
+			var pw = game.screenWidth  *  pctw *  rwidth   * game.scalefact;
+			var ph = game.screenHeight *  pcth *  rheight  * game.scalefact;
+			
+			var posst = 'top:' + py + 'px;left:' + px + 'px';
+			var cssst = "<input type='text'   id='"+this.inputid+"' placeholder='输入聊天内容...' style='width:" + pw + "px;height:"+ph+"px;position:absolute;" + posst + "'></input>";
+			//var cssst = "<input type='text'   id='"+this.inputid+"' placeholder='输入聊天内容...' style='width:" + pw + "px;height:12px;position:absolute;" + posst + "'></input>";
+			//var cssst = "<input type='text'  onfocus=ontxtfocus() id='"+this.inputid+"' value='输入聊天内容...' style='width:" + pw + "px;height:12px;position:absolute;" + posst + "'></input>";
+			console.log(cssst);
+			t.after(cssst);
+		},
+		onUpdate: function() {
+
+		},
+	});
 
 })(window.game);
