@@ -296,12 +296,20 @@ game.configdata = new function() {
 			panel.x = theparent.width / 2 - panel.width * game.scalefact / 2;
 			panel.y = theparent.height / 2 - panel.height * game.scalefact / 2;
 			panel.hide = function() {
-				if(this.iscurrent) {
-					this.parent.currentpanel = null;
-				}
-				this.removeAllChildren();
-				this.removeFromParent();
-				console.log(this.getNumChildren());
+				var self = this;
+				new Hilo.Tween.to(self,{
+					alpha:0.1,
+					y:0,//self.height,
+				},{
+					duration:200,
+					onComplete:function(){
+						if(self.iscurrent) {
+							self.parent.currentpanel = null;
+						}
+						self.removeAllChildren();
+						self.removeFromParent();
+					}
+				});
 			};
 
 			if(ismodal) {

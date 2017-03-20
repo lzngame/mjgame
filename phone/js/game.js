@@ -126,7 +126,7 @@
 			this.scenes = {};
 			this.scenes[game.configdata.SCENE_NAMES.load]         = new game.LoadScene();
 			this.scenes[game.configdata.SCENE_NAMES.weixinlogin]  = new game.WeixinLoginScene();
-			this.scenes[game.configdata.SCENE_NAMES.main]  = new game.MainScene();
+			this.scenes[game.configdata.SCENE_NAMES.main]  = new game.MainScene({note:'主界面'});
 			this.scenes[game.configdata.SCENE_NAMES.play]  = new game.PlayMainscene();
 			this.scenes[game.configdata.SCENE_NAMES.invite]  = new game.InviteMainscene();
 		},

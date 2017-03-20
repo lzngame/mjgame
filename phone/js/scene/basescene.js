@@ -2,6 +2,7 @@
 	var BaseScene = ns.BaseScene = Hilo.Class.create({
 		Extends: Hilo.Container,
 		name:'',
+		note:'',
 		isHandleSlide:true,
 		tapstarttime:0,
 		tapendtime:0,

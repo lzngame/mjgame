@@ -10,7 +10,8 @@ game.networker = new function() {
 		CREATEROOM: 'create_mj_room_104',
 		JOINROOM: 'join_mj_room_105',
 		SHOWTALK: 'show_talk_panel_106',
-		DISBANDROOM:'disband_mj_room_107', //解散房间
+		DISBANDROOM:'disband_mj_room_107',    //解散房间
+		SCROLLIMGLIST:'scroll_image_list_108',//滚动图片
 	};
 	this.executeMsg = function(sendobj, msgtype, msgdata) {
 		var self = this;

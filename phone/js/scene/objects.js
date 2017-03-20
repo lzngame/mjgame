@@ -1132,29 +1132,60 @@
 	var HandleMjBtn = ns.HandleMjBtn = Hilo.Class.create({
 		Extends: Hilo.Container,
 		name: 'HandleMjBtn',
-		imgsource:'',
-		img:null,
-		handletype:0, //吃碰杠听胡过
-		mjid:null, 
-		handimg:null,
+		
+		handleIndex:[0,0,0,0],//胡，碰，吃，杠
+		imgs:null,
+		handleimg:['lsbattle_86','lsbattle_85','19','lsbattle_84'],
+		mjbg:null,
+		mjid:-1,
+		mj:null,
+		pass:null, //过
 
 		constructor: function(properties) {
 			HandleMjBtn.superclass.constructor.call(this, properties);
 			this.init(properties);
 		},
 		init: function(properties) {
-			var bgrect = game.configdata.getPngRect(this.bgrectname,this.imgsource);
-			this.width = bgrect[2];
-			this.height = bgrect[3];
-			game.configdata.createRectImg(this.imgsource, this.bgrectname, 0, 0, 1).addTo(this);
-			var idname = this.mjid + '-1';
-			var mj = new game.MjScene({idname:idname}).addTo(this);
-			mj.x = this.width/2 - mj.width/2;
-			mj.y = this.height/2 - mj.height/2 + 10;
-			mj.pointerEnabled = false;
-			this.scaleX = game.scalefact;
-			this.scaleY = game.scalefact;
+			var self = this;
+			this.imgs = [];
+			this.mjbg = game.configdata.createRectImg('ui','login_bg112',0,0,1).addTo(this);
+			this.mj = new game.MjImg({mjid: 'b_9',x:35,y:25}).addTo(this);
+			var initx = 150;
+			for(var i=0;i<this.handleimg.length;i++){
+				var img = this.handleimg[i];
+				var item = game.configdata.createRectImg('ui',img,initx,0,1).addTo(this);
+				this.imgs.push(item);
+			}
+			this.pass = game.configdata.createRectImg('ui','lsbattle_87',0,50,1).addTo(this);
+			this.pass.on(Hilo.event.POINTER_START,function(e){
+				self.clear();
+			});
 		},
+		setData:function(mjid,data){
+			this.visible = true;
+			this.mj.setMjid(mjid);
+			var initx = 0;
+			for(var i=0;i<data.length;i++){
+				if(i == 0)
+					initx = 120;
+				var isshow = data[i];
+				if(isshow){
+					this.imgs[i].visible = true;
+					this.imgs[i].x = initx;
+					initx += this.imgs[i].width;
+				}else{
+					this.imgs[i].visible = false;
+				}
+			}
+			this.pass.x = initx;
+		},
+		clear:function(){
+			this.visible = false;
+			//this.removeAllChildren();
+		},
+		sethandleMj:function(mjid,handles){
+			
+		}
 	});
 	
 	//MjPortrait--- 头像
@@ -1573,6 +1604,33 @@
 				winimg.y = bg.height *0.25;
 			}
 		},
+	});
+	
+	//MjImg --- 麻将图片，金牌，吃碰杠胡 图片
+	var MjImg = ns.MjImg = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name: '',
+		mjid:'',
+		mj:null,
+		constructor: function(properties) {
+			MjImg.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		init: function(properties) {
+			var bg = game.configdata.createRectImg('ui','17',0,0,1).addTo(this);
+			this.width = bg.width;
+			this.height = bg.height;
+			var mjname = game.mjdata.mj[this.mjid][1];
+			this.mj = game.configdata.createRectImg('mj',mjname,0,0,1).addTo(this);
+			this.mj.x = this.width/2 - this.mj.width/2;
+			this.mj.y = this.height - this.mj.height;
+		},
+		setMjid:function(mjid){
+			var mjname = game.mjdata.mj[mjid][1];
+			var rect = game.configdata.getPngRect(mjname,'mj');
+			var img = game.getImg('mj');
+			this.mj.setImage(img,rect);
+		}
 	});
 	
 	

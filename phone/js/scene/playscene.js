@@ -72,13 +72,13 @@
 			this.takemj();
 			this.turnBuhua();
 
-			this.skipOverBtn = game.configdata.createScalebutton('ui', 'lsbattle_87', this.width * 0.6, this.height * 0.6).addTo(this);
+			//this.skipOverBtn = game.configdata.createScalebutton('ui', 'lsbattle_87', this.width * 0.6, this.height * 0.6).addTo(this);
+			this.skipOverBtn = new game.HandleMjBtn({x:this.width * 0.6, y:this.height * 0.6}).addTo(this);
 			this.skipOverBtn.visible = false;
-			this.skipOverBtn.handler = function(t) {
+			this.skipOverBtn.pass.on(Hilo.event.POINTER_START,function(e){
 				self.turnNext();
 				self.skipOverBtn.visible = false;
-			};
-			
+			});
 			game.roominfo.isStart = true;
 		},
 		//如果要查看牌 ,可以把 createDealMj 的最后一个参数去掉，左右的牌行，缩放改为0.72
@@ -139,7 +139,8 @@
 						self.turnNext();
 					} else {
 						if(msgdata[1] != 'down')
-							self.skipOverBtn.visible = true;
+							//self.skipOverBtn.visible = true;
+							self.skipOverBtn.setData(msgdata[0],[0,0,1,0]);
 						else	
 							self.turnNext();
 					}
