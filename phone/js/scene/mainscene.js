@@ -95,7 +95,9 @@
 			this.initBtnHandle();
 			this.initSlideEvent();
 			
-			
+			if(data == 'balanceaccount'){
+				this.createEndBalanceaccountWindow(this);
+			}
 		},
 		
 		createMjRoom:function(self){
@@ -188,6 +190,70 @@
 			scrollhead.addContent(content,w);
 		},
 		
+		createEndBalanceaccountWindow: function() {
+			var panel = game.configdata.createBgPanel([], 'login_bg35', true, true, this, 'login_13', 'login_14', 'ui', 55, 'login_bg111', 'login_bg81');
+			panel.addTo(this);
+			var nums = game.roominfo.playerNums;
+			var initx = 0;
+			for(var i=0;i<nums;i++){
+				var card =  new game.BalanceAccountCard({scaleX:game.scalefact,scaleY:game.scalefact}).addTo(panel);
+				if(i == 0){
+					initx = panel.width * game.scalefact /2 - nums * card.width * game.scalefact /2;
+				}
+				card.x = initx;
+				card.y = panel.height * game.scalefact * 0.125;
+				initx += card.width * game.scalefact;
+			}
+			/*var inity = panel.height * game.scalefact * 0.125;
+			for(var i in self.mjDirect){
+				var dir = self.mjDirect[i];
+				var l = null;
+				if(dir == 'down')
+					l = self.dealDownMjLayer.children;
+				if(dir == 'up')
+					l = self.dealUpMjLayer.children;
+				if(dir == 'right')
+					l = self.dealRightMjLayer.children;
+				if(dir == 'left')
+					l = self.dealLeftMjLayer.children;
+				var queue = new game.BalanceAccountMjqueue({y:inity,l:l,scaleX:game.scalefact,scaleY:game.scalefact}).addTo(panel);
+				queue.x = panel.width* game.scalefact/2 - queue.width * game.scalefact/2;
+				inity += queue.height * game.scalefact * 1.05;
+				console.log('x:%d y:%d',queue.x,queue.y);
+			}
+			var l = this.dealDownMjLayer.children;
+			*/
+			
+			var btn = new game.IconButton({
+				imgsource: 'ui',
+				btnupimg: 'login_10',
+				btndownimg: 'login_11',
+				iconimg: 'login_bg79',
+				scaleX: game.scalefact,
+				scaleY: game.scalefact,
+			}).addTo(panel);
+			btn.x = panel.width* game.scalefact/2 - btn.width * game.scalefact/2  -btn.width * game.scalefact/2;
+			btn.y = panel.height* game.scalefact * (7/8);
+			
+			var btn2 = new game.IconButton({
+				imgsource: 'ui',
+				btnupimg: 'login_bg65',
+				btndownimg: 'login_bg66',
+				iconimg: 'login_bg83',
+				scaleX: game.scalefact,
+				scaleY: game.scalefact,
+			}).addTo(panel);
+			btn2.x = panel.width* game.scalefact/2 - btn.width * game.scalefact/2  +btn.width * game.scalefact/2;
+			btn2.y = panel.height* game.scalefact * (7/8);
+			
+			btn.handler = function(){
+				//game.mjdata.initMjQueue();
+				//self.destory();
+				//self.active();
+			};
+			
+		},
+		
 		hidepanel:function(){
 			console.log('删除输入框');
 			var panel = this.getChildById(this.panelid);
@@ -220,7 +286,8 @@
 			}).addTo(panel);
 			btn.x = (panel.width - btn.width) * game.scalefact / 2;
 			btn.y = panel.height * game.scalefact - btn.height * game.scalefact + 20;
-
+			
+			//局数    房卡   人数  玩法
 			var setvalue = [0, 0, 0, 0];
 			for(var itemid in panel.items) {
 				var radiobox = panel.items[itemid];

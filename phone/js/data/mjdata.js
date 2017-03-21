@@ -437,7 +437,8 @@ game.mjdata = new function() {
 			height: 2745,
 			frames: self.effectframes,
 			sprites: {
-				buhua: { from: 0, to: 26 },
+				//buhua: { from: 0, to: 26 },
+				buhua: { from: 20, to: 26 },
 				beikeguang: { from: 27, to: 42 },
 				dianpao: { from: 43, to: 67 },
 				changdianguang: { from: 68, to: 78 },
@@ -467,7 +468,6 @@ game.mjdata = new function() {
 		var lastframe = effect.getNumFrames() - 1;
 		if(isonce) {
 			effect.setFrameCallback(lastframe, function() {
-				console.log('remove effect');
 				this.stop();
 				this.removeFromParent();
 			});
@@ -534,7 +534,7 @@ game.roominfo = new function() {
 
 	self.PAYTYPES = ['放胡单赔', '放胡双倍单赔', '放胡全赔'];
 	self.COUNTDOWN_TIME = 10;
-	self.LASTMJNUM = 42;
+	self.LASTMJNUM = 4;
 	self.id = '000000';
 	self.paytype = 0;
 	self.paytypeSt = '';
@@ -542,16 +542,21 @@ game.roominfo = new function() {
 	self.isCreate = false;
 	self.isStart = false;
 	self.lastmj = self.LASTMJNUM;//黄庄的剩余张
+	self.totalCount = 0;         //局数
+	self.whopay = 0;             //谁支付房卡    房主 雀神
 	
 	self.countdown = self.COUNTDOWN_TIME; //创建倒计时
 
 	self.sumtime = 0;
-
-	self.setData = function(roomid, paytype, playerNums) {
+	
+	
+	self.setData = function(roomid, paytype, playerNums,whopay,count) {
 		self.id = roomid;
 		self.paytype = paytype;
 		self.playerNums = playerNums;
 		self.paytypeSt = self.PAYTYPES[self.paytype];
+		self.totalCount = count;
+		self.whopay = whopay;
 	};
 	//清零
 	self.reset = function() {
@@ -644,9 +649,9 @@ game.playsceneUidata = new function() {
 				dealX: Math.floor(this.width * 0.02),
 				dealY: Math.floor(this.height - 10 - this.mjselfH * game.scalefact),
 				throwX: Math.floor(this.width * 0.3),
-				throwY: Math.floor(this.height * 0.63),
+				throwY: Math.floor(this.height * 0.68),
 				huaX: Math.floor(this.width * 0.3),
-				huaY: Math.floor(this.height * 0.75),
+				huaY: Math.floor(this.height * 0.78),
 				huaCount: 0,
 				userX: this.width * 0.01,
 				userY: this.height * 0.625,
@@ -656,10 +661,10 @@ game.playsceneUidata = new function() {
 			up: {
 				dealX: Math.floor(this.width * 0.3),
 				dealY: Math.floor(this.height * 0.125),
-				throwX: Math.floor(this.width * 0.35),
-				throwY: Math.floor(this.height * 0.33),
-				huaX: Math.floor(this.width * 0.35),
-				huaY: Math.floor(this.height * 0.23),
+				throwX: Math.floor(this.width * 0.3),
+				throwY: Math.floor(this.height * 0.28),
+				huaX: Math.floor(this.width * 0.3),
+				huaY: Math.floor(this.height * 0.20),
 				huaCount: 0,
 				userX: this.width * 0.67,
 				userY: this.height * 0.07,
@@ -669,9 +674,9 @@ game.playsceneUidata = new function() {
 			left: {
 				dealX: Math.floor(this.width * 0.125), // - this.slideMjWidth * game.scalefact),
 				dealY: Math.floor(this.height * 0.11),
-				throwX: Math.floor(this.width * 0.25 - this.svmjH),
+				throwX: Math.floor(this.width * 0.24 - this.svmjH),
 				throwY: Math.floor(this.height * 0.25),
-				huaX: Math.floor(this.width * 0.16),
+				huaX: Math.floor(this.width * 0.145),
 				huaY: Math.floor(this.height * 0.11),
 				huaCount: 0,
 				userX: this.width * 0.01,
@@ -682,9 +687,9 @@ game.playsceneUidata = new function() {
 			right: {
 				dealX: Math.floor(this.width * 0.86),
 				dealY: Math.floor(this.height * 0.20),
-				throwX: Math.floor(this.width * 0.75),
+				throwX: Math.floor(this.width * 0.77),
 				throwY: Math.floor(this.height * 0.25),
-				huaX: Math.floor(this.width * 0.8),
+				huaX: Math.floor(this.width * 0.82),
 				huaY: Math.floor(this.height * 0.25),
 				huaCount: 0,
 				userX: this.width * 0.88,

@@ -59,6 +59,8 @@
 			var self = this;
 			this.addTo(game.stage);
 			this.initBg('bg', 'battle_bg');
+			this.x = 0;
+			this.y = 0;
 			this.initFlowers = {
 				up: 1,
 				down: 1,
@@ -74,7 +76,6 @@
 			this.takemj();
 			this.turnBuhua();
 			
-			//this.skipOverBtn = game.configdata.createScalebutton('ui', 'lsbattle_87', this.width * 0.6, this.height * 0.6).addTo(this);
 			this.skipOverBtn = new game.HandleMjBtn({x:this.width * 0.6, y:this.height * 0.6}).addTo(this);
 			this.skipOverBtn.visible = false;
 			this.skipOverBtn.pass.on(Hilo.event.POINTER_START,function(e){
@@ -95,11 +96,6 @@
 
 			this.isThrow = false;
 		},
-		
-		clear:function(){
-			
-		},
-		
 
 		executeMsg: function(sendobj, msgtype, msgdata) {
 			var self = this;
@@ -133,8 +129,7 @@
 						self.turnNext();
 					} else {
 						if(msgdata[1] != 'down')
-							//self.skipOverBtn.visible = true;
-							self.skipOverBtn.setData(msgdata[0],[0,0,1,0]);
+							self.skipOverBtn.setData(msgdata[0],[0,1,0,0]);
 						else	
 							self.turnNext();
 					}
@@ -199,9 +194,9 @@
 		},
 
 		turnBuhua: function() {
-			if(this.checkFlower('down')) {
-				this.buhua('down');
-			}
+			//if(this.checkFlower('down')) {
+			//	this.buhua('down');
+			//}
 			game.sendMsg(this, game.networker, game.networker.msg.NEXTUSER_BUHUA, 'down');
 		},
 
@@ -283,7 +278,7 @@
 			this.residueMjLabel.x = this.width / 2 - this.residueMjLabel.width - 50;
 			this.residueMjLabel.y = this.height / 2 - this.residueMjLabel.height / 2;
 			this.residueMjLabel.txt.text = '剩余' + game.networker.getResidueMj().toString() + '张';
-			this.residueGamenumLabel = game.configdata.createBgTitletext('剩余3局', '18px 黑体', 'yellow', 'ui', 'login_bg9','center').addTo(this.bglayer);
+			this.residueGamenumLabel = game.configdata.createBgTitletext('剩余'+game.roominfo.totalCount+'局', '18px 黑体', 'yellow', 'ui', 'login_bg9','center').addTo(this.bglayer);
 			this.residueGamenumLabel.x = this.width / 2 + 50;
 			this.residueGamenumLabel.y = this.height / 2 - this.residueMjLabel.height / 2;
 			this.roomIdLabel = game.configdata.createBgTitletext('房间号:123980', '20px 黑体', 'white', 'ui', 'login_bg17','center').addTo(this.bglayer);
@@ -304,12 +299,15 @@
 
 			if(info.playerNums == 4) {
 				this.mjDirect = ['down', 'left', 'up', 'right'];
+				this.maxMjStack = 9;
 			}
 			if(info.playerNums == 3) {
 				this.mjDirect = ['down', 'left', 'up'];
+				this.maxMjStack = 12;
 			}
 			if(info.playerNums == 2) {
 				this.mjDirect = ['down', 'up'];
+				this.maxMjStack = 24;
 			}
 			this.setPortrait();
 		},
@@ -347,6 +345,10 @@
 		},
 		
 		huangzhuang:function(){
+			game.roominfo.totalCount--;
+			var st = '剩余'+game.roominfo.totalCount+'局';
+			this.residueGamenumLabel.txt.text = st;
+			
 			this.ishuangzhuang = true;
 			var self = this;
 			var img = game.configdata.createRectImg('ui','battle_108',0,0,1).addTo(this);
@@ -369,8 +371,12 @@
 						delay:100,
 						duration:300,
 						onComplete:function(){
-							//game.switchScene(game.configdata.SCENE_NAMES.weixinlogin);
-							self.createBalanceaccountWindow(self);
+							if(game.roominfo.totalCount <= 0){
+								game.roominfo.isCreate = false;
+								game.switchScene(game.configdata.SCENE_NAMES.main,'balanceaccount');
+							}else{
+								self.createBalanceaccountWindow(self);
+							}
 						}
 					})
 				}
@@ -380,7 +386,7 @@
 		createBalanceaccountWindow: function(self) {
 			var panel = game.configdata.createBgPanel([], 'login_bg35', true, true, self, 'login_13', 'login_14', 'ui', 55, 'login_bg111', 'login_bg81');
 			panel.addTo(self);
-			var inity = panel.height * 0.125;
+			var inity = panel.height * game.scalefact * 0.125;
 			for(var i in self.mjDirect){
 				var dir = self.mjDirect[i];
 				var l = null;
@@ -392,9 +398,9 @@
 					l = self.dealRightMjLayer.children;
 				if(dir == 'left')
 					l = self.dealLeftMjLayer.children;
-				var queue = new game.BalanceAccountMjqueue({y:inity,l:l}).addTo(panel);
-				queue.x = panel.width/2 - queue.width/2;
-				inity += 120;
+				var queue = new game.BalanceAccountMjqueue({y:inity,l:l,scaleX:game.scalefact,scaleY:game.scalefact}).addTo(panel);
+				queue.x = panel.width* game.scalefact/2 - queue.width * game.scalefact/2;
+				inity += queue.height * game.scalefact * 1.05;
 				console.log('x:%d y:%d',queue.x,queue.y);
 			}
 			var l = this.dealDownMjLayer.children;
@@ -408,7 +414,7 @@
 				scaleX: game.scalefact,
 				scaleY: game.scalefact,
 			}).addTo(panel);
-			btn.x = panel.width* game.scalefact/2 - btn.width * game.scalefact/2  -btn.width * game.scalefact;
+			btn.x = panel.width* game.scalefact/2 - btn.width * game.scalefact/2  -btn.width * game.scalefact/2;
 			btn.y = panel.height* game.scalefact * (7/8);
 			
 			var btn2 = new game.IconButton({
@@ -419,7 +425,7 @@
 				scaleX: game.scalefact,
 				scaleY: game.scalefact,
 			}).addTo(panel);
-			btn2.x = panel.width* game.scalefact/2 - btn.width * game.scalefact/2  +btn.width * game.scalefact;
+			btn2.x = panel.width* game.scalefact/2 - btn.width * game.scalefact/2  +btn.width * game.scalefact/2;
 			btn2.y = panel.height* game.scalefact * (7/8);
 			
 			btn.handler = function(){
@@ -536,7 +542,7 @@
 		},
 
 		buhua: function(userdir) {
-			//console.log("-----------补花：%s'---------",userdir);
+			console.log("-----------补花：%s'---------",userdir);
 			var mjlist = null;
 			var beThrowMjList = [];
 			var x = this.width / 2 - 300 / 2;
@@ -562,7 +568,11 @@
 			for(var i = mjlist.length - 1; i > 0; i--) {
 				var sendobj = mjlist[i];
 				if(sendobj.mjid.indexOf('f') != -1 || sendobj.mjid.indexOf('h') != -1) {
-					//console.log('-------(%d):%s',i,sendobj.name);
+					if(userdir == 'down'){
+						console.log(userdir);
+						console.log('-------(%d):%s',i,sendobj.name);
+					}
+					
 					beThrowMjList.push(sendobj.mjid);
 					sendobj.removeFromParent();
 				}

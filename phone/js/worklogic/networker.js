@@ -80,9 +80,11 @@ game.networker = new function() {
 			console.log('房卡不够');
 		}else{
 			var id = self._createRoomId();
-			var man = msgdata[1][2];
-			var paytype = msgdata[1][3];
-			game.roominfo.setData(id,paytype,man);
+			var man     = msgdata[1][2];      //人数
+			var paytype = msgdata[1][3];      //赔率
+			var count   = msgdata[1][0];      //局数
+			var whopay  = msgdata[1][1];	  //支付方
+			game.roominfo.setData(id,paytype,man,whopay,count);
 			game.roominfo.isCreate = true;
 		}
 		game.sendMsg(self, sendobj, self.msg.CREATEROOM, isEnoughcards);

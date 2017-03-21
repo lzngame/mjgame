@@ -1773,12 +1773,15 @@
 		scoreicon:null,
 		scoretxt:null,
 		score:120,
+		flowerstxt:null,
+		flowers:8,
+		goldtxt:null,
+		golds:1,
+		lianzhuangtxt:null,
+		lianzhuang:2,
 		l:null,
-		numimg:null,
-		txt:null,
-		txtnum:null,
-		invitenum:10,
-		cardnum:1,
+		
+		
 
 		constructor: function(properties) {
 			BalanceAccountMjqueue.superclass.constructor.call(this, properties);
@@ -1792,13 +1795,15 @@
 			this.scoretxt = game.configdata.createSimpletext(this.score.toString(), '30px 黑体', 'white', 'rgba(0,0,0,0)', this.scoreicon.x + this.scoreicon.width*1.1, this.scoreicon.y, 150).addTo(this);
 			for(var i in this.l){
 				var mjid = this.l[i].mjid;
-				console.log(mjid);
 				var idname = mjid+'-1';
 				var mj = new game.MjScene({idname:idname}).addTo(this);
-				mj.x = i * mj.width;
-				mj.y = this.height/2 - mj.height/2;
-				
+				mj.x = i * mj.width + this.width * game.scalefact * 0.3;
+				mj.y = this.height - mj.height*1.2;
 			}
+			this.lianzhuangtxt = game.configdata.createSimpletext('连庄 ×'+this.lianzhuang.toString(), '30px 黑体', 'white', 'rgba(0,0,0,0)', 0.5 * this.width*game.scalefact, this.scoreicon.y, 150).addTo(this);
+			this.flowerstxt = game.configdata.createSimpletext('花 ×'+this.flowers.toString(), '30px 黑体', 'white', 'rgba(0,0,0,0)', 0.8 * this.width*game.scalefact, this.scoreicon.y, 150).addTo(this);
+			this.goldtxt = game.configdata.createSimpletext('金 ×'+this.golds.toString(), '30px 黑体', 'white', 'rgba(0,0,0,0)', 0.92 * this.width*game.scalefact, this.scoreicon.y, 150).addTo(this);
+			
 		},
 	});
 	
