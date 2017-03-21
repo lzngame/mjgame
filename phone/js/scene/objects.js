@@ -1800,9 +1800,9 @@
 				mj.x = i * mj.width + this.width * game.scalefact * 0.3;
 				mj.y = this.height - mj.height*1.2;
 			}
-			this.lianzhuangtxt = game.configdata.createSimpletext('连庄 ×'+this.lianzhuang.toString(), '30px 黑体', 'white', 'rgba(0,0,0,0)', 0.5 * this.width*game.scalefact, this.scoreicon.y, 150).addTo(this);
-			this.flowerstxt = game.configdata.createSimpletext('花 ×'+this.flowers.toString(), '30px 黑体', 'white', 'rgba(0,0,0,0)', 0.8 * this.width*game.scalefact, this.scoreicon.y, 150).addTo(this);
-			this.goldtxt = game.configdata.createSimpletext('金 ×'+this.golds.toString(), '30px 黑体', 'white', 'rgba(0,0,0,0)', 0.92 * this.width*game.scalefact, this.scoreicon.y, 150).addTo(this);
+			this.lianzhuangtxt = game.configdata.createSimpletext('连庄 ×'+this.lianzhuang.toString(), '30px 黑体', 'white', 'rgba(0,0,0,0)', 0.3 * this.width*game.scalefact, this.scoreicon.y, 150).addTo(this);
+			this.flowerstxt = game.configdata.createSimpletext('花 ×'+this.flowers.toString(), '30px 黑体', 'white', 'rgba(0,0,0,0)', 0.5 * this.width*game.scalefact, this.scoreicon.y, 150).addTo(this);
+			this.goldtxt = game.configdata.createSimpletext('金 ×'+this.golds.toString(), '30px 黑体', 'white', 'rgba(0,0,0,0)', 0.65 * this.width*game.scalefact, this.scoreicon.y, 150).addTo(this);
 			
 		},
 	});

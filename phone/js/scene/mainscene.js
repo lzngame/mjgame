@@ -191,6 +191,7 @@
 		},
 		
 		createEndBalanceaccountWindow: function() {
+			
 			var panel = game.configdata.createBgPanel([], 'login_bg35', true, true, this, 'login_13', 'login_14', 'ui', 55, 'login_bg111', 'login_bg81');
 			panel.addTo(this);
 			var nums = game.roominfo.playerNums;
@@ -204,25 +205,6 @@
 				card.y = panel.height * game.scalefact * 0.125;
 				initx += card.width * game.scalefact;
 			}
-			/*var inity = panel.height * game.scalefact * 0.125;
-			for(var i in self.mjDirect){
-				var dir = self.mjDirect[i];
-				var l = null;
-				if(dir == 'down')
-					l = self.dealDownMjLayer.children;
-				if(dir == 'up')
-					l = self.dealUpMjLayer.children;
-				if(dir == 'right')
-					l = self.dealRightMjLayer.children;
-				if(dir == 'left')
-					l = self.dealLeftMjLayer.children;
-				var queue = new game.BalanceAccountMjqueue({y:inity,l:l,scaleX:game.scalefact,scaleY:game.scalefact}).addTo(panel);
-				queue.x = panel.width* game.scalefact/2 - queue.width * game.scalefact/2;
-				inity += queue.height * game.scalefact * 1.05;
-				console.log('x:%d y:%d',queue.x,queue.y);
-			}
-			var l = this.dealDownMjLayer.children;
-			*/
 			
 			var btn = new game.IconButton({
 				imgsource: 'ui',
@@ -247,11 +229,8 @@
 			btn2.y = panel.height* game.scalefact * (7/8);
 			
 			btn.handler = function(){
-				//game.mjdata.initMjQueue();
-				//self.destory();
-				//self.active();
 			};
-			
+			game.roominfo.reset();
 		},
 		
 		hidepanel:function(){

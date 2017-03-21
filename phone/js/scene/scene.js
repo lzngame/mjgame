@@ -121,8 +121,6 @@
 				if(this._loaded % m == 0) {
 					self.addLoadCoin();
 				}
-				console.log(this._loaded / total);
-				console.log(game.loadqueue.getLoaded()/game.loadqueue.getTotal());
 			});
 			game.loadqueue.on('complete', function(e) {
 				console.log('end');
