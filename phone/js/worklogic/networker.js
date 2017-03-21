@@ -31,7 +31,7 @@ game.networker = new function() {
 				self.delayHandle(1000,sendobj, msgdata, self.canCreateRoom, self);
 				break;
 			case this.msg.NEXTUSER_BUHUA://补花
-				self.delayHandle(500,sendobj, msgdata, self.buhua, self);
+				self.delayHandle(200,sendobj, msgdata, self.buhua, self);
 				break;
 			case this.msg.SHOWTALK://显示聊天
 				self.delayHandle(50,sendobj,msgdata,self.showtalk,self);

@@ -194,9 +194,6 @@
 		},
 
 		turnBuhua: function() {
-			//if(this.checkFlower('down')) {
-			//	this.buhua('down');
-			//}
 			game.sendMsg(this, game.networker, game.networker.msg.NEXTUSER_BUHUA, 'down');
 		},
 
@@ -331,11 +328,6 @@
 			panel.addTo(sceneself);
 		},
 		
-		//局间结算
-		showPartBalancecount:function(sceneself){
-			var l = this.dealDownMjLayer.children;
-			var panel = new game.PartBalanceAccountpanel().addTo(this);
-		},
 		
 		hidepanel:function(){
 			console.log('删除输入框');
@@ -433,7 +425,6 @@
 				self.destory();
 				self.active();
 			};
-			
 		},
 		
 		showtalk:function(userdir,showtype,txt,sound){
