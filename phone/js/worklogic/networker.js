@@ -136,7 +136,7 @@ game.networker = new function() {
 		game.sendMsg(this,sendobj.playscene,self.msg.MJGANG, mjid);
 	};
 	this.mjChi = function(sendobj,msgdata,self){
-		var mjid = msgdata;
-		game.sendMsg(this,sendobj.playscene,self.msg.MJCHI, msgdata);
+		var mjid = msgdata[0];
+		game.sendMsg(this,game.currentScene,self.msg.MJCHI, msgdata);
 	};
 };

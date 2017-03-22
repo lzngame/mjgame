@@ -179,7 +179,7 @@
 					self.currentThrowIndex = 0;
 					//self.turnNext();
 					self.isTurn = true;
-					
+					self.takemj();
 					self.handlePeng(msgdata,true);
 					self.sortPlayerMj('down');
 					break;
@@ -198,8 +198,20 @@
 					self.currentThrowIndex = 0;
 					self.isTurn = true;
 					
-					//self.handlePeng(msgdata,true);
-					debugger;
+					//var pos = game.mjdata.getChiPos(result);
+					var pos = msgdata[1];
+					
+					self.handleChi(msgdata[0],pos);
+					/*var result = msgdata[1];
+					if(game.mjdata.getChiTypeCount(result) > 1){
+						var selectpanel = new game.ChiMjSelectPanel({chiresult:result,mjid:msgdata[0]}).addTo(self);
+						selectpanel.x = this.width/2 - selectpanel.width/2;
+						selectpanel.y = this.height * 0.6;
+					}else{
+						
+					}*/
+					
+					console.log(msgdata);
 					self.sortPlayerMj('down');
 					break;
 			}
@@ -228,8 +240,61 @@
 				}
 			}
 			var initx = this.downChiLayer.children.length;
+			var middlex,middley;
 			for(var i=0;i<l+1;i++){
 				var mj = new game.MjImg({isput:true,mjid:mjid,scaleX:game.scalefact,scaleY:game.scalefact}).addTo(this.downChiLayer);
+				mj.x = i *mj.swidth + initx*mj.swidth;
+				mj.y = mj.sheight * 0.05;
+				if(i==1){
+					middlex = mj.x;
+					middley = mj.y;
+				}
+				if(isgang && i==l){
+					mj.x = middlex;
+					mj.y = middley - mj.sheight * 0.1;
+				}
+			}
+			this.setDownChipos();
+		},
+		
+		//chipos 0:左张  1：右张  2：卡张
+		handleChi:function(mjid,chipos){
+			var mjlist = this.dealDownMjLayer.children;
+			var ist1 = true;
+			var ist2 = true;
+			var t1,t2;
+			var mjteam = game.mjdata.getChiQueue(mjid,chipos);
+			if(chipos == 0){
+				t1 = mjteam[1];
+				t2 = mjteam[2];
+			}
+			if(chipos == 1){
+				t1 = mjteam[0];
+				t2 = mjteam[1];
+			}
+			if(chipos == 2){
+				t1 = mjteam[0];
+				t2 = mjteam[2];
+			}
+				
+			for(var i=mjlist.length-1;i>-1;i--){
+				var item = mjlist[i];
+				if(item.mjid == t1 && ist1){
+					ist1 = false;
+					item.removeFromParent();
+					console.log(item.name);
+				}
+				if(item.mjid == t2 && ist2){
+					ist2 = false;
+					item.removeFromParent();
+					console.log(item.name);
+				}
+			}
+			
+			
+			var initx = this.downChiLayer.children.length;
+			for(var i=0;i<mjteam.length;i++){
+				var mj = new game.MjImg({isput:true,mjid:mjteam[i],scaleX:game.scalefact,scaleY:game.scalefact}).addTo(this.downChiLayer);
 				mj.x = i *mj.swidth + initx*mj.swidth;
 				mj.y = mj.sheight * 0.05;
 			}
@@ -460,8 +525,26 @@
 			});
 			this.skipOverBtn.funcHu =   this.mjHu;
 			this.skipOverBtn.funcPeng = this.mjPeng;
-			this.skipOverBtn.funcChi =  this.mjChi;
+			this.skipOverBtn.funcChi =  function(mjid,data){
+				var result = self.checkChi(mjid, self.dealDownMjLayer.children);
+				var typecount = game.mjdata.getChiTypeCount(result);
+				if(typecount == 1){
+					var chipos = game.mjdata.getChiPos(result);
+					game.sendMsg(this,game.networker,game.networker.msg.MJCHI,[mjid,chipos]);
+				}else{
+					self.showChiSelect(mjid,result);
+				}
+			};
 			this.skipOverBtn.funcGang = this.mjGang;
+		},
+		showChiSelect:function(mjid,result){
+			var selectpanel = new game.ChiMjSelectPanel({chiresult:result,mjid:mjid}).addTo(this);
+			selectpanel.x = this.width/2 - selectpanel.width/2;
+			selectpanel.y = this.height * 0.6;
+			selectpanel.func = function(chipos){
+				selectpanel.removeFromParent();
+				game.sendMsg(this,game.networker,game.networker.msg.MJCHI,[mjid,chipos]);
+			};
 		},
 		
 		mjHu:function(mjid){
@@ -471,8 +554,8 @@
 			game.sendMsg(this,game.networker,game.networker.msg.MJPENG,mjid);
 		},
 		mjChi:function(mjid,data){
-			debugger;
-			game.sendMsg(this,game.networker,game.networker.msg.MJCHI,[mjid,data]);
+			var chiresult = gaem.mjdata.checkChi()
+			
 		},
 		mjGang:function(mjid){
 			game.sendMsg(this,game.networker,game.networker.msg.MJGANG,mjid);

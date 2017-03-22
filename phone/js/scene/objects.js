@@ -1223,6 +1223,93 @@
 		}
 	});
 	
+	//ChiMjSelectbtn --- 吃牌选择 按钮
+	var ChiMjSelectbtn = ns.ChiMjSelectbtn = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name: 'ChiMjSelectbtn',
+		chipos:0,//0:左张 1：右张 2：卡张
+		mjid:null,     //要吃的牌
+		func:null,
+
+		constructor: function(properties) {
+			ChiMjSelectbtn.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		init: function(properties) {
+			var self = this;
+			var mjteam = game.mjdata.getChiQueue(this.mjid,this.chipos);
+			var w = 0;
+			for(var i=0;i<mjteam.length;i++){
+				var mj = new game.MjImg({mjid: mjteam[i],y:0}).addTo(this);
+				mj.on(Hilo.event.POINTER_END,function(e){
+					console.log('999999999999999999988888888888889999999999999');
+					if(self.func){
+						self.func(self.mjid,self.chipos);
+					}
+				});
+				mj.x = i * mj.width;
+				if(mj.mjid == self.mjid){
+					var selectSign = game.configdata.createRectImg('ui','chibeijing1',0,0,1).addTo(self);
+					selectSign.x = mj.x + mj.width/2 - selectSign.width/2;
+					selectSign.y = mj.height - selectSign.height;
+					selectSign.pointerEnabled = false;
+				}
+				w+= mj.width;
+				h = mj.height;
+			}
+			this.width = w;
+			this.height = h;
+			self.on(Hilo.POINTER_END,function(e){
+				console.log('99999999999999999999999999999999999999999999999');
+				if(self.func){
+					self.func(self.mjid,self.chipos);
+				}
+			});
+		},
+	});
+	
+	//ChiMjSelectPanel --- 吃牌选择 面板
+	var ChiMjSelectPanel = ns.ChiMjSelectPanel = Hilo.Class.create({
+		Extends: Hilo.Container,
+		name: 'ChiMjSelectPanel',
+		chiresult:null,
+		mjid:null,
+		chipos:null,
+		func:null,
+		constructor: function(properties) {
+			ChiMjSelectPanel.superclass.constructor.call(this, properties);
+			this.init(properties);
+		},
+		init: function(properties) {
+			var self = this;
+			var n = 0;
+			var space = 20;
+			var bg = game.configdata.createRectImg('ui','login_bg75',0,0,1).addTo(this);
+			var w = 0;
+			for(var i=0;i<this.chiresult.length;i++){
+				if(this.chiresult[i]){
+					var mjpanel = new game.ChiMjSelectbtn({mjid:this.mjid,chipos:i}).addTo(this);
+					mjpanel.x = n * mjpanel.width*1.2 + space;
+					n++;
+					w = mjpanel.width;
+					mjpanel.func = function(mjid,chipos){
+						console.log('3333335555555555555555555555555555555555333333');
+						self.chipos = chipos;
+						self.func(self.chipos);
+					}
+				}
+			}
+			this.on(Hilo.POINTER_END,function(e){
+				console.log('3333333333333333333333333333333');
+				if(self.func){
+					self.func(self.mjid,self.chipos);
+				}
+			});
+			bg.width = 2*space + (n-1) *w*1.2 + w;
+			this.width = bg.width;
+		},
+	});
+	
 	//MjPortrait--- 头像
 	var MjPortrait = ns.MjPortrait = Hilo.Class.create({
 		Extends: Hilo.Container,

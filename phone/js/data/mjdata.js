@@ -475,6 +475,50 @@ game.mjdata = new function() {
 
 		return effect;
 	};
+
+	self.getChiQueue = function(mjid, chipos) {
+		var itemtmp = mjid.split('_');
+		var head = itemtmp[0];
+		var order = parseInt(itemtmp[1]);
+		var t1, t2;
+
+		var mjteam = null;
+		if(chipos == 0) {
+			t1 = head + '_' + (order + 1).toString();
+			t2 = head + '_' + (order + 2).toString();
+			mjteam = [mjid, t1, t2];
+		}
+		if(chipos == 1) {
+			t1 = head + '_' + (order - 1).toString();
+			t2 = head + '_' + (order - 2).toString();
+			mjteam = [t2, t1, mjid];
+		}
+		if(chipos == 2) {
+			t1 = head + '_' + (order - 1).toString();
+			t2 = head + '_' + (order + 1).toString();
+			mjteam = [t1, mjid, t2];
+		}
+		return mjteam;
+	};
+
+	self.getChiTypeCount = function(chiresult) {
+		var n = 0;
+		for(var i in chiresult) {
+			if(chiresult[i])
+				n++;
+		}
+		return n;
+	};
+	self.getChiPos = function(chiresult) {
+		var pos = 0;
+		if(chiresult[0])
+			pos = 0;
+		if(chiresult[1])
+			pos = 1;
+		if(chiresult[2])
+			pos = 2;
+		return pos;
+	};
 };
 
 //玩家配置数据
@@ -541,16 +585,15 @@ game.roominfo = new function() {
 	self.playerNums = 0;
 	self.isCreate = false;
 	self.isStart = false;
-	self.lastmj = self.LASTMJNUM;//黄庄的剩余张
-	self.totalCount = 0;         //局数
-	self.whopay = 0;             //谁支付房卡    房主 雀神
-	
+	self.lastmj = self.LASTMJNUM; //黄庄的剩余张
+	self.totalCount = 0; //局数
+	self.whopay = 0; //谁支付房卡    房主 雀神
+
 	self.countdown = self.COUNTDOWN_TIME; //创建倒计时
 
 	self.sumtime = 0;
-	
-	
-	self.setData = function(roomid, paytype, playerNums,whopay,count) {
+
+	self.setData = function(roomid, paytype, playerNums, whopay, count) {
 		self.id = roomid;
 		self.paytype = paytype;
 		self.playerNums = playerNums;
@@ -588,8 +631,8 @@ game.roominfo = new function() {
 				self.countdown--;
 				if(self.countdown < 0) {
 					self.countdown = 0;
-					game.sendMsg(this,game.currentScene,game.networker.msg.DISBANDROOM,true);
-					console.log('发出解散房间消息-->%s',game.currentScene.name);
+					game.sendMsg(this, game.currentScene, game.networker.msg.DISBANDROOM, true);
+					console.log('发出解散房间消息-->%s', game.currentScene.name);
 					self.reset();
 				}
 			}
