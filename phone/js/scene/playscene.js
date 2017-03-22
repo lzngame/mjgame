@@ -6,7 +6,9 @@
 		bglayer: null,
 		currentmj: null,
 		mjDirect: null,
+		
 		currentThrowIndex: null,
+		currentThrowMj:null,  //打出的手牌
 		
 		isTurn: false,
 		isThrow: false,
@@ -15,6 +17,8 @@
 		throwLeftNum: 0,
 		throwRightNum: 0,
 		ishuangzhuang: false,
+		downPutx:0,
+		downPuty:0,
 		
 		pointer_mj: null,
 		pointer_user: null,
@@ -33,9 +37,6 @@
 		residueGamenumLabel: null, //剩余局数
 		roomIdLabel: null, //房间ID号
 		bankerDir: 'down', //庄家位置
-
-		
-
 		skipOverBtn: null,
 
 		constructor: function(properties) {
@@ -66,14 +67,6 @@
 			this.setTurnGold();
 			this.takemj();
 			this.turnBuhua();
-
-			this.skipOverBtn = new game.HandleMjBtn({ x: this.width * 0.6, y: this.height * 0.6 }).addTo(this);
-			this.skipOverBtn.visible = false;
-			this.skipOverBtn.pass.on(Hilo.event.POINTER_START, function(e) {
-				self.turnNext();
-				self.skipOverBtn.visible = false;
-			});
-			
 		},
 		
 		reset:function(){
@@ -92,6 +85,8 @@
 			this.throwUpNum = 0;
 			this.throwLeftNum = 0;
 			this.throwRightNum = 0;
+			this.downPutx = 0;
+			this.downPuty = 0;
 			game.playsceneUidata.initPostion['down']['huaCount'] = 0;
 			game.playsceneUidata.initPostion['up']['huaCount'] = 0;
 			game.playsceneUidata.initPostion['left']['huaCount'] = 0;
@@ -117,6 +112,7 @@
 						sendobj.removeFromParent();
 						self.throwOneMj('down', sendobj.mjid);
 						self.sortPlayerMj('down');
+						self.setDownChipos();
 						console.log('扔掉手牌：%s', game.mjdata.mj[sendobj.mjid][0]);
 					} else {
 						console.log('放回手牌：%s', game.mjdata.mj[sendobj.mjid][0]);
@@ -133,15 +129,12 @@
 					if(self.currentThrowIndex >= self.mjDirect.length) {
 						self.currentThrowIndex = 0;
 					}
-
 					var user = self.mjDirect[self.currentThrowIndex];
-
 					if(self.checkFlower(user)) {
 						self.buhua(user);
 					} else {
 						self.initFlowers[user] = 0;
 					}
-
 					if(!self.checkAllFlower()) {
 						game.sendMsg(this, game.networker, game.networker.msg.NEXTUSER_BUHUA, 'down');
 					} else {
@@ -152,8 +145,106 @@
 				case game.networker.msg.SHOWTALK:
 					self.showtalk(msgdata[0], msgdata[1], msgdata[2], msgdata[3]);
 					break;
+				case game.networker.msg.MJPENG:
+					self.pointer_mj.visible = false;
+					self.currentThrowMj.removeFromParent();
+					var userdir = self.mjDirect[self.currentThrowIndex];
+					if(userdir == 'down')
+						self.throwDownNum--;
+					if(userdir == 'up')
+						self.throwUpNum--;
+					if(userdir == 'left')
+						self.throwLeftNum--;
+					if(userdir == 'right')
+						self.throwRightNum--;
+					self.currentThrowIndex = 0;
+					//self.turnNext();
+					self.isTurn = true;
+					
+					self.handlePeng(msgdata);
+					self.sortPlayerMj('down');
+					break;
+				case game.networker.msg.MJGANG:
+					self.pointer_mj.visible = false;
+					self.currentThrowMj.removeFromParent();
+					var userdir = self.mjDirect[self.currentThrowIndex];
+					if(userdir == 'down')
+						self.throwDownNum--;
+					if(userdir == 'up')
+						self.throwUpNum--;
+					if(userdir == 'left')
+						self.throwLeftNum--;
+					if(userdir == 'right')
+						self.throwRightNum--;
+					self.currentThrowIndex = 0;
+					//self.turnNext();
+					self.isTurn = true;
+					
+					self.handlePeng(msgdata,true);
+					self.sortPlayerMj('down');
+					break;
+				case game.networker.msg.MJCHI:
+					self.pointer_mj.visible = false;
+					self.currentThrowMj.removeFromParent();
+					var userdir = self.mjDirect[self.currentThrowIndex];
+					if(userdir == 'down')
+						self.throwDownNum--;
+					if(userdir == 'up')
+						self.throwUpNum--;
+					if(userdir == 'left')
+						self.throwLeftNum--;
+					if(userdir == 'right')
+						self.throwRightNum--;
+					self.currentThrowIndex = 0;
+					self.isTurn = true;
+					
+					//self.handlePeng(msgdata,true);
+					debugger;
+					self.sortPlayerMj('down');
+					break;
 			}
 		},
+		
+		handlePeng:function(mjid,isgang){
+			var mjlist = this.dealDownMjLayer.children;
+			var peng = 0;
+			var w = 0;
+			var l = 2;
+			if(isgang){
+				l = 3;			
+			}
+			for(var i=mjlist.length-1;i>-1;i--){
+				var item = mjlist[i];
+				var w = item.swidth;
+				console.log('%s:%s',i,item.name);
+				if(item.mjid == mjid){
+					if(peng < l){
+						console.log(i);
+						item.removeFromParent();
+						peng++;
+						if(peng == l)
+							break;
+					}
+				}
+			}
+			var initx = this.downChiLayer.children.length;
+			for(var i=0;i<l+1;i++){
+				var mj = new game.MjImg({isput:true,mjid:mjid,scaleX:game.scalefact,scaleY:game.scalefact}).addTo(this.downChiLayer);
+				mj.x = i *mj.swidth + initx*mj.swidth;
+				mj.y = mj.sheight * 0.05;
+			}
+			this.setDownChipos();
+		},
+		
+		setDownChipos:function(){
+			var mjlist = this.dealDownMjLayer.children;
+			var w = mjlist[0].swidth;
+			var x = game.playsceneUidata.initPostion['down']['dealX'];
+			var y = game.playsceneUidata.initPostion['down']['dealY'];
+			this.downChiLayer.x  = mjlist.length * w  + x;
+			this.downChiLayer.y  = y;
+		},
+		
 		checkChipenggang: function(mjid, userdir) {
 			var resultList = [0, 0, 0, 0];
 			var count = this.checkPeng(mjid, this.dealDownMjLayer.children);
@@ -168,13 +259,15 @@
 					if(count == 3) {
 						resultList = [0, 1, 0, 1];
 					}
-					if(userdir == 'right') {
+					if((userdir == 'right' && game.roominfo.playerNums == 4)||
+					   (userdir == 'up'    && (game.roominfo.playerNums == 3 ||game.roominfo.playerNums == 2))
+					){
 						if(result[0] || result[1] || result[2]) {
 							resultList[2] = 1;
 						}
 					}
 					if(resultList[0]+resultList[1]+resultList[2]+resultList[3] != 0) {
-						this.skipOverBtn.setData(mjid, resultList);
+						this.skipOverBtn.setData(mjid, resultList,result);
 					} else {
 						this.turnNext();
 					}
@@ -193,6 +286,8 @@
 				var mj_down = new game.MjSelf({ mjid: game.mjdata.dealOne(), scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.dealDownMjLayer);
 				mj_down.x = mj_down.swidth * i + game.playsceneUidata.initPostion['down']['dealX'];
 				mj_down.y = game.playsceneUidata.initPostion['down']['dealY'];
+				this.downPutx = mj_down.x+mj_down.width;
+				this.downPuty = mj_down.y;
 				//up
 				var mj_up = this.createDealMj(game.mjdata.dealOne(), 1, 1).addTo(this.dealUpMjLayer);
 				mj_up.x = mj_up.swidth * i + game.playsceneUidata.initPostion['up']['dealX'];
@@ -250,7 +345,7 @@
 			if(count == 2) {
 				console.log('%s 砰', mjid);
 			}
-			if(count == 3) {
+			if(count == 3 || count == 4) {
 				console.log('%s 杠', mjid);
 			}
 			return count;
@@ -276,7 +371,6 @@
 			var r1 = mjHead + '_' + (parseInt(mjOrder) + 1);
 			if(this.checkMjIn(l1, mjlist) && this.checkMjIn(r1, mjlist))
 				result[2] = true;
-
 			return result;
 		},
 
@@ -316,6 +410,8 @@
 			this.dealDownMjLayer = new Hilo.Container().addTo(this);
 			this.selfMjInitx = this.width / 50;
 			this.selfMjTakeInitx = this.maxMjHandle * 74 * game.scalefact + this.width / 50 + 50;
+			
+			this.downChiLayer = new Hilo.Container().addTo(this);
 		},
 
 		setRoomInfo: function() {
@@ -356,6 +452,30 @@
 				this.maxMjStack = 24;
 			}
 			this.setPortrait();
+			this.skipOverBtn = new game.HandleMjBtn({playscene:this, x: this.width * 0.6, y: this.height * 0.6 }).addTo(this);
+			this.skipOverBtn.visible = false;
+			this.skipOverBtn.pass.on(Hilo.event.POINTER_START, function(e) {
+				self.turnNext();
+				//self.skipOverBtn.visible = false;
+			});
+			this.skipOverBtn.funcHu =   this.mjHu;
+			this.skipOverBtn.funcPeng = this.mjPeng;
+			this.skipOverBtn.funcChi =  this.mjChi;
+			this.skipOverBtn.funcGang = this.mjGang;
+		},
+		
+		mjHu:function(mjid){
+			
+		},
+		mjPeng:function(mjid,isgang){
+			game.sendMsg(this,game.networker,game.networker.msg.MJPENG,mjid);
+		},
+		mjChi:function(mjid,data){
+			debugger;
+			game.sendMsg(this,game.networker,game.networker.msg.MJCHI,[mjid,data]);
+		},
+		mjGang:function(mjid){
+			game.sendMsg(this,game.networker,game.networker.msg.MJGANG,mjid);
 		},
 
 		setPortrait: function() {
@@ -441,7 +561,6 @@
 				var queue = new game.BalanceAccountMjqueue({ y: inity, l: l, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(panel);
 				queue.x = panel.width * game.scalefact / 2 - queue.width * game.scalefact / 2;
 				inity += queue.height * game.scalefact * 1.05;
-				console.log('x:%d y:%d', queue.x, queue.y);
 			}
 			var l = this.dealDownMjLayer.children;
 
@@ -509,6 +628,12 @@
 			
 			this.isThrow = true;
 			this.checkOneGold(mj);
+			
+			
+			if(this.checkPeng(mj.mjid,this.dealDownMjLayer.children) == 4){
+				this.skipOverBtn.setData(mj.mjid,[0,0,0,1]);
+			}
+			
 			if(this.checkOneMjFlower(mj.mjid) && this.isTurn) {
 				var self = this;
 				new Hilo.Tween.to(this, {
@@ -604,11 +729,6 @@
 			for(var i = mjlist.length - 1; i > 0; i--) {
 				var sendobj = mjlist[i];
 				if(sendobj.mjid.indexOf('f') != -1 || sendobj.mjid.indexOf('h') != -1) {
-					if(userdir == 'down') {
-						console.log(userdir);
-						console.log('-------(%d):%s', i, sendobj.name);
-					}
-
 					beThrowMjList.push(sendobj.mjid);
 					sendobj.removeFromParent();
 				}
@@ -828,6 +948,7 @@
 
 					break;
 			}
+			this.currentThrowMj = throwmj;
 
 		},
 
@@ -853,6 +974,7 @@
 					self.pointer_mj.y = throwmj.y - 40;
 				}
 			});
+			
 		},
 
 		createDealMj: function(mjid, typemj, showback) {

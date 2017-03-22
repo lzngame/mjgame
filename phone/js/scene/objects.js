@@ -793,7 +793,7 @@
 		frontimg: null,
 		goldimg: null,
 		rectfront: null,
-		bgrects: ['self_30', 'self_22', 'selfmj_23'],
+		bgrects: ['self_30', 'self_23', 'selfmj_22'],
 		bgrect: 0,
 		state: 0, //0 正常 1放下（吃/碰/明杠）2暗杠
 		swidth: 0,
@@ -1139,7 +1139,17 @@
 		mjbg:null,
 		mjid:-1,
 		mj:null,
-		pass:null, //过
+		pass:null,     //过
+		funcHu:null,   //胡
+		funcPeng:null, //碰
+		funcChi:null,  //吃
+		funcGang:null, //杠
+		
+		currentMjid:null,
+		handleData:null,
+		chiresult:null,   //怎么吃牌
+		
+		playscene:null,
 
 		constructor: function(properties) {
 			HandleMjBtn.superclass.constructor.call(this, properties);
@@ -1160,8 +1170,28 @@
 			this.pass.on(Hilo.event.POINTER_START,function(e){
 				self.clear();
 			});
+			//胡
+			this.imgs[0].on(Hilo.event.POINTER_START,function(e){
+				self.clear();
+				self.funcHu(self.currentMjid);
+			});
+			//碰
+			this.imgs[1].on(Hilo.event.POINTER_START,function(e){
+				self.clear();
+				self.funcPeng(self.currentMjid);
+			});
+			//吃
+			this.imgs[2].on(Hilo.event.POINTER_START,function(e){
+				self.clear();
+				self.funcChi(self.currentMjid,self.handleData);
+			});
+			//杠
+			this.imgs[3].on(Hilo.event.POINTER_START,function(e){
+				self.clear();
+				self.funcGang(self.currentMjid);
+			});
 		},
-		setData:function(mjid,data){
+		setData:function(mjid,data,chiresult){
 			this.visible = true;
 			this.mj.setMjid(mjid);
 			var initx = 0;
@@ -1178,6 +1208,11 @@
 				}
 			}
 			this.pass.x = initx;
+			this.currentMjid = mjid;
+			this.handleData = data;
+			if(chiresult){
+				this.chiresult = chiresult;
+			}
 		},
 		clear:function(){
 			this.visible = false;
@@ -1612,6 +1647,7 @@
 		name: '',
 		mjid:'',
 		mj:null,
+		isput:false,
 		constructor: function(properties) {
 			MjImg.superclass.constructor.call(this, properties);
 			this.init(properties);
@@ -1620,10 +1656,17 @@
 			var bg = game.configdata.createRectImg('ui','17',0,0,1).addTo(this);
 			this.width = bg.width;
 			this.height = bg.height;
+			this.swidth = this.width * game.scalefact;
+			this.sheight = this.height * game.scalefact;
 			var mjname = game.mjdata.mj[this.mjid][1];
 			this.mj =  game.configdata.createRectImg('mj',mjname,0,0,1).addTo(this);
 			this.mj.x = this.width/2 - this.mj.width/2;
 			this.mj.y = this.height - this.mj.height;
+			if(this.isput){
+				bg.scaleY = -1;
+				bg.y = this.height;
+				this.mj.y = 2;
+			}
 		},
 		setMjid:function(mjid){
 			var mjname = game.mjdata.mj[mjid][1];

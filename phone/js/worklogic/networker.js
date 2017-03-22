@@ -2,17 +2,21 @@
 game.networker = new function() {
 	var self = this;
 	self.msg = {
-		BETHROW: 'bethrow_mj_msg_100',
-		BESELECT: 'beselect_mj_msg_101',
-		NEXTUSER_HANDLE: 'nextuser_mjhandle_102',
-		NEXTUSER_BUHUA:'nextuser_buhua',
-		THROWMJ: 'throw_mj_mjid_103',
-		CREATEROOM: 'create_mj_room_104',
-		JOINROOM: 'join_mj_room_105',
-		SHOWTALK: 'show_talk_panel_106',
+		BETHROW: 'bethrow_mj_msg_100',           //牌被扔掉
+		BESELECT: 'beselect_mj_msg_101',         //选牌
+		NEXTUSER_HANDLE: 'nextuser_mjhandle_102',//下一个玩家操作
+		NEXTUSER_BUHUA:'nextuser_buhua',      //补花
+		THROWMJ: 'throw_mj_mjid_103',         //扔牌
+		CREATEROOM: 'create_mj_room_104',     //创建房间
+		JOINROOM: 'join_mj_room_105',         //加入房间
+		SHOWTALK: 'show_talk_panel_106',      //显示聊天
 		DISBANDROOM:'disband_mj_room_107',    //解散房间
 		SCROLLIMGLIST:'scroll_image_list_108',//滚动图片
-		HUANGZHUANG:'huangzhuang',            //黄庄
+		HUANGZHUANG:'huangzhuang_109',            //黄庄
+		MJCHI:'mj_chi_110',  //吃
+		MJPENG:'mj_peng_111',//碰
+		MJGANG:'mj_gang_112',//杠
+		MJHU:'mj_hu_113',    //胡
 	};
 	this.executeMsg = function(sendobj, msgtype, msgdata) {
 		var self = this;
@@ -35,6 +39,15 @@ game.networker = new function() {
 				break;
 			case this.msg.SHOWTALK://显示聊天
 				self.delayHandle(50,sendobj,msgdata,self.showtalk,self);
+				break;
+			case this.msg.MJPENG://碰
+				self.delayHandle(30,sendobj,msgdata,self.mjPeng,self);
+				break;
+			case this.msg.MJGANG://杠
+				self.delayHandle(30,sendobj,msgdata,self.mjGang,self);
+				break;
+			case this.msg.MJCHI://吃
+				self.delayHandle(30,sendobj,msgdata,self.mjChi,self);
 				break;
 		}
 	};
@@ -112,5 +125,18 @@ game.networker = new function() {
 		var dir = dirs[Math.floor(Math.random()*4)];
 		
 		game.sendMsg(this, playscene, self.msg.SHOWTALK, [dir,msgdata[0],msgdata[1],msgdata[2]]);
+	};
+	
+	this.mjPeng = function(sendobj,msgdata,self){
+		var mjid = msgdata;
+		game.sendMsg(this,sendobj.playscene,self.msg.MJPENG, mjid);
+	};
+	this.mjGang = function(sendobj,msgdata,self){
+		var mjid = msgdata;
+		game.sendMsg(this,sendobj.playscene,self.msg.MJGANG, mjid);
+	};
+	this.mjChi = function(sendobj,msgdata,self){
+		var mjid = msgdata;
+		game.sendMsg(this,sendobj.playscene,self.msg.MJCHI, msgdata);
 	};
 };
