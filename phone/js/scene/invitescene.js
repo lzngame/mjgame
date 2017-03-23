@@ -86,7 +86,7 @@
 
 		disbandRoom: function(btnself) {
 			console.log('disbandRoom');
-			game.roominfo.reset();
+			game.roominfo.resetDefault();
 			var win = btnself.createPointoutWindow(game.sceneuidata.bgtextline, 'login_9', '房间解散，游戏未开始不扣除房卡。').addTo(btnself);
 			win.closebtn.on(Hilo.event.POINTER_END,function(e){
 				game.switchScene(game.configdata.SCENE_NAMES.main);

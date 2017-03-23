@@ -213,9 +213,6 @@
 					self.createPointoutWindow([], 'login_9', '请同意用户协议').addTo(self);
 				}
 			});
-			
-			
-			new game.ChiMjSelectPanel({chiresult:[true,false,true],mjid:'w_5',x:100,y:100}).addTo(this);
 		},
 
 		deactive: function() {

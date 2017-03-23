@@ -6,10 +6,10 @@
 		bglayer: null,
 		currentmj: null,
 		mjDirect: null,
-		
+
 		currentThrowIndex: null,
-		currentThrowMj:null,  //打出的手牌
-		
+		currentThrowMj: null, //打出的手牌
+
 		isTurn: false,
 		isThrow: false,
 		throwDownNum: 0,
@@ -17,9 +17,9 @@
 		throwLeftNum: 0,
 		throwRightNum: 0,
 		ishuangzhuang: false,
-		downPutx:0,
-		downPuty:0,
-		
+		downPutx: 0,
+		downPuty: 0,
+
 		pointer_mj: null,
 		pointer_user: null,
 		goldmj: null,
@@ -59,38 +59,14 @@
 			this.initBg('bg', 'battle_bg');
 			this.x = 0;
 			this.y = 0;
-			this.reset();
-			
+			this.resetDefault();
+
 			this.initLayerAndPositions();
 			this.setRoomInfo();
 			this.deal(game.roominfo.getData().playerNums);
 			this.setTurnGold();
 			this.takemj();
 			this.turnBuhua();
-		},
-		
-		reset:function(){
-			this.initFlowers = {
-				up: 1,
-				down: 1,
-				left: 1,
-				right: 1
-			};
-			game.roominfo.isStart = true;
-			game.mjdata.initMjQueue();
-			this.ishuangzhuang = false;
-			this.isTurn = false;
-			this.isThrow = false;
-			this.throwDownNum = 0;
-			this.throwUpNum = 0;
-			this.throwLeftNum = 0;
-			this.throwRightNum = 0;
-			this.downPutx = 0;
-			this.downPuty = 0;
-			game.playsceneUidata.initPostion['down']['huaCount'] = 0;
-			game.playsceneUidata.initPostion['up']['huaCount'] = 0;
-			game.playsceneUidata.initPostion['left']['huaCount'] = 0;
-			game.playsceneUidata.initPostion['right']['huaCount'] = 0;
 		},
 
 		executeMsg: function(sendobj, msgtype, msgdata) {
@@ -122,7 +98,7 @@
 					self.isThrow = false;
 					break;
 				case game.networker.msg.NEXTUSER_HANDLE:
-					self.checkChipenggang(msgdata[0],msgdata[1]);
+					self.checkChipenggang(msgdata[0], msgdata[1]);
 					break;
 				case game.networker.msg.NEXTUSER_BUHUA:
 					self.currentThrowIndex++;
@@ -146,91 +122,57 @@
 					self.showtalk(msgdata[0], msgdata[1], msgdata[2], msgdata[3]);
 					break;
 				case game.networker.msg.MJPENG:
-					self.pointer_mj.visible = false;
-					self.currentThrowMj.removeFromParent();
-					var userdir = self.mjDirect[self.currentThrowIndex];
-					if(userdir == 'down')
-						self.throwDownNum--;
-					if(userdir == 'up')
-						self.throwUpNum--;
-					if(userdir == 'left')
-						self.throwLeftNum--;
-					if(userdir == 'right')
-						self.throwRightNum--;
-					self.currentThrowIndex = 0;
-					//self.turnNext();
-					self.isTurn = true;
-					
-					self.handlePeng(msgdata);
-					self.sortPlayerMj('down');
+					game.sounds.playMjAction(1);
+					self.actionBeforeChigang();
+					self.actionPeng(msgdata);
 					break;
 				case game.networker.msg.MJGANG:
-					self.pointer_mj.visible = false;
-					self.currentThrowMj.removeFromParent();
-					var userdir = self.mjDirect[self.currentThrowIndex];
-					if(userdir == 'down')
-						self.throwDownNum--;
-					if(userdir == 'up')
-						self.throwUpNum--;
-					if(userdir == 'left')
-						self.throwLeftNum--;
-					if(userdir == 'right')
-						self.throwRightNum--;
-					self.currentThrowIndex = 0;
-					//self.turnNext();
-					self.isTurn = true;
+					game.sounds.playMjAction(2);
+					self.actionBeforeChigang();
 					self.takemj();
-					self.handlePeng(msgdata,true);
-					self.sortPlayerMj('down');
+					self.actionPeng(msgdata, true);
 					break;
 				case game.networker.msg.MJCHI:
-					self.pointer_mj.visible = false;
-					self.currentThrowMj.removeFromParent();
-					var userdir = self.mjDirect[self.currentThrowIndex];
-					if(userdir == 'down')
-						self.throwDownNum--;
-					if(userdir == 'up')
-						self.throwUpNum--;
-					if(userdir == 'left')
-						self.throwLeftNum--;
-					if(userdir == 'right')
-						self.throwRightNum--;
-					self.currentThrowIndex = 0;
-					self.isTurn = true;
-					
-					//var pos = game.mjdata.getChiPos(result);
+					game.sounds.playMjAction(0);
+					self.actionBeforeChigang();
 					var pos = msgdata[1];
-					
-					self.handleChi(msgdata[0],pos);
-					/*var result = msgdata[1];
-					if(game.mjdata.getChiTypeCount(result) > 1){
-						var selectpanel = new game.ChiMjSelectPanel({chiresult:result,mjid:msgdata[0]}).addTo(self);
-						selectpanel.x = this.width/2 - selectpanel.width/2;
-						selectpanel.y = this.height * 0.6;
-					}else{
-						
-					}*/
-					
-					console.log(msgdata);
-					self.sortPlayerMj('down');
+					self.actionChi(msgdata[0], pos);
 					break;
 			}
 		},
 		
-		handlePeng:function(mjid,isgang){
+		//吃碰杠之前的动作-- 清除牌面中的牌，隐藏指示器，回退一个位置
+		actionBeforeChigang: function() {
+			var self = this;
+			self.pointer_mj.visible = false;
+			self.currentThrowMj.removeFromParent();
+			var userdir = self.mjDirect[self.currentThrowIndex];
+			if(userdir == 'down')
+				self.throwDownNum--;
+			if(userdir == 'up')
+				self.throwUpNum--;
+			if(userdir == 'left')
+				self.throwLeftNum--;
+			if(userdir == 'right')
+				self.throwRightNum--;
+			self.currentThrowIndex = 0;
+			self.isTurn = true;
+		},
+
+		actionPeng: function(mjid, isgang) {
 			var mjlist = this.dealDownMjLayer.children;
 			var peng = 0;
 			var w = 0;
 			var l = 2;
-			if(isgang){
-				l = 3;			
+			if(isgang) {
+				l = 3;
 			}
-			for(var i=mjlist.length-1;i>-1;i--){
+			for(var i = mjlist.length - 1; i > -1; i--) {
 				var item = mjlist[i];
 				var w = item.swidth;
-				console.log('%s:%s',i,item.name);
-				if(item.mjid == mjid){
-					if(peng < l){
+				console.log('%s:%s', i, item.name);
+				if(item.mjid == mjid) {
+					if(peng < l) {
 						console.log(i);
 						item.removeFromParent();
 						peng++;
@@ -240,76 +182,76 @@
 				}
 			}
 			var initx = this.downChiLayer.children.length;
-			var middlex,middley;
-			for(var i=0;i<l+1;i++){
-				var mj = new game.MjImg({isput:true,mjid:mjid,scaleX:game.scalefact,scaleY:game.scalefact}).addTo(this.downChiLayer);
-				mj.x = i *mj.swidth + initx*mj.swidth;
+			var middlex, middley;
+			for(var i = 0; i < l + 1; i++) {
+				var mj = new game.MjImg({ isput: true, mjid: mjid, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.downChiLayer);
+				mj.x = i * mj.swidth + initx * mj.swidth;
 				mj.y = mj.sheight * 0.05;
-				if(i==1){
+				if(i == 1) {
 					middlex = mj.x;
 					middley = mj.y;
 				}
-				if(isgang && i==l){
+				if(isgang && i == l) {
 					mj.x = middlex;
 					mj.y = middley - mj.sheight * 0.1;
 				}
 			}
 			this.setDownChipos();
 		},
-		
+
 		//chipos 0:左张  1：右张  2：卡张
-		handleChi:function(mjid,chipos){
+		actionChi: function(mjid, chipos) {
 			var mjlist = this.dealDownMjLayer.children;
 			var ist1 = true;
 			var ist2 = true;
-			var t1,t2;
-			var mjteam = game.mjdata.getChiQueue(mjid,chipos);
-			if(chipos == 0){
+			var t1, t2;
+			var mjteam = game.mjdata.getChiQueue(mjid, chipos);
+			if(chipos == 0) {
 				t1 = mjteam[1];
 				t2 = mjteam[2];
 			}
-			if(chipos == 1){
+			if(chipos == 1) {
 				t1 = mjteam[0];
 				t2 = mjteam[1];
 			}
-			if(chipos == 2){
+			if(chipos == 2) {
 				t1 = mjteam[0];
 				t2 = mjteam[2];
 			}
-				
-			for(var i=mjlist.length-1;i>-1;i--){
+
+			for(var i = mjlist.length - 1; i > -1; i--) {
 				var item = mjlist[i];
-				if(item.mjid == t1 && ist1){
+				if(item.mjid == t1 && ist1) {
 					ist1 = false;
 					item.removeFromParent();
 					console.log(item.name);
 				}
-				if(item.mjid == t2 && ist2){
+				if(item.mjid == t2 && ist2) {
 					ist2 = false;
 					item.removeFromParent();
 					console.log(item.name);
 				}
 			}
-			
-			
+
 			var initx = this.downChiLayer.children.length;
-			for(var i=0;i<mjteam.length;i++){
-				var mj = new game.MjImg({isput:true,mjid:mjteam[i],scaleX:game.scalefact,scaleY:game.scalefact}).addTo(this.downChiLayer);
-				mj.x = i *mj.swidth + initx*mj.swidth;
+			for(var i = 0; i < mjteam.length; i++) {
+				var mj = new game.MjImg({ isput: true, mjid: mjteam[i], scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.downChiLayer);
+				mj.x = i * mj.swidth + initx * mj.swidth;
 				mj.y = mj.sheight * 0.05;
 			}
 			this.setDownChipos();
 		},
-		
-		setDownChipos:function(){
+
+		setDownChipos: function() {
 			var mjlist = this.dealDownMjLayer.children;
 			var w = mjlist[0].swidth;
 			var x = game.playsceneUidata.initPostion['down']['dealX'];
 			var y = game.playsceneUidata.initPostion['down']['dealY'];
-			this.downChiLayer.x  = mjlist.length * w  + x;
-			this.downChiLayer.y  = y;
+			this.downChiLayer.x = mjlist.length * w + x;
+			this.downChiLayer.y = y;
+			this.sortPlayerMj('down');
 		},
-		
+
 		checkChipenggang: function(mjid, userdir) {
 			var resultList = [0, 0, 0, 0];
 			var count = this.checkPeng(mjid, this.dealDownMjLayer.children);
@@ -324,15 +266,15 @@
 					if(count == 3) {
 						resultList = [0, 1, 0, 1];
 					}
-					if((userdir == 'right' && game.roominfo.playerNums == 4)||
-					   (userdir == 'up'    && (game.roominfo.playerNums == 3 ||game.roominfo.playerNums == 2))
-					){
+					if((userdir == 'right' && game.roominfo.playerNums == 4) ||
+						(userdir == 'up' && (game.roominfo.playerNums == 3 || game.roominfo.playerNums == 2))
+					) {
 						if(result[0] || result[1] || result[2]) {
 							resultList[2] = 1;
 						}
 					}
-					if(resultList[0]+resultList[1]+resultList[2]+resultList[3] != 0) {
-						this.skipOverBtn.setData(mjid, resultList,result);
+					if(resultList[0] + resultList[1] + resultList[2] + resultList[3] != 0) {
+						this.skipOverBtn.setData(mjid, resultList, result);
 					} else {
 						this.turnNext();
 					}
@@ -351,7 +293,7 @@
 				var mj_down = new game.MjSelf({ mjid: game.mjdata.dealOne(), scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this.dealDownMjLayer);
 				mj_down.x = mj_down.swidth * i + game.playsceneUidata.initPostion['down']['dealX'];
 				mj_down.y = game.playsceneUidata.initPostion['down']['dealY'];
-				this.downPutx = mj_down.x+mj_down.width;
+				this.downPutx = mj_down.x + mj_down.width;
 				this.downPuty = mj_down.y;
 				//up
 				var mj_up = this.createDealMj(game.mjdata.dealOne(), 1, 1).addTo(this.dealUpMjLayer);
@@ -475,7 +417,7 @@
 			this.dealDownMjLayer = new Hilo.Container().addTo(this);
 			this.selfMjInitx = this.width / 50;
 			this.selfMjTakeInitx = this.maxMjHandle * 74 * game.scalefact + this.width / 50 + 50;
-			
+
 			this.downChiLayer = new Hilo.Container().addTo(this);
 		},
 
@@ -517,48 +459,51 @@
 				this.maxMjStack = 24;
 			}
 			this.setPortrait();
-			this.skipOverBtn = new game.HandleMjBtn({playscene:this, x: this.width * 0.6, y: this.height * 0.6 }).addTo(this);
+			this.setHandleBtn();
+		},
+		
+		showChiSelect: function(mjid, result){
+			var self = this;
+			var selectpanel = new game.ChiMjSelectPanel({ chiresult: result, mjid: mjid, scaleX: game.scalefact, scaleY: game.scalefact }).addTo(this);
+			selectpanel.x = this.width  / 2 - selectpanel.width * game.scalefact / 2;
+			selectpanel.y = this.height * 0.6 * game.scalefact;
+			console.log('宽高：%d',selectpanel.width);
+			selectpanel.func = function(chipos) {
+				selectpanel.removeFromParent();
+				game.sendMsg(this, game.networker, game.networker.msg.MJCHI, [mjid, chipos]);
+			};
+			selectpanel.passbtn.handler = function(){
+				selectpanel.removeFromParent();
+				self.turnNext();
+			};
+		},
+
+		setHandleBtn: function() {
+			var self = this;
+			this.skipOverBtn = new game.HandleMjBtn({playscene: this, x: this.width * 0.6, y: this.height * 0.6 ,scaleX: game.scalefact, scaleY: game.scalefact}).addTo(this);
 			this.skipOverBtn.visible = false;
 			this.skipOverBtn.pass.on(Hilo.event.POINTER_START, function(e) {
 				self.turnNext();
-				//self.skipOverBtn.visible = false;
 			});
-			this.skipOverBtn.funcHu =   this.mjHu;
-			this.skipOverBtn.funcPeng = this.mjPeng;
-			this.skipOverBtn.funcChi =  function(mjid,data){
+			this.skipOverBtn.funcHu = function(mjid) {
+
+			};
+			this.skipOverBtn.funcChi = function(mjid, data) {
 				var result = self.checkChi(mjid, self.dealDownMjLayer.children);
 				var typecount = game.mjdata.getChiTypeCount(result);
-				if(typecount == 1){
+				if(typecount == 1) {
 					var chipos = game.mjdata.getChiPos(result);
-					game.sendMsg(this,game.networker,game.networker.msg.MJCHI,[mjid,chipos]);
-				}else{
-					self.showChiSelect(mjid,result);
+					game.sendMsg(self, game.networker, game.networker.msg.MJCHI, [mjid, chipos]);
+				} else {
+					self.showChiSelect(mjid, result);
 				}
 			};
-			this.skipOverBtn.funcGang = this.mjGang;
-		},
-		showChiSelect:function(mjid,result){
-			var selectpanel = new game.ChiMjSelectPanel({chiresult:result,mjid:mjid}).addTo(this);
-			selectpanel.x = this.width/2 - selectpanel.width/2;
-			selectpanel.y = this.height * 0.6;
-			selectpanel.func = function(chipos){
-				selectpanel.removeFromParent();
-				game.sendMsg(this,game.networker,game.networker.msg.MJCHI,[mjid,chipos]);
+			this.skipOverBtn.funcPeng = function(mjid, data) {
+				game.sendMsg(self, game.networker, game.networker.msg.MJPENG, mjid);
 			};
-		},
-		
-		mjHu:function(mjid){
-			
-		},
-		mjPeng:function(mjid,isgang){
-			game.sendMsg(this,game.networker,game.networker.msg.MJPENG,mjid);
-		},
-		mjChi:function(mjid,data){
-			var chiresult = gaem.mjdata.checkChi()
-			
-		},
-		mjGang:function(mjid){
-			game.sendMsg(this,game.networker,game.networker.msg.MJGANG,mjid);
+			this.skipOverBtn.funcGang = function(mjid, data) {
+				game.sendMsg(self, game.networker, game.networker.msg.MJGANG, mjid);
+			};
 		},
 
 		setPortrait: function() {
@@ -708,15 +653,14 @@
 			mj.y = y;
 			mj.initx = mj.x;
 			mj.inity = mj.y;
-			
+
 			this.isThrow = true;
 			this.checkOneGold(mj);
-			
-			
-			if(this.checkPeng(mj.mjid,this.dealDownMjLayer.children) == 4){
-				this.skipOverBtn.setData(mj.mjid,[0,0,0,1]);
+
+			if(this.checkPeng(mj.mjid, this.dealDownMjLayer.children) == 4) {
+				this.skipOverBtn.setData(mj.mjid, [0, 0, 0, 1]);
 			}
-			
+
 			if(this.checkOneMjFlower(mj.mjid) && this.isTurn) {
 				var self = this;
 				new Hilo.Tween.to(this, {
@@ -985,7 +929,7 @@
 					throwmj = this._getThrowMj(mjid, 1);
 					throwmj.visible = false;
 					var x = (this.throwDownNum % this.maxMjStack) * throwmj.swidth + game.playsceneUidata.initPostion['down']['throwX'];
-					var y = -Math.floor(this.throwDownNum / this.maxMjStack) * throwmj.height + 5 + game.playsceneUidata.initPostion['down']['throwY'];
+					var y = -Math.floor(this.throwDownNum / this.maxMjStack) * throwmj.sheight * 0.8  + game.playsceneUidata.initPostion['down']['throwY'];
 					throwmj.x = x;
 					throwmj.y = y;
 					this.throwDownNum++;
@@ -998,7 +942,7 @@
 					throwmj = this._getThrowMj(mjid, 2);
 					throwmj.visible = false;
 					var y = (this.throwLeftNum % this.maxMjStack) * (throwmj.sheight * 0.8);
-					var x = Math.floor(this.throwLeftNum / this.maxMjStack) * throwmj.width;
+					var x = Math.floor(this.throwLeftNum / this.maxMjStack) * throwmj.swidth;
 					throwmj.x = x + game.playsceneUidata.initPostion['left']['throwX'];
 					throwmj.y = y + game.playsceneUidata.initPostion['left']['throwY'];
 					this.throwLeftNum++;
@@ -1010,7 +954,7 @@
 					throwmj = this._getThrowMj(mjid, 1);
 					throwmj.visible = false;
 					var x = (this.throwUpNum % this.maxMjStack) * throwmj.swidth + game.playsceneUidata.initPostion['up']['throwX'];
-					var y = Math.floor(this.throwUpNum / this.maxMjStack) * throwmj.height + game.playsceneUidata.initPostion['up']['throwY'];
+					var y = Math.floor(this.throwUpNum / this.maxMjStack) * throwmj.sheight*0.8 + game.playsceneUidata.initPostion['up']['throwY'];
 					throwmj.x = x;
 					throwmj.y = y;
 					this.throwUpNum++;
@@ -1022,7 +966,7 @@
 					throwmj = this._getThrowMj(mjid, 3);
 					throwmj.visible = false;
 					var y = (this.throwRightNum % this.maxMjStack) * (throwmj.sheight * 0.8);
-					var x = -Math.floor(this.throwRightNum / this.maxMjStack) * throwmj.width;
+					var x = -Math.floor(this.throwRightNum / this.maxMjStack) * throwmj.swidth;
 					throwmj.x = x + game.playsceneUidata.initPostion['right']['throwX'];
 					throwmj.y = y + game.playsceneUidata.initPostion['right']['throwY'];
 					this.throwRightNum++;
@@ -1057,7 +1001,7 @@
 					self.pointer_mj.y = throwmj.y - 40;
 				}
 			});
-			
+
 		},
 
 		createDealMj: function(mjid, typemj, showback) {
@@ -1117,6 +1061,30 @@
 			} else {
 				return 0;
 			}
+		},
+
+		resetDefault: function() {
+			this.initFlowers = {
+				up: 1,
+				down: 1,
+				left: 1,
+				right: 1
+			};
+			game.roominfo.isStart = true;
+			game.mjdata.initMjQueue();
+			this.ishuangzhuang = false;
+			this.isTurn = false;
+			this.isThrow = false;
+			this.throwDownNum = 0;
+			this.throwUpNum = 0;
+			this.throwLeftNum = 0;
+			this.throwRightNum = 0;
+			this.downPutx = 0;
+			this.downPuty = 0;
+			game.playsceneUidata.initPostion['down']['huaCount'] = 0;
+			game.playsceneUidata.initPostion['up']['huaCount'] = 0;
+			game.playsceneUidata.initPostion['left']['huaCount'] = 0;
+			game.playsceneUidata.initPostion['right']['huaCount'] = 0;
 		},
 
 		deactive: function() {

@@ -465,13 +465,13 @@ game.sounds = new function() {
 			loop: loop
 		}).play();
 	},
+	// 0:audio_card 1:chi 2:peng 3:gang 4:hu
 	this.playMjEffect = function(index){
-		//debugger;
 		if(game.configdata.MUTE)
 			return;
 		var	loop = false;
 		var basedir = 'sound/gongyong/';
-		var s = ['audio_card_click']
+		var s = ['audio_card_click','huang','Win']
 		var audioSrc = s[index]+'.mp3';
 		var t = basedir+audioSrc;
 		audio = Hilo.WebSound.getAudio({
@@ -479,6 +479,21 @@ game.sounds = new function() {
 			loop: loop
 		}).play();
 	},
+	// 0:chi 1:peng 2:gang 
+	this.playMjAction = function(index){
+		if(game.configdata.MUTE)
+			return;
+		var	loop = false;
+		var basedir = 'sound/putonghua/woman/';
+		var s = ['chi','peng','gang',]
+		var audioSrc = s[index]+'.mp3';
+		var t = basedir+audioSrc;
+		audio = Hilo.WebSound.getAudio({
+			src: basedir + audioSrc,
+			loop: loop
+		}).play();
+	},
+	
 	this.playTalk = function(talk){
 		if(game.configdata.MUTE)
 			return;

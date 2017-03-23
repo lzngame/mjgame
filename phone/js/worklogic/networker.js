@@ -129,11 +129,11 @@ game.networker = new function() {
 	
 	this.mjPeng = function(sendobj,msgdata,self){
 		var mjid = msgdata;
-		game.sendMsg(this,sendobj.playscene,self.msg.MJPENG, mjid);
+		game.sendMsg(this,game.currentScene,self.msg.MJPENG, mjid);
 	};
 	this.mjGang = function(sendobj,msgdata,self){
 		var mjid = msgdata;
-		game.sendMsg(this,sendobj.playscene,self.msg.MJGANG, mjid);
+		game.sendMsg(this,game.currentScene,self.msg.MJGANG, mjid);
 	};
 	this.mjChi = function(sendobj,msgdata,self){
 		var mjid = msgdata[0];

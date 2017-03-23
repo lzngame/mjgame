@@ -1276,6 +1276,8 @@
 		mjid:null,
 		chipos:null,
 		func:null,
+		pass:null,
+		passfunc:null,
 		constructor: function(properties) {
 			ChiMjSelectPanel.superclass.constructor.call(this, properties);
 			this.init(properties);
@@ -1293,20 +1295,20 @@
 					n++;
 					w = mjpanel.width;
 					mjpanel.func = function(mjid,chipos){
-						console.log('3333335555555555555555555555555555555555333333');
 						self.chipos = chipos;
 						self.func(self.chipos);
 					}
 				}
 			}
-			this.on(Hilo.POINTER_END,function(e){
-				console.log('3333333333333333333333333333333');
-				if(self.func){
-					self.func(self.mjid,self.chipos);
-				}
-			});
+			
 			bg.width = 2*space + (n-1) *w*1.2 + w;
+			this.passbtn = game.configdata.createScalebutton('ui','lsbattle_87',0,bg.height).addTo(this);
+			this.passbtn.scaleX = 1;
+			this.passbtn.scaleY = 1;
+			this.passbtn.y = bg.height;
 			this.width = bg.width;
+			this.height = bg.height;
+			
 		},
 	});
 	
@@ -1469,7 +1471,6 @@
 						self.func();
 					}
 				}
-				
 			});
 			this.setState(this.isUp);			
 		},

@@ -602,7 +602,7 @@ game.roominfo = new function() {
 		self.whopay = whopay;
 	};
 	//清零
-	self.reset = function() {
+	self.resetDefault = function() {
 		self.id = '000000';
 		self.paytype = 0;
 		self.paytypeSt = '';
@@ -633,7 +633,7 @@ game.roominfo = new function() {
 					self.countdown = 0;
 					game.sendMsg(this, game.currentScene, game.networker.msg.DISBANDROOM, true);
 					console.log('发出解散房间消息-->%s', game.currentScene.name);
-					self.reset();
+					self.resetDefault();
 				}
 			}
 		}

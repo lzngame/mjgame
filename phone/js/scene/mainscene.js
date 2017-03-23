@@ -230,7 +230,7 @@
 			
 			btn.handler = function(){
 			};
-			game.roominfo.reset();
+			game.roominfo.resetDefault();
 		},
 		
 		hidepanel:function(){
