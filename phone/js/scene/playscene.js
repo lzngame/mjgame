@@ -273,8 +273,9 @@
 							resultList[2] = 1;
 						}
 					}
-					if(resultList[0] + resultList[1] + resultList[2] + resultList[3] != 0) {
-						this.skipOverBtn.setData(mjid, resultList, result);
+					if(resultList[0]+resultList[1]+resultList[2]+resultList[3] != 0) {
+						console.log(resultList);
+						this.skipOverBtn.setData(mjid, resultList,result);
 					} else {
 						this.turnNext();
 					}
@@ -504,6 +505,18 @@
 			this.skipOverBtn.funcGang = function(mjid, data) {
 				game.sendMsg(self, game.networker, game.networker.msg.MJGANG, mjid);
 			};
+
+		},
+		
+		mjHu:function(mjid){
+			
+		},
+		mjPeng:function(mjid,isgang){
+			game.sendMsg(this,game.networker,game.networker.msg.MJPENG,mjid);
+		},
+		
+		mjGang:function(mjid){
+			game.sendMsg(this,game.networker,game.networker.msg.MJGANG,mjid);
 		},
 
 		setPortrait: function() {
