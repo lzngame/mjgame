@@ -1046,11 +1046,15 @@
 		startTime:0,
 		pivotx:24,
 		pivoty:24,
+		
+		currentDir:'down',
+		targetDir:null,
 
 		constructor: function(properties) {
 			Pointeruser.superclass.constructor.call(this, properties);
 			this.init(properties);
 		},
+		
 		init: function(properties) {
 			var bodyrect = game.configdata.getPngRect(this.rectname,this.imgsource);
 			this.width = bodyrect[2];
@@ -1062,29 +1066,49 @@
 		},
 		
 		setDirect:function(direct){
-			var d = 0;
-			console.log(direct);
+			var self = this;
+			this.targetDir = direct;
 			this.resetTime();
-			switch(direct){
-				case 'left':
-					d = 90;
-					break;
-				case 'dwon':
-					d = 0;
-					break;
-				case 'up':
-					d = 180;
-					break;
-				case 'right':
-					d = 270;
-					break;
-			}
+			var tmp = {
+				down:{
+					down:0,
+					left:90,
+					up:180,
+					right:270
+				},
+				left:{
+					left:0,
+					up:90,
+					right:180,
+					down:270,
+				},
+				up:{
+					up:0,
+					right:90,
+					down:180,
+					left:270,
+				},
+				right:{
+					right:0,
+					down:90,
+					left:180,
+					up:270
+				}
+			};
+			var current = this.imgbody.rotation;
+			var d = tmp[this.currentDir][this.targetDir];
+			var target = current + d;
+			console.log('current:%d --> target:%d  [%d]',current,target,d);
 			new Hilo.Tween.to(this.imgbody,{
-				rotation:d
+				rotation:target
 			},{
 				duration:200,
+				onComplete:function(){
+					self.currentDir = self.targetDir;
+				}
 			});
 		},
+		
 		resetTime:function(){
 			this.currentNum = 0;
 			this.sumtime = 0;

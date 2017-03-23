@@ -6,9 +6,8 @@
 		bglayer: null,
 		currentmj: null,
 		mjDirect: null,
-
 		currentThrowIndex: null,
-		currentThrowMj: null, //打出的手牌
+		currentThrowMj: null,      //打出的手牌
 
 		isTurn: false,
 		isThrow: false,
@@ -60,7 +59,6 @@
 			this.x = 0;
 			this.y = 0;
 			this.resetDefault();
-
 			this.initLayerAndPositions();
 			this.setRoomInfo();
 			this.deal(game.roominfo.getData().playerNums);
@@ -275,6 +273,8 @@
 					}
 					if(resultList[0]+resultList[1]+resultList[2]+resultList[3] != 0) {
 						console.log(resultList);
+						this.pointer_user.setDirect('down');
+						
 						this.skipOverBtn.setData(mjid, resultList,result);
 					} else {
 						this.turnNext();
@@ -334,6 +334,7 @@
 			}
 			var user = self.mjDirect[self.currentThrowIndex];
 			self.pointer_user.setDirect(user);
+			console.log('dir:%s',user);
 			if(user == 'down') {
 				self.isTurn = true;
 				self.takemj();
@@ -505,18 +506,6 @@
 			this.skipOverBtn.funcGang = function(mjid, data) {
 				game.sendMsg(self, game.networker, game.networker.msg.MJGANG, mjid);
 			};
-
-		},
-		
-		mjHu:function(mjid){
-			
-		},
-		mjPeng:function(mjid,isgang){
-			game.sendMsg(this,game.networker,game.networker.msg.MJPENG,mjid);
-		},
-		
-		mjGang:function(mjid){
-			game.sendMsg(this,game.networker,game.networker.msg.MJGANG,mjid);
 		},
 
 		setPortrait: function() {
@@ -961,19 +950,17 @@
 					this.throwLeftNum++;
 					game.sendMsg(this, game.networker, game.networker.msg.THROWMJ, [mjid, 1, 'left']);
 					this.createThrowMj(dir, mjid, throwmj.x + throwmj.height, throwmj.y, 300, 200, 90, throwmj, this);
-
 					break;
 				case 'up':
 					throwmj = this._getThrowMj(mjid, 1);
 					throwmj.visible = false;
-					var x = (this.throwUpNum % this.maxMjStack) * throwmj.swidth + game.playsceneUidata.initPostion['up']['throwX'];
+					var x = -(this.throwUpNum % this.maxMjStack) * throwmj.swidth + game.playsceneUidata.initPostion['up']['throwX'];
 					var y = Math.floor(this.throwUpNum / this.maxMjStack) * throwmj.sheight*0.8 + game.playsceneUidata.initPostion['up']['throwY'];
 					throwmj.x = x;
 					throwmj.y = y;
 					this.throwUpNum++;
 					game.sendMsg(this, game.networker, game.networker.msg.THROWMJ, [mjid, 1, 'up']);
 					this.createThrowMj(dir, mjid, throwmj.x, throwmj.y, 300, 100, 0, throwmj, this);
-
 					break;
 				case 'right':
 					throwmj = this._getThrowMj(mjid, 3);
@@ -985,11 +972,9 @@
 					this.throwRightNum++;
 					game.sendMsg(this, game.networker, game.networker.msg.THROWMJ, [mjid, 1, 'right']);
 					this.createThrowMj(dir, mjid, throwmj.x, throwmj.y + throwmj.width, 300, 200, -90, throwmj, this);
-
 					break;
 			}
 			this.currentThrowMj = throwmj;
-
 		},
 
 		createThrowMj: function(userdir, mjid, x, y, delay, duration, angle, throwmj, self) {
