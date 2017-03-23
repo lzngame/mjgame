@@ -965,13 +965,14 @@
 				case 'right':
 					throwmj = this._getThrowMj(mjid, 3);
 					throwmj.visible = false;
-					var y = (this.throwRightNum % this.maxMjStack) * (throwmj.sheight * 0.8);
+					var y = -(this.throwRightNum % this.maxMjStack) * (throwmj.sheight * 0.8);
 					var x = -Math.floor(this.throwRightNum / this.maxMjStack) * throwmj.swidth;
 					throwmj.x = x + game.playsceneUidata.initPostion['right']['throwX'];
 					throwmj.y = y + game.playsceneUidata.initPostion['right']['throwY'];
 					this.throwRightNum++;
 					game.sendMsg(this, game.networker, game.networker.msg.THROWMJ, [mjid, 1, 'right']);
-					this.createThrowMj(dir, mjid, throwmj.x, throwmj.y + throwmj.width, 300, 200, -90, throwmj, this);
+					this.createThrowMj(dir, mjid, throwmj.x, throwmj.y - throwmj.width, 300, 200, -90, throwmj, this);
+					this.throwlayer.sortChildren(this._sortByY);
 					break;
 			}
 			this.currentThrowMj = throwmj;

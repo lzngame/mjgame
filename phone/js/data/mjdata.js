@@ -731,7 +731,7 @@ game.playsceneUidata = new function() {
 				dealX: Math.floor(this.width * 0.86),
 				dealY: Math.floor(this.height * 0.20),
 				throwX: Math.floor(this.width * 0.77),
-				throwY: Math.floor(this.height * 0.25),
+				throwY: Math.floor(this.height * 0.70),
 				huaX: Math.floor(this.width * 0.82),
 				huaY: Math.floor(this.height * 0.25),
 				huaCount: 0,
