@@ -1132,6 +1132,7 @@
 		imgsource:null,
 		bgrectname: null,
 		mjid:null,
+		mj:null,
 
 		constructor: function(properties) {
 			Goldmj.superclass.constructor.call(this, properties);
@@ -1142,13 +1143,20 @@
 			this.width = bgrect[2];
 			this.height = bgrect[3];
 			game.configdata.createRectImg(this.imgsource, this.bgrectname, 0, 0, 1).addTo(this);
-			var idname = this.mjid + '-1';
-			var mj = new game.MjScene({idname:idname}).addTo(this);
-			mj.x = this.width/2 - mj.width/2;
-			mj.y = this.height/2 - mj.height/2 + 10;
-			mj.pointerEnabled = false;
+		},
+		showGoldMj:function(mjid){
+			this.mjid = mjid;
+			this.mj = new game.MjImg({mjid:this.mjid,isput:true,visible:false}).addTo(this);
+			this.mj.pivotY = this.mj.height/2;
+			this.mj.pivotX = this.mj.width/2;
+			this.mj.scaleX = 0.8;
+			this.mj.scaleY = 0.8;
+			this.mj.x = this.width/2;
+			this.mj.y = this.height/2+10;
+			this.mj.pointerEnabled = false;
 			this.scaleX = game.scalefact;
 			this.scaleY = game.scalefact;
+			this.mj.visible = true;
 		},
 	});
 	

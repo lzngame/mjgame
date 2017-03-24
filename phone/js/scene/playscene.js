@@ -840,9 +840,44 @@
 			this.throwFlower(sendobj.mjid, userdir);
 			this.buhuaEffect(userdir);
 		},
+		
+		openGold:function(mjid){
+			var self = this;
+			var targetMjid = game.configdata.createRandomMjid();
+			if(mjid)
+				targetMjid = mjid;
+			var goldshowmj = new game.MjImg({mjid:targetMjid,alpha:0.3}).addTo(this);
+			var goldeffect = game.mjdata.createEffect('beikeguang',0,0,6,false).addTo(this);
+			goldshowmj.x = this.width/2 - goldshowmj.width/2;
+			goldshowmj.y = this.height * 0.6; 
+			goldeffect.x = this.width/2 - goldeffect.width/2;
+			goldeffect.y = this.height * 0.6;
+			new Hilo.Tween.to(goldshowmj,{
+				alpha:1,
+			},{
+				duration:1400,
+				onComplete:function(){
+					goldeffect.removeFromParent();
+					new Hilo.Tween.to(goldshowmj,{
+						x:self.goldmj.x,
+						y:self.goldmj.y,
+					},{
+						duration:400,
+						delay:200,
+						onComplete:function(){
+							self.goldmj.showGoldMj(mjid);
+							goldshowmj.removeFromParent();
+						}
+					});
+				}
+			});
+		},
 
 		setTurnGold: function() {
-			this.goldmj = new game.Goldmj({ mjid: game.configdata.createRandomMjid(), imgsource: 'ui', bgrectname: '15' }).addTo(this.bglayer);
+		
+			this.goldmj = new game.Goldmj({ mjid: game.configdata.createRandomMjid(), imgsource: 'ui', bgrectname: '15',scaleX:game.scalefact,scaleY:game.scalefact }).addTo(this.bglayer);
+			this.openGold(this.goldmj.mjid);
+			
 			var list = this.dealDownMjLayer.children;
 			for(var item in list) {
 				var mj = list[item];
