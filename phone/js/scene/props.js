@@ -207,7 +207,7 @@
 			this.tabpanelCode = game.configdata.createBgPanel([], 'login_bg36', false, false, this.panel, 'empty', 'empty', 'ui', 55, 'empty', 'empty').addTo(this.panel);
 			this.tabpanelCode.x = this.panel.width * 0.125 * game.scalefact;
 			this.tabpanelCode.y = this.panel.height * 0.125 * game.scalefact;
-			var txt = game.configdata.createTitletext('输入邀请码可以获得房卡，邀请码可发送邀请链接后查看', '30px 黑体', '#27342b', 'rgba(0,0,0,0)', 0, 0, this.tabpanelCode.width *game.scalefact);
+			var txt = game.configdata.createTitletext('输入邀请码可以获得房卡，邀请码可发送邀请链接后查看', '30px 黑体', '#122E29', 'rgba(0,0,0,0)', 0, 0, this.tabpanelCode.width *game.scalefact);
 			txt.y = this.tabpanelCode.height * 0.1* game.scalefact;
 			txt.addTo(this.tabpanelCode);
 			var btn = new game.IconButton({

@@ -64,9 +64,10 @@ game.sceneuidata = new function(){
 				{
 					itemid:'id_announcement_txt',
 					itemtype:'texttitle',
-					itemurlvalue:'yaoqing7',
+					w:800,
+					h:40,
 					textvalue:'抵制不良游戏,拒绝赌博,合理安排时间,享受健康生活。',
-					color:'#333333',
+					color:'#fffffb',
 					font:'24px 黑体',
 					bg:'rgba(0,0,0,0)',
 					layouttype_x:'txt',
@@ -199,7 +200,8 @@ game.sceneuidata = new function(){
 				{
 					itemid:'id_shareweixin_text',
 					itemtype:'texttitle',
-					itemurlvalue:'fenxiang2',
+					w:132,
+					h:40,
 					textvalue:'微信',
 					color:'#333333',
 					font:'30px 黑体',
@@ -207,7 +209,7 @@ game.sceneuidata = new function(){
 					layouttype_x:'pct',
 					alignx:'left_25',
 					layouttype_y:'pct',
-					aligny:'bottom_40'
+					aligny:'top_37.5'
 				},
 				{
 					itemid:'id_sharepenyouquan_btn',
@@ -222,7 +224,8 @@ game.sceneuidata = new function(){
 				{
 					itemid:'id_shareweixin_text',
 					itemtype:'texttitle',
-					itemurlvalue:'fenxiang2',
+					w:132,
+					h:40,
 					textvalue:'朋友圈',
 					color:'#333333',
 					font:'30px 黑体',
@@ -230,7 +233,7 @@ game.sceneuidata = new function(){
 					layouttype_x:'pct',
 					alignx:'right_25',
 					layouttype_y:'pct',
-					aligny:'bottom_40'
+					aligny:'top_37.5'
 				},
 			],
 			// -------- 3 创建房间窗口数据
@@ -465,15 +468,16 @@ game.sceneuidata = new function(){
 				{
 					itemid:'id_shareweixin2_text',
 					itemtype:'simpletext',
-					width:500,
+					w:600,
+					h:40,
 					textvalue:'游戏首局结束前解散游戏，不扣除房卡',
-					color:'#333333',
+					color:'#130C0E',
 					font:'24px 黑体',
 					bg:'rgba(0,0,0,0)',
 					layouttype_x:'pct',
 					alignx:'left_20',
 					layouttype_y:'pct',
-					aligny:'bottom_20'
+					aligny:'bottom_15'
 				},
 			],
 			// -------- 4  设置按钮弹出
@@ -623,7 +627,8 @@ game.sceneuidata = new function(){
 				{
 					itemid:'id_invitescene_title_txt',
 					itemtype:'texttitle',
-					itemurlvalue:'login_bg17',
+					w:666,
+					h:40,
 					textvalue:'房间号：123456',
 					color:'white',
 					font:'20px 黑体',
@@ -636,7 +641,8 @@ game.sceneuidata = new function(){
 				{
 					itemid:'id_invitescene_wintype_txt',
 					itemtype:'texttitle',
-					itemurlvalue:'login_bg17',
+					w:300,
+					h:40,
 					textvalue:'放胡怎么赔',
 					color:'white',
 					font:'24px 黑体',
