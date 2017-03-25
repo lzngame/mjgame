@@ -60,6 +60,19 @@ game.sceneuidata = new function(){
 					alignx:'id_agreeweixinlogin_selectbox&115',
 					layouttype_y:'follow',
 					aligny:'id_agreeweixinlogin_selectbox&15'
+				},
+				{
+					itemid:'id_announcement_txt',
+					itemtype:'texttitle',
+					itemurlvalue:'yaoqing7',
+					textvalue:'抵制不良游戏,拒绝赌博,合理安排时间,享受健康生活。',
+					color:'#333333',
+					font:'24px 黑体',
+					bg:'rgba(0,0,0,0)',
+					layouttype_x:'txt',
+					alignx:'center',
+					layouttype_y:'pct',
+					aligny:'bottom_5'
 				}
 			]
 		];
